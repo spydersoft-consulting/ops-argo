@@ -9,8 +9,6 @@ argo-cd:
       enabled: true
       hosts:
       - argo.mattgerega.net
-
-  config:
     additionalApplications:
     - name: external-secrets
       namespace: external-secrets
