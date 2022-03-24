@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: home-automation-applications
+  labels:
+    environment: non-production
+    category: app
+spec:
+  generators:
+  - git:
+      repoURL: https://bitbucket.org/spydersoftteam/ops-nonprod-cluster
+      revision: HEAD
+      directories:
+      - path: apps/test/*
+      - path: apps/stage/*
+  template:
+    metadata:
+      name: '{{path.basename}}-{{path[1]}}'
+      labels:
+        environment: non-production
+        category: app
+    spec:
+      project: home-automation
+      source:
+        repoURL: https://bitbucket.org/spydersoftteam/ops-nonprod-cluster
+        targetRevision: main
+        path: '{{path}}'
+        directory:
+          recurse: true
+      destination:
+        server: https://192.168.1.43:6443
+        namespace: '{{path[1]}}'
+      
