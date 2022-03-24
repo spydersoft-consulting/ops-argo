@@ -80,6 +80,23 @@ argo-cd:
         automated:
           selfHeal: true
           prune: true
+    - name: argocd-secrets
+      namespace: argo
+      destination:
+        namespace: argo
+        server: https://kubernetes.default.svc
+      project: argocd
+      source:
+        path: secrets
+        repoURL: https://bitbucket.org/spydersoftteam/ops-argo
+        targetRevision: HEAD
+        directory:
+          recurse: true
+          jsonnet: {}
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
     additionalProjects: 
     - name: argocd
       namespace: argo
