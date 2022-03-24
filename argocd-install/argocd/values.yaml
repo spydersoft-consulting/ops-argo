@@ -106,6 +106,8 @@ argo-cd:
       destinations:
       - namespace: argo
         server: https://kubernetes.default.svc
+      - namespace: external-secrets
+        server: https://kubernetes.default.svc
       clusterResourceWhitelist:
       - group: '*'
         kind: '*'
