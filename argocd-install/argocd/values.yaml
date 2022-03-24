@@ -1,0 +1,114 @@
+argo-cd:
+  global:
+    storageClass: nfs-client
+
+  server:
+    extraArgs:
+    - --insecure
+    ingress:
+      enabled: true
+      hosts:
+      - argo.mattgerega.net
+
+  config:
+    additionalApplications:
+    - name: external-secrets
+      namespace: external-secrets
+      destination:
+        namespace: external-secrets
+        server: https://kubernetes.default.svc
+      project: argocd
+      source:
+        helm:
+          version: v3
+          valueFiles:
+          - values.yaml
+        path: external-secrets
+        repoURL: https://bitbucket.org/spydersoftteam/ops-argo
+        targetRevision: HEAD
+      syncPolicy:
+        syncOptions:
+        - CreateNamespace=true
+    - name: argocd
+      namespace: argo
+      destination:
+        namespace: argo
+        server: https://kubernetes.default.svc
+      project: argocd
+      source:
+        helm:
+          version: v3
+          valueFiles:
+          - values.yaml
+        path: argocd-install/argocd
+        repoURL: https://bitbucket.org/spydersoftteam/ops-argo
+        targetRevision: HEAD
+      syncPolicy:
+        syncOptions:
+        - CreateNamespace=true
+    - name: argocd-apps
+      namespace: argo
+      destination:
+        namespace: argo
+        server: https://kubernetes.default.svc
+      project: argocd
+      source:
+        path: apps
+        repoURL: https://bitbucket.org/spydersoftteam/ops-argo
+        targetRevision: HEAD
+        directory:
+          recurse: true
+          jsonnet: {}
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+    - name: argocd-appprojects
+      namespace: argo
+      destination:
+        namespace: argo
+        server: https://kubernetes.default.svc
+      project: argocd
+      source:
+        path: projects
+        repoURL: https://bitbucket.org/spydersoftteam/ops-argo
+        targetRevision: HEAD
+        directory:
+          recurse: true
+          jsonnet: {}
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+    additionalProjects: 
+    - name: argocd
+      namespace: argo
+      additionalLabels: {}
+      additionalAnnotations: {}
+      description: Argocd Project
+      sourceRepos:
+      - '*'
+      destinations:
+      - namespace: argo
+        server: https://kubernetes.default.svc
+      clusterResourceWhitelist:
+      - group: '*'
+        kind: '*'
+      orphanedResources:
+        warn: false
+
+  configs:
+    repositories:
+      argo-helm:
+        url: https://argoproj.github.io/argo-helm
+        name: argo-helm
+        type: helm
+      git-ops-cluster-tools:
+        name: git-ops-cluster-tools
+        url: https://bitbucket.org/spydersoftteam/ops-cluster-tools
+        type: git
+      git-ops-nonprod-cluster:
+        name: git-ops-nonprod-cluster
+        url: https://bitbucket.org/spydersoftteam/ops-nonprod-cluster
+        type: git
+    
