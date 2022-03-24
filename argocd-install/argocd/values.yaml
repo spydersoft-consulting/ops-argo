@@ -11,7 +11,7 @@ argo-cd:
       - argo.mattgerega.net
     additionalApplications:
     - name: external-secrets
-      namespace: external-secrets
+      namespace: argo
       destination:
         namespace: external-secrets
         server: https://kubernetes.default.svc
