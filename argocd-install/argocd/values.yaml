@@ -21,6 +21,7 @@ argo-cd:
           - openid
           - profile
           - email
+        getUserInfo: true
 
     additionalApplications:
     - name: external-secrets
