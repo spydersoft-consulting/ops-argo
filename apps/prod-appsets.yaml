@@ -1,38 +1,23 @@
 apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
+kind: Application
 metadata:
-  name: spydersoft-apps-prod
+  name: prod-application-sets
   labels:
-    environment: production
+    environment: non-production
     category: app
 spec:
-  generators:
-  - git:
-      repoURL: https://bitbucket.org/spydersoftteam/ops-prod-cluster
-      revision: HEAD
-      directories:
-      - path: apps/production/*
-  template:
-    metadata:
-      name: '{{path.basename}}-{{path[1]}}'
-      labels:
-        environment: production
-        category: app
-    spec:
-      project: spydersoft-apps
-      source:
-        repoURL: https://bitbucket.org/spydersoftteam/ops-prod-cluster
-        targetRevision: main
-        path: '{{ path }}'
-        directory:
-          recurse: true
-      destination:
-        server: https://192.168.1.46:6443
-        namespace: '{{ path[1] }}'
-      syncPolicy:
-        automated: 
-          prune: true 
-          selfHeal: true
-        syncOptions:   
-        - CreateNamespace=true
-      
+  destination:
+    namespace: argo
+    server: https://kubernetes.default.svc
+  project: argocd
+  source:
+    path: applicationSets
+    repoURL: https://bitbucket.org/spydersoftteam/ops-prod-cluster
+    targetRevision: HEAD
+    directory:
+      recurse: true
+      jsonnet: {}
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
