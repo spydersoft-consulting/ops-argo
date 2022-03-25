@@ -29,4 +29,10 @@ spec:
       destination:
         server: https://192.168.1.46:6443
         namespace: '{{ path[1] }}'
+      syncPolicy:
+        automated: 
+          prune: true 
+          selfHeal: true
+        syncOptions:   
+        - CreateNamespace=true
       
