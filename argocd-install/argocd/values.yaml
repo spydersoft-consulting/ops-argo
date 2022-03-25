@@ -128,4 +128,8 @@ argo-cd:
         name: git-ops-nonprod-cluster
         url: https://bitbucket.org/spydersoftteam/ops-nonprod-cluster
         type: git
+      git-ops-prod-cluster:
+        name: git-ops-nonprod-cluster
+        url: https://bitbucket.org/spydersoftteam/ops-nonprod-cluster
+        type: git
     
