@@ -9,6 +9,19 @@ argo-cd:
       enabled: true
       hosts:
       - argo.mattgerega.net
+
+    config:
+      url: https://argo.mattgerega.net
+      oidc.config: |
+        name: Spydersoft
+        issuer: https://auth.mattgerega.com
+        clientID: $argo-oidc-creds:oidc.clientid
+        clientSecret: $argo-oidc-creds:oidc.clientsecret
+        requestedScopes:
+          - openid
+          - profile
+          - email
+
     additionalApplications:
     - name: external-secrets
       namespace: argo
