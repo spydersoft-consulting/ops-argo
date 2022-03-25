@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: home-automation-applications
+  name: home-automation-apps-prod
   labels:
     environment: production
     category: app
