@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nonprod-application-sets
+  labels:
+    environment: non-production
+    category: app
+spec:
+  namespace: argo
+  destination:
+    namespace: argo
+    server: https://kubernetes.default.svc
+  project: argocd
+  source:
+    path: applicationSets
+    repoURL: https://bitbucket.org/spydersoftteam/ops-nonprod-cluster
+    targetRevision: HEAD
+    directory:
+      recurse: true
+      jsonnet: {}
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
