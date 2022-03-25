@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: home-automation-apps-nonprod
+  name: spydersoft-apps-nonprod
   labels:
     environment: non-production
     category: app
@@ -20,7 +20,7 @@ spec:
         environment: non-production
         category: app
     spec:
-      project: home-automation
+      project: spydersoft-apps
       source:
         repoURL: https://bitbucket.org/spydersoftteam/ops-nonprod-cluster
         targetRevision: main
