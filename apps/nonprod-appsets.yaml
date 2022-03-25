@@ -6,7 +6,6 @@ metadata:
     environment: non-production
     category: app
 spec:
-  namespace: argo
   destination:
     namespace: argo
     server: https://kubernetes.default.svc
