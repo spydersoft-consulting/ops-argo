@@ -99,3 +99,29 @@ spec:
     kind: LimitRange
   - group: ''
     kind: NetworkPolicy
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: external-apps
+  namespace: argo
+  # Finalizer that ensures that project is not deleted until it is not referenced by any application
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: External Applications
+  # Allow manifests to deploy from any Git repos
+  sourceRepos:
+  - '*'
+  # Only permit applications to deploy to the guestbook namespace in the same cluster
+  destinations:
+  - namespace: opstools
+    server: https://192.168.1.46:6443
+  - namespace: sites
+    server: https://192.168.1.46:6443
+  - namespace: nettools
+    server: https://192.168.1.46:6443
+  # Deny all cluster-scoped resources from being created, except for Namespace
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
