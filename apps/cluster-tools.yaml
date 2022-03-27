@@ -3,7 +3,7 @@ kind: ApplicationSet
 metadata:
   name: cluster-tools
   labels:
-    category: cluster-tools
+    spydersoft.io/category: cluster-tools
 spec:
   generators:
   - matrix:
@@ -21,7 +21,7 @@ spec:
     metadata:
       name: '{{ nameNormalized }}-{{path.basename}}'
       labels:
-        category: cluster-tools 
+        spydersoft.io/category: cluster-tools 
     spec:
       project: cluster-tools
       source:
