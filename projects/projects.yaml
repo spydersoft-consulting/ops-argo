@@ -155,6 +155,8 @@ spec:
     server: https://192.168.1.46:6443
   - namespace: nettools
     server: https://192.168.1.46:6443
+  - namespace: elk-stack
+    server: https://192.168.1.36:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
   - group: '*'
