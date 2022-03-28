@@ -41,6 +41,23 @@ argo-cd:
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
+    - name: rancher
+      namespace: argo
+      destination:
+        namespace: cattle-system
+        server: https://kubernetes.default.svc
+      project: argocd
+      source:
+        helm:
+          version: v3
+          valueFiles:
+          - values.yaml
+        path: rancher
+        repoURL: https://bitbucket.org/spydersoftteam/ops-argo
+        targetRevision: HEAD
+      syncPolicy:
+        syncOptions:
+        - CreateNamespace=true
     - name: argocd
       namespace: argo
       destination:
