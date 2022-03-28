@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: internal-application-sets
+  labels:
+    spydersoft.io/environment: internal
+    spydersoft.io/category: app
+spec:
+  destination:
+    namespace: argo
+    server: https://kubernetes.default.svc
+  project: argocd
+  source:
+    path: applicationSets
+    repoURL: https://bitbucket.org/spydersoftteam/ops-internal-cluster
+    targetRevision: HEAD
+    directory:
+      recurse: true
+      jsonnet: {}
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
