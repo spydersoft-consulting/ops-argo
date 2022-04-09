@@ -39,8 +39,8 @@ argo-cd:
         repoURL: https://bitbucket.org/spydersoftteam/ops-argo
         targetRevision: HEAD
       ignoreDifferences:
-      - group: '*'
-        kind: '*'
+      - group: "*"
+        kind: "*"
         managedFieldsManagers:
         - external-secrets
       syncPolicy:

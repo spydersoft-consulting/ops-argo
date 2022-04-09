@@ -40,8 +40,8 @@ spec:
         server: '{{ server }}'
         namespace: 'cluster-tools'
       ignoreDifferences:
-      - group: '*'
-        kind: '*'
+      - group: "*"
+        kind: "*"
         managedFieldsManagers:
         - external-secrets
       - group: '*'
