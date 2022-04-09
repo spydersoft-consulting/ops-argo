@@ -30,7 +30,7 @@ argo-cd:
             redirectURI: https://argo.mattgerega.net/api/dex/callback
             usernameAttr: email
             emailAttr: email
-            groupsAttr: Group
+            groupsAttr: group
 
     additionalApplications:
     - name: external-secrets
