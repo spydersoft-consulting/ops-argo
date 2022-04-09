@@ -22,6 +22,9 @@ argo-cd:
           - profile
           - email
         getUserInfo: true
+      resource.customizations.ignoreDifferences.all: |
+        managedFieldsManagers:
+        - external-secrets
 
     additionalApplications:
     - name: external-secrets
