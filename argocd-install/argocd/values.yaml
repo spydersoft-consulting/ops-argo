@@ -46,6 +46,7 @@ argo-cd:
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
+        - RespectIgnoreDifferences=true
     - name: rancher
       namespace: argo
       destination:
