@@ -40,9 +40,9 @@ argo-cd:
         targetRevision: HEAD
       ignoreDifferences:
       - group: '*'
-        kind: ValidatingWebhookConfiguration
-        jsonPointers:
-        - /webhooks/0/clientConfig/caBundle
+        kind: '*'
+        managedFieldsManagers:
+        - external-secrets
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
