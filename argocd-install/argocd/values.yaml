@@ -38,6 +38,11 @@ argo-cd:
         path: external-secrets
         repoURL: https://bitbucket.org/spydersoftteam/ops-argo
         targetRevision: HEAD
+      ignoreDifferences:
+      - group: '*'
+        kind: ValidatingWebhookConfiguration
+        jsonPointers:
+        - /webhooks/0/clientConfig/caBundle
       syncPolicy:
         syncOptions:
         - CreateNamespace=true
