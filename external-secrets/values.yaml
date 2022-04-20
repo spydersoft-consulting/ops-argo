@@ -7,6 +7,13 @@ external-secrets:
     readOnlyRootFilesystem: true
     runAsNonRoot: true
     runAsUser: 1000
+  resources:
+    limits:
+      cpu: 25m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 32Mi
   webhook:
     securityContext:
       capabilities:
@@ -15,6 +22,13 @@ external-secrets:
       readOnlyRootFilesystem: true
       runAsNonRoot: true
       runAsUser: 1000
+    resources:
+      limits:
+        cpu: 25m
+        memory: 128Mi
+      requests:
+        cpu: 10m
+        memory: 32Mi
   certController:
     securityContext:
       capabilities:
@@ -23,3 +37,10 @@ external-secrets:
       readOnlyRootFilesystem: true
       runAsNonRoot: true
       runAsUser: 1000
+    resources:
+      limits:
+        cpu: 25m
+        memory: 128Mi
+      requests:
+        cpu: 10m
+        memory: 32Mi
