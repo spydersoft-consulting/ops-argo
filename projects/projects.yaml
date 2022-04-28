@@ -14,9 +14,9 @@ spec:
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
   - namespace: test
-    server: https://nonprodcp.gerega.net:6443
+    server: https://cp-nonprod.gerega.net:6443
   - namespace: stage
-    server: https://nonprodcp.gerega.net:6443
+    server: https://cp-nonprod.gerega.net:6443
   - namespace: production
     server: https://192.168.1.46:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
@@ -48,9 +48,9 @@ spec:
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
   - namespace: test
-    server: https://nonprodcp.gerega.net:6443
+    server: https://cp-nonprod.gerega.net:6443
   - namespace: stage
-    server: https://nonprodcp.gerega.net:6443
+    server: https://cp-nonprod.gerega.net:6443
   - namespace: production
     server: https://192.168.1.46:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
@@ -82,9 +82,9 @@ spec:
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
   - namespace: test
-    server: https://nonprodcp.gerega.net:6443
+    server: https://cp-nonprod.gerega.net:6443
   - namespace: stage
-    server: https://nonprodcp.gerega.net:6443
+    server: https://cp-nonprod.gerega.net:6443
   - namespace: production
     server: https://192.168.1.46:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
@@ -118,7 +118,7 @@ spec:
   - namespace: '*'
     server: https://192.168.1.36:6443
   - namespace: '*'
-    server: https://nonprodcp.gerega.net:6443
+    server: https://cp-nonprod.gerega.net:6443
   - namespace: '*'
     server: https://192.168.1.46:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
