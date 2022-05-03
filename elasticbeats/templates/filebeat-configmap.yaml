@@ -8,9 +8,10 @@ metadata:
     k8s-app: filebeat
 data:
   filebeat.yml: |-
-    setup.template.name: "k8-fb"
-    setup.template.pattern: "k8-fb-%{[agent.version]}"
-    
+    setup.template.name: "k8-filebeat"
+    setup.template.pattern: "k8-filebeat-%{[agent.version]}"
+    setup.ilm.rollover_alias: "k8-filebeat-%{[agent.version]}"
+
     filebeat.autodiscover:
       providers:
         - type: kubernetes
@@ -22,4 +23,3 @@ data:
 
     output.elasticsearch:
       hosts: ['{{ .Values.elastic.url }}:{{ .Values.elastic.port }}']
-      index: "k8-fb-%{[agent.version]}-%{+yyyy.MM.dd}"
