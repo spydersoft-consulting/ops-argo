@@ -85,6 +85,24 @@ argo-cd:
         syncOptions:
         - CreateNamespace=true
         - RespectIgnoreDifferences=true
+    - name: kube-state-metrics
+      namespace: argo
+      destination:
+        namespace: kube-state-metrics
+        server: https://kubernetes.default.svc
+      project: argocd
+      source:
+        helm:
+          version: v3
+          valueFiles:
+          - values.yaml
+        path: kube-state-metrics
+        repoURL: https://bitbucket.org/spydersoftteam/ops-argo
+        targetRevision: HEAD
+      syncPolicy:
+        syncOptions:
+        - CreateNamespace=true
+        - RespectIgnoreDifferences=true
     - name: rancher
       namespace: argo
       destination:
@@ -186,6 +204,8 @@ argo-cd:
       - namespace: cattle-system
         server: https://kubernetes.default.svc
       - namespace: elasticbeats
+        server: https://kubernetes.default.svc
+      - namespace: kube-state-metrics
         server: https://kubernetes.default.svc
       clusterResourceWhitelist:
       - group: '*'
