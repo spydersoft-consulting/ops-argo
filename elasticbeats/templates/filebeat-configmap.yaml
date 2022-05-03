@@ -22,4 +22,4 @@ data:
 
     output.elasticsearch:
       hosts: ['{{ .Values.elastic.url }}:{{ .Values.elastic.port }}']
-      index: "k8-fb-%{[agent.version]}"
+      index: "k8-fb-%{[agent.version]}-%{+yyyy.MM.dd}"
