@@ -1,0 +1,6 @@
+elastic:
+  url: http://elastic.mattgerega.net
+  port: 9200
+  version: 7.17.1
+  username: ''
+  password: ''
