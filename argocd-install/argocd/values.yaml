@@ -185,6 +185,8 @@ argo-cd:
         server: https://kubernetes.default.svc
       - namespace: cattle-system
         server: https://kubernetes.default.svc
+      - namespace: elasticbeats
+        server: https://kubernetes.default.svc
       clusterResourceWhitelist:
       - group: '*'
         kind: '*'
