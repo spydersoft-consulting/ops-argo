@@ -70,7 +70,7 @@ argo-cd:
     - name: elasticbeats
       namespace: argo
       destination:
-        namespace: elasticbeats
+        namespace: kube-monitoring
         server: https://kubernetes.default.svc
       project: argocd
       source:
@@ -88,7 +88,7 @@ argo-cd:
     - name: kube-state-metrics
       namespace: argo
       destination:
-        namespace: kube-state-metrics
+        namespace: kube-monitoring
         server: https://kubernetes.default.svc
       project: argocd
       source:
@@ -206,6 +206,8 @@ argo-cd:
       - namespace: elasticbeats
         server: https://kubernetes.default.svc
       - namespace: kube-state-metrics
+        server: https://kubernetes.default.svc
+      - namespace: kube-monitoring
         server: https://kubernetes.default.svc
       clusterResourceWhitelist:
       - group: '*'
