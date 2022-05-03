@@ -1,6 +1,6 @@
 elastic:
-  url: http://elastic.mattgerega.net
-  port: 9200
+  url: https://elastic.mattgerega.net
+  port: 443
   version: 7.17.1
   username: ''
   password: ''
