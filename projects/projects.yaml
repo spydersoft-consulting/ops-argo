@@ -18,7 +18,7 @@ spec:
   - namespace: stage
     server: https://cp-nonprod.gerega.net:6443
   - namespace: production
-    server: https://192.168.1.46:6443
+    server: https://cp-prod.gerega.net:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
   - group: ''
@@ -52,7 +52,7 @@ spec:
   - namespace: stage
     server: https://cp-nonprod.gerega.net:6443
   - namespace: production
-    server: https://192.168.1.46:6443
+    server: https://cp-prod.gerega.net:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
   - group: ''
@@ -86,7 +86,7 @@ spec:
   - namespace: stage
     server: https://cp-nonprod.gerega.net:6443
   - namespace: production
-    server: https://192.168.1.46:6443
+    server: https://cp-prod.gerega.net:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
   - group: ''
@@ -120,7 +120,7 @@ spec:
   - namespace: '*'
     server: https://cp-nonprod.gerega.net:6443
   - namespace: '*'
-    server: https://192.168.1.46:6443
+    server: https://cp-prod.gerega.net:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
   - group: '*'
@@ -150,11 +150,11 @@ spec:
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
   - namespace: opstools
-    server: https://192.168.1.46:6443
+    server: https://cp-prod.gerega.net:6443
   - namespace: sites
-    server: https://192.168.1.46:6443
+    server: https://cp-prod.gerega.net:6443
   - namespace: nettools
-    server: https://192.168.1.46:6443
+    server: https://cp-prod.gerega.net:6443
   - namespace: elk-stack
     server: https://192.168.1.36:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
