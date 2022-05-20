@@ -121,6 +121,8 @@ spec:
     server: https://cp-nonprod.gerega.net:6443
   - namespace: '*'
     server: https://cp-prod.gerega.net:6443
+  - namespace: '*'
+    server: https://kubernetes.default.svc
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
   - group: '*'
