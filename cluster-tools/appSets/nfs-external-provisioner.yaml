@@ -19,7 +19,7 @@ spec:
     spec:
       project: cluster-tools
       source:
-        repoURL: https://bitbucket.org/spydersoftteam/ops-cluster-tools
+        repoURL: https://bitbucket.org/spydersoftteam/ops-argo
         targetRevision: main
         path: 'cluster-tools/tools/nfs-external-provisioner'
         helm:
