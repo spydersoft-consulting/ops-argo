@@ -1,0 +1,46 @@
+external-secrets:
+  installCRDs: true
+  securityContext:
+    capabilities:
+      drop:
+      - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    runAsUser: 1000
+  resources:
+    limits:
+      cpu: 25m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 32Mi
+  webhook:
+    securityContext:
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
+    resources:
+      limits:
+        cpu: 25m
+        memory: 128Mi
+      requests:
+        cpu: 10m
+        memory: 32Mi
+  certController:
+    securityContext:
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
+    resources:
+      limits:
+        cpu: 25m
+        memory: 128Mi
+      requests:
+        cpu: 10m
+        memory: 32Mi

@@ -1,0 +1,12 @@
+ingress-nginx:
+  controller:
+    replicaCount: 2
+    
+    service:
+      type: "ClusterIP"
+    
+    config:
+      use-forwarded-headers: "true"
+      proxy-buffer-size: "256k"
+      proxy-buffers-number: "4"
+      large-client-header-buffers: "4 16k"
