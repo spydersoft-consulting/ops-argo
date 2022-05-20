@@ -44,29 +44,6 @@ argo-cd:
         g, "bad2673a-2a0e-46f0-ab2f-bfe0c9b67274", role:org-admin
 
     additionalApplications:
-    - name: external-secrets
-      namespace: argo
-      destination:
-        namespace: external-secrets
-        server: https://kubernetes.default.svc
-      project: argocd
-      source:
-        helm:
-          version: v3
-          valueFiles:
-          - values.yaml
-        path: external-secrets
-        repoURL: https://bitbucket.org/spydersoftteam/ops-argo
-        targetRevision: HEAD
-      ignoreDifferences:
-      - group: "*"
-        kind: "*"
-        managedFieldsManagers:
-        - external-secrets
-      syncPolicy:
-        syncOptions:
-        - CreateNamespace=true
-        - RespectIgnoreDifferences=true
     - name: rancher
       namespace: argo
       destination:
