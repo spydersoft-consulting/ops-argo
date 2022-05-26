@@ -157,7 +157,7 @@ spec:
     server: https://cp-prod.gerega.net:6443
   - namespace: nettools
     server: https://cp-prod.gerega.net:6443
-  - namespace: elk-stack
+  - namespace: '*'
     server: https://192.168.1.36:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
