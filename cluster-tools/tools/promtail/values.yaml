@@ -1,0 +1,3 @@
+promtail:
+  config:
+    lokiAddress: https://loki.mattgerega.net/api/v1/push
