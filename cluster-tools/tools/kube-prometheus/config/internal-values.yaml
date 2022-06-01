@@ -3,6 +3,5 @@ kube-prometheus:
     thanos:
       ingress:
         hostname: thanos-internal.mattgerega.net
-        ingressClassName: nginx
     externalLabels:
       cluster: production

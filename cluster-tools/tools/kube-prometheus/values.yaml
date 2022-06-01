@@ -4,3 +4,4 @@ kube-prometheus:
       create: true
       ingress:
         enabled: true
+        ingressClassName: nginx
