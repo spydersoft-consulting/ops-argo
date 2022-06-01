@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: prometheus-tool
+  name: kube-prometheus-tool
   labels:
     spydersoft.io/category: cluster-tools
 spec:
@@ -10,10 +10,10 @@ spec:
       selector:
         matchLabels:
           argocd.argoproj.io/secret-type: cluster
-          spydersoft.io/prometheus: 'true'
+          spydersoft.io/kube-prometheus: 'true'
   template:
     metadata:
-      name: '{{ nameNormalized }}-prometheus'
+      name: '{{ nameNormalized }}-kube-prometheus'
       labels:
         spydersoft.io/category: cluster-tools 
     spec:
@@ -21,16 +21,18 @@ spec:
       source:
         repoURL: https://bitbucket.org/spydersoftteam/ops-argo
         targetRevision: main
-        path: 'cluster-tools/tools/prometheus'
-        helm: {}
+        path: 'cluster-tools/tools/kube-prometheus'
+        helm:
+          releaseName: 'kube-prometheus'
+          valueFiles:
+          - 'config/{{name}}-values.yaml'
       destination:
         server: '{{ server }}'
-        namespace: 'prometheus'
+        namespace: 'cluster-tools'
       syncPolicy:
         # automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
         #   prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
         #   selfHeal: false
         syncOptions:     # Sync options which modifies sync behavior
         - CreateNamespace=true
-        - RespectIgnoreDifferences=true
       
