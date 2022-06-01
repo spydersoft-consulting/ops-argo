@@ -11,5 +11,6 @@ loki-distributed:
         nginx.ingress.kubernetes.io/rewrite-target: /
   loki:
     structuredConfig:
+      storage_config:
         aws:
           s3: http://${MINIO_USERNAME}:${MINIO_PASSWORD}@192.168.1.46:9000/loki-internal
