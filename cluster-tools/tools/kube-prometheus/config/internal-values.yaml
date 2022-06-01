@@ -4,4 +4,4 @@ kube-prometheus:
       ingress:
         hostname: thanos-internal.mattgerega.net
     externalLabels:
-      cluster: production
+      cluster: internal
