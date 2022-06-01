@@ -1,0 +1,8 @@
+kube-prometheus:
+  prometheus:
+    thanos:
+      ingress:
+        hostname: thanos-nonprod.mattgerega.net
+        ingressClassName: nginx
+    externalLabels:
+      cluster: production

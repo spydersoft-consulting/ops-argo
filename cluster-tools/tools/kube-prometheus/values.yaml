@@ -1,0 +1,4 @@
+kube-prometheus:
+  prometheus:
+    thanos:
+      create: true
