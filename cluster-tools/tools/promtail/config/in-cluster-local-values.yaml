@@ -1,0 +1,3 @@
+promtail:
+  config:
+    lokiAddress: https://ops-cluster.mattgerega.net/loki/loki/api/v1/push

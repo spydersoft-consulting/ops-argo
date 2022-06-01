@@ -3,6 +3,8 @@ kube-prometheus:
     thanos:
       create: true
       ingress:
+        annotations:
+          nginx.ingress.kubernetes.io/rewrite-target: /
+        path: /thanos
         enabled: true
         ingressClassName: nginx
-        hostname: 'test.mattgerega.net'

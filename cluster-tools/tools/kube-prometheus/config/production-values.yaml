@@ -2,6 +2,6 @@ kube-prometheus:
   prometheus:
     thanos:
       ingress:
-        hostname: thanos-prod.mattgerega.net
+        hostname: prod-cluster.mattgerega.net
     externalLabels:
       cluster: production
