@@ -2,6 +2,6 @@ kube-prometheus:
   prometheus:
     thanos:
       ingress:
-        hostname: thanos-nonprod.mattgerega.net
+        hostname: nonprod-cluster.mattgerega.net
     externalLabels:
       cluster: nonproduction

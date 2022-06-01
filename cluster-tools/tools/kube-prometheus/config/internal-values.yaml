@@ -2,6 +2,6 @@ kube-prometheus:
   prometheus:
     thanos:
       ingress:
-        hostname: thanos-internal.mattgerega.net
+        hostname: internal-cluster.mattgerega.net
     externalLabels:
       cluster: internal
