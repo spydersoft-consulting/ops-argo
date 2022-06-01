@@ -1,7 +1,10 @@
 kube-prometheus:
   prometheus:
     thanos:
+      create: true
       ingress:
-        hostname: thanos-prod.mattgerega.net
+        enabled: true
+        ingressClassName: nginx
+        hostname: thanos-nonprod.mattgerega.net
     externalLabels:
       cluster: production
