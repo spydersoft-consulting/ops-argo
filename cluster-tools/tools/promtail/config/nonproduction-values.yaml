@@ -1,3 +1,0 @@
-promtail:
-  config:
-    lokiAddress: https://nonprod-cluster.mattgerega.net/loki/loki/api/v1/push

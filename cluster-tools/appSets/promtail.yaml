@@ -22,9 +22,7 @@ spec:
         repoURL: https://bitbucket.org/spydersoftteam/ops-argo
         targetRevision: main
         path: 'cluster-tools/tools/promtail'
-        helm:
-          valueFiles:
-          - 'config/{{name}}-values.yaml'
+        helm: {}
       destination:
         server: '{{ server }}'
         namespace: 'promtail'
