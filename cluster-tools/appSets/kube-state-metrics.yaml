@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: kube-prometheus-tool
+  name: kube-state-metrics-tool
   labels:
     spydersoft.io/category: cluster-tools
 spec:
@@ -10,10 +10,10 @@ spec:
       selector:
         matchLabels:
           argocd.argoproj.io/secret-type: cluster
-          spydersoft.io/kube-prometheus: 'true'
+          spydersoft.io/kube-state-metrics: 'true'
   template:
     metadata:
-      name: '{{ nameNormalized }}-kube-prometheus'
+      name: '{{ nameNormalized }}-kube-state-metrics'
       labels:
         spydersoft.io/category: cluster-tools 
     spec:
@@ -21,9 +21,9 @@ spec:
       source:
         repoURL: https://bitbucket.org/spydersoftteam/ops-argo
         targetRevision: main
-        path: 'cluster-tools/tools/kube-prometheus'
+        path: 'cluster-tools/tools/kube-state-metrics'
         helm:
-          releaseName: 'kube-prometheus'
+          releaseName: 'kube-state-metrics'
           valueFiles:
           - 'config/{{name}}-values.yaml'
       destination:
