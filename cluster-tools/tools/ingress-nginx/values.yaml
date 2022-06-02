@@ -2,6 +2,9 @@ ingress-nginx:
   controller:
     metrics:
       enabled: true
+    podAnnotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "10254"
     replicaCount: 2
     
     service:
