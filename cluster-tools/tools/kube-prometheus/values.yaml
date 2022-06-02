@@ -4,7 +4,7 @@ kube-prometheus:
       create: true
       ingress:
         annotations:
-          nginx.ingress.kubernetes.io/rewrite-target: /
-        path: /thanos
+          nginx.ingress.kubernetes.io/rewrite-target: /$2
+        path: /thanos(/|$)(.*)
         enabled: true
         ingressClassName: nginx
