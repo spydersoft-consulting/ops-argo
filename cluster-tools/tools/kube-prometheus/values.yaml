@@ -1,5 +1,11 @@
 kube-prometheus:
   prometheus:
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      path: /prometheus(/|$)(.*)
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
     thanos:
       create: true
       ingress:
