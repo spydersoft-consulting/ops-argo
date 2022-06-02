@@ -5,12 +5,18 @@ loki-distributed:
     extraEnvFrom:
       - secretRef:
           name: minio-secret
+    persistence:
+      enabled: true
+      storageClass: nfs-client
   ingester:
     extraArgs:
       - -config.expand-env=true
     extraEnvFrom:
       - secretRef:
           name: minio-secret
+    persistence:
+      enabled: true
+      storageClass: nfs-client
   distributor:
     extraArgs:
       - -config.expand-env=true
