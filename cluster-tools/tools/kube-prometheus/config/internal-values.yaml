@@ -1,5 +1,7 @@
 kube-prometheus:
   prometheus:
+    ingress:
+      hostname: internal-cluster.mattgerega.net
     thanos:
       ingress:
         hostname: internal-cluster.mattgerega.net

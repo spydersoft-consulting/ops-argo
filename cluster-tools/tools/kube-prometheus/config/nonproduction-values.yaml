@@ -1,5 +1,7 @@
 kube-prometheus:
   prometheus:
+    ingress:
+      hostname: nonprod-cluster.mattgerega.net
     thanos:
       ingress:
         hostname: nonprod-cluster.mattgerega.net
