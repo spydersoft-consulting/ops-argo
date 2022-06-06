@@ -61,7 +61,7 @@ loki-distributed:
         configs:
         - from: 2020-05-15
           store: boltdb-shipper
-          object_store: filesystem
+          object_store: aws
           schema: v11
           index:
             prefix: index_
