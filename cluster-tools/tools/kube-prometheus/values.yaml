@@ -1,5 +1,8 @@
 kube-prometheus:
   prometheus:
+    persistence:
+      enabled: true
+      storageClass: nfs-client
     ingress:
       enabled: true
       ingressClassName: nginx
@@ -14,13 +17,7 @@ kube-prometheus:
         path: /thanos(/|$)(.*)
         enabled: true
         ingressClassName: nginx
-    extraScrapeConfigs: |
-      - job_name: 'prometheus-nginx-ingress'
-        metrics_path: /metrics
-        static_configs:
-          - targets:
-            - ingress-nginx-controller-metrics.cluster-tools.svc.cluster.local
-        kubernetes_sd_configs:
-          - role: endpoints
-        scrape_interval: 1m
-        scrape_timeout: 30s
+  alertManager:
+    persistence:
+      enabled: true
+      storageClass: nfs-client
