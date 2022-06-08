@@ -1,7 +1,6 @@
 promtail:
   config:
-    snippets:
-      pipelineStages:
-        - cri: {}
-        - static_labels:
-            cluster: internal
+    clients:
+    - url: 'https://loki.mattgerega.net/loki/api/v1/push'
+      external_labels:
+        cluster: internal
