@@ -1,0 +1,7 @@
+promtail:
+  config:
+    snippets:
+      pipelineStages:
+        - cri: {}
+        - static_labels:
+            cluster: internal
