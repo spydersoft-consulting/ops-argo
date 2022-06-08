@@ -2,3 +2,7 @@ promtail:
   config:
     clients:
     - url: 'https://loki.mattgerega.net/loki/api/v1/push'
+  serviceMonitor:
+    enabled: true
+    interval: 1m
+    scrapeTimeout: 30s
