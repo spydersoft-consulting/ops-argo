@@ -1,8 +1,6 @@
 argo-cd:
   global:
     storageClass: nfs-client
-    image:
-      tag: "v2.4.0-rc5"
   server:
     extraArgs:
     - --insecure
