@@ -1,6 +1,31 @@
 argo-cd:
   global:
     storageClass: nfs-client
+  controller:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+  repoServer:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+  redis:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+  applicationSet:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+  notifications:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
   server:
     extraArgs:
     - --insecure
@@ -30,6 +55,10 @@ argo-cd:
             usernameAttr: email
             emailAttr: email
             groupsAttr: group
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
 
     rbacConfig:
       policy.default: role:readonly
@@ -154,10 +183,7 @@ argo-cd:
         kind: '*'
       orphanedResources:
         warn: false
-    metrics:
-      enabled: true
-      serviceMonitor:
-        enabled: true
+
   configs:
     repositories:
       argo-helm:
