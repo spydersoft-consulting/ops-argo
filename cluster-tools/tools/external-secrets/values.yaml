@@ -22,6 +22,10 @@ external-secrets:
       readOnlyRootFilesystem: true
       runAsNonRoot: true
       runAsUser: 1000
+    serviceMonitor:
+      enabled: true
+      interval: 1m
+      scrapeTimeout: 30s
     resources:
       limits:
         cpu: 25m
@@ -37,6 +41,10 @@ external-secrets:
       readOnlyRootFilesystem: true
       runAsNonRoot: true
       runAsUser: 1000
+    serviceMonitor:
+      enabled: true
+      interval: 1m
+      scrapeTimeout: 30s
     resources:
       limits:
         cpu: 25m
@@ -44,3 +52,7 @@ external-secrets:
       requests:
         cpu: 10m
         memory: 32Mi
+  serviceMonitor:
+      enabled: true
+      interval: 1m
+      scrapeTimeout: 30s
