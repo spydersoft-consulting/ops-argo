@@ -154,7 +154,10 @@ argo-cd:
         kind: '*'
       orphanedResources:
         warn: false
-
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
   configs:
     repositories:
       argo-helm:
