@@ -30,4 +30,4 @@ spec:
   - secretKey: certKey
     remoteRef:
       key: secrets-k8/linkerd
-      property: caket
+      property: cakey
