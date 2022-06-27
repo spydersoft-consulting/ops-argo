@@ -1,0 +1,2 @@
+linkerd-viz:
+  prometheusUrl: https://internal-cluster.mattgerega.net/prometheus

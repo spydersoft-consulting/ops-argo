@@ -1,0 +1,2 @@
+linkerd-viz:
+  prometheusUrl: https://ops-cluster.mattgerega.net/prometheus

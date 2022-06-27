@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: linkerd-viz-tool
+  labels:
+    spydersoft.io/category: cluster-tools
+spec:
+  generators:
+   - clusters:
+      selector:
+        matchLabels:
+          argocd.argoproj.io/secret-type: cluster
+          spydersoft.io/linkerd-viz: 'true'
+  template:
+    metadata:
+      name: '{{ nameNormalized }}-linkerd-viz'
+      labels:
+        spydersoft.io/category: cluster-tools 
+    spec:
+      project: cluster-tools
+      source:
+        repoURL: https://bitbucket.org/spydersoftteam/ops-argo
+        targetRevision: main
+        path: 'cluster-tools/tools/linkerd-viz'
+        helm: {}
+      destination:
+        server: '{{ server }}'
+        namespace: 'linkerd-viz'
+      syncPolicy:
+        # automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
+        #   prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
+        #   selfHeal: false
+        syncOptions:     # Sync options which modifies sync behavior
+        - CreateNamespace=true
+      
