@@ -9,6 +9,7 @@ kube-prometheus:
       cluster: ops
     additionalScrapeConfigs:
       enabled: true
+      type: internal
       internal:
         jobList:
         - job_name: 'linkerd-controller'
