@@ -1,44 +1,34 @@
 argo-cd:
   global:
     storageClass: nfs-client
-  controller:
-    annotations:
+    podAnnotations:
       linkerd.io/inject: enabled
+  controller:
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
   repoServer:
-    annotations:
-      linkerd.io/inject: enabled
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
   redis:
-    annotations:
-      linkerd.io/inject: enabled
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
   applicationSet:
-    annotations:
-      linkerd.io/inject: enabled
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
   notifications:
-    annotations:
-      linkerd.io/inject: enabled
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
   server:
-    annotations:
-      linkerd.io/inject: enabled
     extraArgs:
     - --insecure
     ingress:
