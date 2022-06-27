@@ -22,7 +22,9 @@ spec:
         repoURL: https://bitbucket.org/spydersoftteam/ops-argo
         targetRevision: main
         path: 'cluster-tools/tools/linkerd-viz'
-        helm: {}
+        helm: 
+          valueFiles:
+            - 'config/{{name}}-values.yaml'
       destination:
         server: '{{ server }}'
         namespace: 'linkerd-viz'
