@@ -1,5 +1,7 @@
 ingress-nginx:
   controller:
+    podAnnotations:
+      linkerd.io/inject: enabled
     metrics:
       enabled: true
       serviceMonitor:
