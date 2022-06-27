@@ -31,6 +31,8 @@ argo-cd:
     - --insecure
     ingress:
       enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/service-upstream: "true"
       hosts:
       - argo.mattgerega.net
 
