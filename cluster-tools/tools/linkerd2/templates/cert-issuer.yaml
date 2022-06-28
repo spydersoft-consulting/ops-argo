@@ -19,6 +19,7 @@ spec:
   issuerRef:
     name: linkerd-trust-anchor
     kind: Issuer
+  commonName: identity.linkerd.cluster.local
   dnsNames:
     - identity.linkerd.cluster.local
   isCA: true
