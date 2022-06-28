@@ -1,5 +1,6 @@
 ingress-nginx:
   controller:
+    kind: Daemonset
     podAnnotations:
       linkerd.io/inject: enabled
     metrics:
