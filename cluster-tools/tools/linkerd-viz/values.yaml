@@ -1,5 +1,5 @@
 linkerd-viz:
-  grafanaUrl: "https://grafana.mattgerega.net"
+  grafanaUrl: grafana.mattgerega.net
   grafana: 
     enabled: false
   prometheus:
