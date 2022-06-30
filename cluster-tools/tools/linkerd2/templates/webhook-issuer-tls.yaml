@@ -1,0 +1,27 @@
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: webhook-issuer-tls-es
+
+spec:
+  refreshInterval: 1h0m0s
+  secretStoreRef:
+    name: vault-backend
+    kind: ClusterSecretStore
+  target:
+    name: webhook-issuer-tls
+    template:
+      type: kubernetes.io/tls
+      engineVersion: v2
+      data:
+        tls.crt: "{{ `{{ .cert }}` }}"
+        tls.key: "{{ `{{ .certKey }}` }}"
+  data:
+  - secretKey: cert
+    remoteRef:
+      key: secrets-k8/linkerd
+      property: webhookcacrt
+  - secretKey: certKey
+    remoteRef:
+      key: secrets-k8/linkerd
+      property: webhookcakey
