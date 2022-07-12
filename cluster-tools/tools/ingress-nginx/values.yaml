@@ -1,8 +1,8 @@
 ingress-nginx:
   controller:
     kind: DaemonSet
-    podAnnotations:
-      linkerd.io/inject: enabled
+    # podAnnotations:
+    #   linkerd.io/inject: enabled
     metrics:
       enabled: true
       serviceMonitor:
