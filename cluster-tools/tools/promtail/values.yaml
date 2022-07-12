@@ -18,7 +18,11 @@ promtail:
       pipeline_stages:
       - match:
          selector: '{spydersoft.io/log="dotnet-serilog"}'
-        - json: 
+        - json:
+            expressions:
+              message: '@mt'
+              trace_id: TraceId
+              span_id: SpanId
             timestamp:
               source: '"@t"'
               format: RFC3339
