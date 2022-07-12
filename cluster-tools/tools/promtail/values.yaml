@@ -8,17 +8,12 @@ promtail:
     scrapeTimeout: 30s
   podAnnotations: 
       linkerd.io/inject: enabled
-  extraScrapeConfigs: |
-    - job_name: system
-      static_configs:
-      - targets:
-          - localhost
-        labels:
-          __path__: /var/logs/*.log
-      pipeline_stages:
+  snippets:
+    pipelineStages:
       - match:
-         selector: '{spydersoft.io/log="dotnet-serilog"}'
-        - json:
+          selector: '{spydersoft.io/log="dotnet-serilog"}'
+          stages:
+          - json:
             expressions:
               message: '@mt'
               trace_id: TraceId
@@ -35,3 +30,4 @@ promtail:
                 source: "Application"
             output:
               source: '{message: "@m", stack: "@x"}'
+      - cri: {}
