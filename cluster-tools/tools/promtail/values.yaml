@@ -8,26 +8,3 @@ promtail:
     scrapeTimeout: 30s
   podAnnotations: 
       linkerd.io/inject: enabled
-  snippets:
-    pipelineStages:
-      - match:
-          selector: '{spydersoft.io/log="dotnet-serilog"}'
-          stages:
-          - json:
-            expressions:
-              message: '@mt'
-              trace_id: TraceId
-              span_id: SpanId
-            timestamp:
-              source: '"@t"'
-              format: RFC3339
-            labels:
-              level:
-                source: '"@l"'
-              venue:
-                source: "venueId"
-              application:
-                source: "Application"
-            output:
-              source: '{message: "@m", stack: "@x"}'
-      - cri: {}
