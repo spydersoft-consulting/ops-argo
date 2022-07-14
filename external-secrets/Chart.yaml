@@ -1,19 +1,19 @@
 apiVersion: v2
-name: linkerd-viz
+name: external-secrets
 
 type: application
 
 dependencies:
-- name: linkerd-viz
-  version: 2.11.3
-  repository: https://helm.linkerd.io/stable
+- name: external-secrets
+  version: 0.5.2
+  repository: https://charts.external-secrets.io
 
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 2.11.3
+version: 0.1.0
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
-appVersion: "stable-2.11.3"
+appVersion: "1.0"
