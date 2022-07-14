@@ -60,7 +60,7 @@ spec:
         name: v1alpha1.tap.linkerd.io
         jsonPointers:
         - /spec/caBundle
-      - group: batch/v1beta1
+      - group: ''
         kind: CronJob
         name: linkerd-heartbeat
         jsonPointers:
