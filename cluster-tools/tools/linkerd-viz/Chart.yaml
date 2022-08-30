@@ -1,19 +1,11 @@
+type: application
+version: 30.3.0
 apiVersion: v2
 name: linkerd-viz
-
-type: application
-
 dependencies:
-- name: linkerd-viz
-  version: 2.11.4
+- version: 30.3.0
+  name: linkerd-viz
   repository: https://helm.linkerd.io/stable
+appVersion: stable-2.12.0
 
-# This is the chart version. This version number should be incremented each time you make changes
-# to the chart and its templates, including the app version.
-# Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 2.11.4
 
-# This is the version number of the application being deployed. This version number should be
-# incremented each time you make changes to the application. Versions are not expected to
-# follow Semantic Versioning. They should reflect the version the application is using.
-appVersion: "stable-2.11.4"

@@ -1,19 +1,11 @@
+type: application
+version: 6.3.0
 apiVersion: v2
 name: promtail
-
-type: application
-
 dependencies:
-- name: promtail
-  version: 6.2.2
+- version: 6.3.0
+  name: promtail
   repository: https://grafana.github.io/helm-charts
+appVersion: 2.6.1
 
-# This is the chart version. This version number should be incremented each time you make changes
-# to the chart and its templates, including the app version.
-# Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 6.2.2
 
-# This is the version number of the application being deployed. This version number should be
-# incremented each time you make changes to the application. Versions are not expected to
-# follow Semantic Versioning. They should reflect the version the application is using.
-appVersion: "2.6.1"
