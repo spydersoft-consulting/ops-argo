@@ -75,129 +75,12 @@ argo-cd:
         p, role:org-admin, repositories, delete, *, allow
         g, "bad2673a-2a0e-46f0-ab2f-bfe0c9b67274", role:org-admin
 
-    additionalApplications:
-    - name: rancher
-      namespace: argo
-      destination:
-        namespace: cattle-system
-        server: https://kubernetes.default.svc
-      project: argocd
-      source:
-        helm:
-          version: v3
-          valueFiles:
-          - values.yaml
-        path: rancher
-        repoURL: https://bitbucket.org/spydersoftteam/ops-argo
-        targetRevision: HEAD
-      syncPolicy:
-        syncOptions:
-        - CreateNamespace=true
-    - name: argocd
-      namespace: argo
-      destination:
-        namespace: argo
-        server: https://kubernetes.default.svc
-      project: argocd
-      source:
-        helm:
-          version: v3
-          valueFiles:
-          - values.yaml
-        path: argocd-install/argocd
-        repoURL: https://bitbucket.org/spydersoftteam/ops-argo
-        targetRevision: HEAD
-      syncPolicy:
-        syncOptions:
-        - CreateNamespace=true
-    - name: argocd-apps
-      namespace: argo
-      destination:
-        namespace: argo
-        server: https://kubernetes.default.svc
-      project: argocd
-      source:
-        path: apps
-        repoURL: https://bitbucket.org/spydersoftteam/ops-argo
-        targetRevision: HEAD
-        directory:
-          recurse: true
-          jsonnet: {}
-      syncPolicy:
-        automated:
-          selfHeal: true
-          prune: true
-    - name: argocd-appprojects
-      namespace: argo
-      destination:
-        namespace: argo
-        server: https://kubernetes.default.svc
-      project: argocd
-      source:
-        path: projects
-        repoURL: https://bitbucket.org/spydersoftteam/ops-argo
-        targetRevision: HEAD
-        directory:
-          recurse: true
-          jsonnet: {}
-      syncPolicy:
-        automated:
-          selfHeal: true
-          prune: true
-    - name: argocd-secrets
-      namespace: argo
-      destination:
-        namespace: argo
-        server: https://kubernetes.default.svc
-      project: argocd
-      source:
-        path: secrets
-        repoURL: https://bitbucket.org/spydersoftteam/ops-argo
-        targetRevision: HEAD
-        directory:
-          recurse: true
-          jsonnet: {}
-      syncPolicy:
-        automated:
-          selfHeal: true
-          prune: true
-    additionalProjects: 
-    - name: argocd
-      namespace: argo
-      additionalLabels: {}
-      additionalAnnotations: {}
-      description: Argocd Project
-      sourceRepos:
-      - '*'
-      destinations:
-      - namespace: argo
-        server: https://kubernetes.default.svc
-      - namespace: external-secrets
-        server: https://kubernetes.default.svc
-      - namespace: cattle-system
-        server: https://kubernetes.default.svc
-      - namespace: elasticbeats
-        server: https://kubernetes.default.svc
-      - namespace: kube-state-metrics
-        server: https://kubernetes.default.svc
-      - namespace: kube-monitoring
-        server: https://kubernetes.default.svc
-      clusterResourceWhitelist:
-      - group: '*'
-        kind: '*'
-      orphanedResources:
-        warn: false
-
   configs:
     repositories:
       argo-helm:
         url: https://argoproj.github.io/argo-helm
         name: argo-helm
         type: helm
-      git-ops-cluster-tools:
-        name: git-ops-cluster-tools
-        url: https://bitbucket.org/spydersoftteam/ops-cluster-tools
-        type: git
       git-ops-nonprod-cluster:
         name: git-ops-nonprod-cluster
         url: https://bitbucket.org/spydersoftteam/ops-nonprod-cluster
