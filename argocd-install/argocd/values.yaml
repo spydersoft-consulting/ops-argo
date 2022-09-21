@@ -29,8 +29,6 @@ argo-cd:
       serviceMonitor:
         enabled: true
   server:
-    extraArgs:
-    - --insecure
     ingress:
       enabled: true
       annotations:
@@ -76,6 +74,10 @@ argo-cd:
         g, "bad2673a-2a0e-46f0-ab2f-bfe0c9b67274", role:org-admin
 
   configs:
+    params:
+      server.insecure: true
+      server.repo.server.strict.tls: false
+      server.rootpath: ''
     repositories:
       argo-helm:
         url: https://argoproj.github.io/argo-helm
