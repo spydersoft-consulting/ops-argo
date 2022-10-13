@@ -5,7 +5,7 @@ kube-prometheus:
     thanos:
       ingress:
         hostname: prod-cluster.mattgerega.net
-    alertManager:
+    alertmanager:
       ingress:
         hostname: prod-cluster.mattgerega.net
     externalLabels:

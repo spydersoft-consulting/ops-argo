@@ -102,7 +102,7 @@ kube-prometheus:
         path: /thanos(/|$)(.*)
         enabled: true
         ingressClassName: nginx
-  alertManager:
+  alertmanager:
     enabled: true
     persistence:
       enabled: true
