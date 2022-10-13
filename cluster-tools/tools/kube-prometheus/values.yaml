@@ -103,6 +103,7 @@ kube-prometheus:
         enabled: true
         ingressClassName: nginx
   alertManager:
+    enabled: true
     persistence:
       enabled: true
       storageClass: nfs-client
