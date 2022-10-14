@@ -1,5 +1,7 @@
 kube-prometheus:
   prometheus:
+    remoteWrite:
+      - url: https://mimir.mattgerega.net/api/v1/push
     persistence:
       enabled: true
       storageClass: nfs-client
