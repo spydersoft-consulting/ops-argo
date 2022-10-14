@@ -10,3 +10,5 @@ kube-prometheus:
         hostname: prod-cluster.mattgerega.net
     externalLabels:
       cluster: internal
+    remoteWrite:
+      - https://mimir.mattgerega.net/api/v1/push
