@@ -11,4 +11,4 @@ kube-prometheus:
     externalLabels:
       cluster: internal
     remoteWrite:
-      - https://mimir.mattgerega.net/api/v1/push
+      - url: https://mimir.mattgerega.net/api/v1/push
