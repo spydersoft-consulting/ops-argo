@@ -1,5 +1,6 @@
 kube-prometheus:
   prometheus:
+    retention: 3d
     remoteWrite:
       - url: https://mimir.mattgerega.net/api/v1/push
     persistence:
@@ -99,7 +100,7 @@ kube-prometheus:
     thanos:
       create: false
   alertmanager:
-    enabled: true
+    enabled: false
     persistence:
       enabled: true
       storageClass: nfs-client
