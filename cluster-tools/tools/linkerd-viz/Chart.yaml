@@ -1,11 +1,11 @@
-name: linkerd-viz
+version: 30.3.4
 apiVersion: v2
-dependencies:
-- version: 30.3.3
-  name: linkerd-viz
-  repository: https://helm.linkerd.io/stable
-type: application
-version: 30.3.3
+name: linkerd-viz
 appVersion: stable-2.12.1
+dependencies:
+- version: 30.3.4
+  repository: https://helm.linkerd.io/stable
+  name: linkerd-viz
+type: application
 
 
