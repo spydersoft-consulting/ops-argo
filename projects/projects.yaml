@@ -153,6 +153,8 @@ spec:
   destinations:
   - namespace: opstools
     server: https://cp-prod.gerega.net:6443
+  - namespace: '*'
+    server: https://cp-nonprod.gerega.net:6443
   - namespace: sites
     server: https://cp-prod.gerega.net:6443
   - namespace: nettools
