@@ -1,12 +1,21 @@
+scrape_secrets:
+  enabled: true
+  name: internal-scrape-config
 kube-prometheus:
   prometheus:
     ingress:
-      hostname: ops-cluster.mattgerega.net
+      hostname: internal-cluster.mattgerega.net
     thanos:
       ingress:
-        hostname: ops-cluster.mattgerega.net
+        hostname: internal-cluster.mattgerega.net
     alertmanager:
       ingress:
         hostname: prod-cluster.mattgerega.net
     externalLabels:
-      cluster: ops
+      cluster: internal
+    additionalScrapeConfigs:
+      enabled: true
+      type: external
+      external:
+        name: internal-scrape-config
+        key: scrape-jobs.yaml
