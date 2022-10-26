@@ -4,7 +4,7 @@ argocd-apps:
     namespace: argo
     destination:
       namespace: cattle-system
-      server: https://192.168.1.36:6443
+      server: https://kubernetes.default.svc
     project: argocd
     source:
       helm:
@@ -21,7 +21,7 @@ argocd-apps:
   #   namespace: argo
   #   destination:
   #     namespace: cattle-system
-  #     server: https://192.168.1.36:6443
+  #     server: https://kubernetes.default.svc
   #   project: argocd
   #   source:
   #     helm:
@@ -38,7 +38,7 @@ argocd-apps:
     namespace: argo
     destination:
       namespace: argo
-      server: https://192.168.1.36:6443
+      server: https://kubernetes.default.svc
     project: argocd
     source:
       helm:
@@ -55,7 +55,7 @@ argocd-apps:
     namespace: argo
     destination:
       namespace: argo
-      server: https://192.168.1.36:6443
+      server: https://kubernetes.default.svc
     project: argocd
     source:
       path: apps
@@ -72,7 +72,7 @@ argocd-apps:
     namespace: argo
     destination:
       namespace: argo
-      server: https://192.168.1.36:6443
+      server: https://kubernetes.default.svc
     project: argocd
     source:
       path: projects
@@ -89,7 +89,7 @@ argocd-apps:
     namespace: argo
     destination:
       namespace: argo
-      server: https://192.168.1.36:6443
+      server: https://kubernetes.default.svc
     project: argocd
     source:
       path: secrets
@@ -112,17 +112,17 @@ argocd-apps:
     - '*'
     destinations:
     - namespace: argo
-      server: https://192.168.1.36:6443
+      server: https://kubernetes.default.svc
     - namespace: external-secrets
-      server: https://192.168.1.36:6443
+      server: https://kubernetes.default.svc
     - namespace: cattle-system
-      server: https://192.168.1.36:6443
+      server: https://kubernetes.default.svc
     - namespace: elasticbeats
-      server: https://192.168.1.36:6443
+      server: https://kubernetes.default.svc
     - namespace: kube-state-metrics
-      server: https://192.168.1.36:6443
+      server: https://kubernetes.default.svc
     - namespace: kube-monitoring
-      server: https://192.168.1.36:6443
+      server: https://kubernetes.default.svc
     clusterResourceWhitelist:
     - group: '*'
       kind: '*'

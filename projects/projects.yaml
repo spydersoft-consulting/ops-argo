@@ -116,11 +116,13 @@ spec:
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
   - namespace: '*'
-    server: https://192.168.1.36:6443
+    server: https://kubernetes.default.svc
   - namespace: '*'
     server: https://cp-nonprod.gerega.net:6443
   - namespace: '*'
     server: https://cp-prod.gerega.net:6443
+  - namespace: '*'
+    server: https://kubernetes.default.svc
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
   - group: '*'
@@ -160,7 +162,7 @@ spec:
   - namespace: redis
     server: https://cp-prod.gerega.net:6443
   - namespace: '*'
-    server: https://192.168.1.36:6443
+    server: https://kubernetes.default.svc
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
   - group: '*'
