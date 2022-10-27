@@ -10,7 +10,7 @@ kube-prometheus:
         hostname: internal-cluster.mattgerega.net
     alertmanager:
       ingress:
-        hostname: prod-cluster.mattgerega.net
+        hostname: internal-cluster.mattgerega.net
     externalLabels:
       cluster: internal
     additionalScrapeConfigs:

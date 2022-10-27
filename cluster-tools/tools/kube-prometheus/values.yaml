@@ -4,7 +4,7 @@ scrape_secrets:
 
 kube-prometheus:
   prometheus:
-    retention: 3d
+    retention: 4d
     remoteWrite:
       - url: https://mimir.mattgerega.net/api/v1/push
     persistence:
