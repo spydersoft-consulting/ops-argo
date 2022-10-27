@@ -7,6 +7,6 @@ kube-prometheus:
         hostname: nonprod-cluster.mattgerega.net
     alertmanager:
       ingress:
-        hostname: prod-cluster.mattgerega.net
+        hostname: nonprod-cluster.mattgerega.net
     externalLabels:
       cluster: nonproduction
