@@ -23,7 +23,6 @@ spec:
         targetRevision: main
         path: 'cluster-tools/tools/kube-prometheus'
         helm:
-          releaseName: 'kube-prometheus'
           valueFiles:
           - 'config/{{name}}-values.yaml'
       destination:
