@@ -1,5 +1,8 @@
 kube-prometheus:
+  operator:
+    logLevel: debug
   prometheus:
+    logLevel: debug
     ingress:
       hostname: nonprod-cluster.mattgerega.net
     thanos:
