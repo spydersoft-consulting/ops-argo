@@ -23,7 +23,6 @@ spec:
         targetRevision: main
         path: 'cluster-tools/tools/ingress-nginx'
         helm:
-          releaseName: 'ingress-nginx'
           valueFiles:
           - 'config/{{name}}-values.yaml'
       destination:
