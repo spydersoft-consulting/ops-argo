@@ -23,6 +23,7 @@ spec:
         targetRevision: main
         path: 'cluster-tools/tools/nfs-external-provisioner'
         helm:
+          releaseName: 'nfs-external-provisioner'
           valueFiles:
           - 'config/{{name}}-values.yaml'
       destination:
