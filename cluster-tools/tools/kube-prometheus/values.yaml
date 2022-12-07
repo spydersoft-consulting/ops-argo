@@ -1,4 +1,7 @@
-scrape_secrets:
+internal_scrape_config:
+  enabled: false
+  name: ''
+production_scrape_config:
   enabled: false
   name: ''
 

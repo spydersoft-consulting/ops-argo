@@ -1,3 +1,6 @@
+production_scrape_config:
+  enabled: true
+  name: production-scrape-config
 kube-prometheus:
   prometheus:
     ingress:
@@ -10,3 +13,9 @@ kube-prometheus:
         hostname: prod-cluster.mattgerega.net
     externalLabels:
       cluster: production
+    additionalScrapeConfigs:
+      enabled: true
+      type: external
+      external:
+        name: production-scrape-config
+        key: scrape-jobs.yaml
