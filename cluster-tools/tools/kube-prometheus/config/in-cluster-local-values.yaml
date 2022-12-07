@@ -1,4 +1,4 @@
-scrape_secrets:
+internal_scrape_config:
   enabled: true
   name: internal-scrape-config
 kube-prometheus:
