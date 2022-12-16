@@ -1,11 +1,11 @@
+apiVersion: v2
 dependencies:
 - repository: https://charts.external-secrets.io
-  version: 0.6.1
+  version: 0.7.0
   name: external-secrets
-appVersion: 0.5.9
-apiVersion: v2
-type: application
-version: 0.6.1
 name: external-secrets
+type: application
+appVersion: 0.5.9
+version: 0.7.0
 
 
