@@ -117,7 +117,7 @@ argocd-apps:
       server: https://kubernetes.default.svc
     - namespace: cattle-system
       server: https://kubernetes.default.svc
-    - namespace: elasticbeats
+    - namespace: cluster-tools
       server: https://kubernetes.default.svc
     - namespace: kube-state-metrics
       server: https://kubernetes.default.svc
