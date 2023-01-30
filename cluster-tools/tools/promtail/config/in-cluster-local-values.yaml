@@ -4,8 +4,9 @@ promtail:
     - url: 'https://loki.mattgerega.net/loki/api/v1/push'
       external_labels:
         cluster: internal
-    extraRelabelConfigs:
-      - source_labels:
-          - "__meta_kubernetes_pod_label_app_kubernetes_io_component"
-        regex: "(canary|read|write)"
-        action: "drop"
+    snippets:
+      extraRelabelConfigs:
+        - source_labels:
+            - "__meta_kubernetes_pod_label_app_kubernetes_io_component"
+          regex: "(canary|read|write)"
+          action: "drop"
