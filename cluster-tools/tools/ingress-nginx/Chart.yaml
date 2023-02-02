@@ -1,11 +1,11 @@
-appVersion: 1.4.0
-version: 4.4.2
 apiVersion: v2
-type: application
+name: nfs-external-provisioner
+version: 4.4.3
+appVersion: 1.4.0
 dependencies:
-- version: 4.4.2
+- version: 4.4.3
   name: ingress-nginx
   repository: https://kubernetes.github.io/ingress-nginx
-name: nfs-external-provisioner
+type: application
 
 
