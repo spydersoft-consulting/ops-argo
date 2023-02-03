@@ -3,7 +3,7 @@ kind: Application
 metadata:
   name: prod-application-sets
   labels:
-    spydersoft.io/environment: non-production
+    spydersoft.io/environment: production
     spydersoft.io/category: app
 spec:
   destination:
