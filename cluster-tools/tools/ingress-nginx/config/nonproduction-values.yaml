@@ -1,0 +1,7 @@
+ingress-nginx:
+  controller:
+    service:
+      externalIPs:
+      - 192.168.1.40
+      - 192.168.1.41
+      - 192.168.1.42
