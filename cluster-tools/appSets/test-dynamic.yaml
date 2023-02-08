@@ -26,7 +26,7 @@ spec:
         helm:
           parameters:
           - name: "externalIPs"
-            value: '{{ quote  "{" + {{ splitList "_" .metadata.labels.loadBalancerIps | join "," }} + "}" }}'
+            value: '{{ quote  cat "{"  {{ splitList "_" .metadata.labels.loadBalancerIps | join "," }}  "}" }}'
       destination:
         server: '{{ .server }}'
         namespace: 'cluster-tools'
