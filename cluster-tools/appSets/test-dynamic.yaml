@@ -25,8 +25,11 @@ spec:
         path: 'cluster-tools/tools/test-dynamic'
         helm:
           parameters:
-          - name: "externalIPs"
-            value: '{{ splitList "_" .metadata.labels.loadBalancerIps }}'
+          {{- range $index, $element := splitList "_" .metadata.labels.loadBalancerIps}}
+          - name: "externalIPs[$index]"
+            value: '{{$element}}'
+          {{- end}}
+          
       destination:
         server: '{{ .server }}'
         namespace: 'cluster-tools'
