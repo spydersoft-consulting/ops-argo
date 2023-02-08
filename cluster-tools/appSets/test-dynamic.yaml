@@ -5,6 +5,7 @@ metadata:
   labels:
     spydersoft.io/category: cluster-tools
 spec:
+  goTemplate: true
   generators:
    - clusters:
       selector:
@@ -12,7 +13,6 @@ spec:
           argocd.argoproj.io/secret-type: cluster
           spydersoft.io/test-dynamic: 'true'
   template:
-    goTemplate: true
     metadata:
       name: '{{ nameNormalized }}-test-dynamic'
       labels:
