@@ -12,6 +12,7 @@ spec:
           argocd.argoproj.io/secret-type: cluster
           spydersoft.io/test-dynamic: 'true'
   template:
+    goTemplate: true
     metadata:
       name: '{{ nameNormalized }}-test-dynamic'
       labels:
@@ -25,7 +26,7 @@ spec:
         helm:
           parameters:
           - name: "externalIPs"
-            value: '{{ splitList "_" .metadata.labels.load-balancer-ips }}'
+            value: '\{{{ .metadata.labels.load-balancer-ips | replace "_" ","  }}\}'
       destination:
         server: '{{ server }}'
         namespace: 'cluster-tools'
