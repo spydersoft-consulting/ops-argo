@@ -14,7 +14,7 @@ spec:
           spydersoft.io/test-dynamic: 'true'
   template:
     metadata:
-      name: '{{ nameNormalized }}-test-dynamic'
+      name: '{{ .nameNormalized }}-test-dynamic'
       labels:
         spydersoft.io/category: cluster-tools 
     spec:
