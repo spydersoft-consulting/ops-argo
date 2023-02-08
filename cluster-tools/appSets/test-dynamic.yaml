@@ -26,7 +26,7 @@ spec:
         helm:
           parameters:
           - name: "externalIPs"
-            value: '\{{{ .metadata.labels.load-balancer-ips | replace "_" ","  }}\}'
+            value: '{{ "{" }}{{ .metadata.labels.load-balancer-ips | replace "_" ","  }}{{ "}" }}'
       destination:
         server: '{{ server }}'
         namespace: 'cluster-tools'
