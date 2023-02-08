@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: game-config
-data:
-  test: {{- range .Values.externalIPs }}
-    - {{.}}
-  {{- end}}
