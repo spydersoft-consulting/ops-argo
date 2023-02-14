@@ -18,9 +18,9 @@ spec:
   - namespace: stage
     server: https://cp-nonprod.gerega.net:6443
   - namespace: production
-    server: https://cp-nonprod.gerega.net:6443
-  - namespace: production
     server: https://cp-prod.gerega.net:6443
+  - namespace: production
+    server: https://cp-production.gerega.net:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
   - group: ''
@@ -54,7 +54,7 @@ spec:
   - namespace: stage
     server: https://cp-nonprod.gerega.net:6443
   - namespace: production
-    server: https://cp-nonprod.gerega.net:6443
+    server: https://cp-production.gerega.net:6443
   - namespace: production
     server: https://cp-prod.gerega.net:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
@@ -90,7 +90,7 @@ spec:
   - namespace: stage
     server: https://cp-nonprod.gerega.net:6443
   - namespace: production
-    server: https://cp-nonprod.gerega.net:6443
+    server: https://cp-production.gerega.net:6443
   - namespace: production
     server: https://cp-prod.gerega.net:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
@@ -128,7 +128,7 @@ spec:
   - namespace: '*'
     server: https://cp-prod.gerega.net:6443
   - namespace: '*'
-    server: https://kubernetes.default.svc
+    server: https://cp-production.gerega.net:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
   - group: '*'
@@ -161,22 +161,10 @@ spec:
     server: https://cp-nonprod.gerega.net:6443
   - namespace: '*'
     server: https://cp-nonprod.gerega.net:6443
-  - namespace: sites
-    server: https://cp-nonprod.gerega.net:6443
-  - namespace: nettools
-    server: https://cp-nonprod.gerega.net:6443
-  - namespace: redis
-    server: https://cp-nonprod.gerega.net:6443
-  - namespace: opstools
-    server: https://cp-prod.gerega.net:6443
   - namespace: '*'
     server: https://cp-prod.gerega.net:6443
-  - namespace: sites
-    server: https://cp-prod.gerega.net:6443
-  - namespace: nettools
-    server: https://cp-prod.gerega.net:6443
-  - namespace: redis
-    server: https://cp-prod.gerega.net:6443
+  - namespace: '*'
+    server: https://cp-production.gerega.net:6443
   - namespace: '*'
     server: https://kubernetes.default.svc
   # Deny all cluster-scoped resources from being created, except for Namespace
