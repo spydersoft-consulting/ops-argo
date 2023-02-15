@@ -1,4 +1,0 @@
-linkerd-viz:
-  prometheusUrl: https://internal-cluster.mattgerega.net/prometheus
-ingress:
-  host: internal-cluster.mattgerega.net

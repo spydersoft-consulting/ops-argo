@@ -1,4 +1,0 @@
-linkerd-viz:
-  prometheusUrl: https://prod-cluster.mattgerega.net/prometheus
-ingress:
-  host: prod-cluster.mattgerega.net
