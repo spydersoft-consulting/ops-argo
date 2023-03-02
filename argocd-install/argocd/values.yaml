@@ -76,7 +76,7 @@ argo-cd:
 
   configs:
     cm:
-      helpChatUrl: https://spydersoft.slack.com/archives/C04S4AJV6E6
+      help.chatUrl: https://spydersoft.slack.com/archives/C04S4AJV6E6
 
     params:
       server.insecure: true
