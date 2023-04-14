@@ -1,11 +1,11 @@
-appVersion: v2.6.9
 type: application
-name: rancher
 apiVersion: v2
+appVersion: v2.6.9
+name: rancher
+version: 2.7.2
 dependencies:
-- repository: https://releases.rancher.com/server-charts/latest
-  version: 2.7.1
-  name: rancher
-version: 2.7.1
+- name: rancher
+  version: 2.7.2
+  repository: https://releases.rancher.com/server-charts/latest
 
 
