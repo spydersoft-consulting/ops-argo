@@ -1,11 +1,11 @@
+version: 1.0.0
+appVersion: v0.0.1
 apiVersion: v2
 name: argocd-apps
 dependencies:
 - name: argocd-apps
-  version: 0.0.9
   repository: https://argoproj.github.io/argo-helm
-appVersion: v0.0.1
+  version: 1.0.0
 type: application
-version: 0.0.9
 
 
