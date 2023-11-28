@@ -12,7 +12,7 @@ spec:
   project: argocd
   source:
     path: applicationSets
-    repoURL: https://bitbucket.org/spydersoftteam/ops-nonprod-cluster
+    repoURL: https://github.com/spydersoft-consulting/ops-nonprod-cluster
     targetRevision: HEAD
     directory:
       recurse: true

@@ -11,7 +11,7 @@ spec:
   project: argocd
   source:
     path: cluster-tools/appSets
-    repoURL: https://bitbucket.org/spydersoftteam/ops-argo
+    repoURL: https://github.com/spydersoft-consulting/ops-argo
     targetRevision: HEAD
     directory:
       recurse: true
