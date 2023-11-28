@@ -12,7 +12,7 @@ spec:
   project: argocd
   source:
     path: applicationSets
-    repoURL: https://bitbucket.org/spydersoftteam/ops-internal-cluster
+    repoURL: https://github.com/spydersoft-consulting/ops-internal-cluster
     targetRevision: HEAD
     directory:
       recurse: true

@@ -12,7 +12,7 @@ argocd-apps:
         valueFiles:
         - values.yaml
       path: argocd-install/argocd-apps
-      repoURL: https://bitbucket.org/spydersoftteam/ops-argo
+      repoURL: https://github.com/spydersoft-consulting/ops-argo
       targetRevision: HEAD
     syncPolicy:
       syncOptions:
@@ -29,7 +29,7 @@ argocd-apps:
   #       valueFiles:
   #       - values.yaml
   #     path: rancher
-  #     repoURL: https://bitbucket.org/spydersoftteam/ops-argo
+  #     repoURL: https://github.com/spydersoft-consulting/ops-argo
   #     targetRevision: HEAD
   #   syncPolicy:
   #     syncOptions:
@@ -46,7 +46,7 @@ argocd-apps:
         valueFiles:
         - values.yaml
       path: argocd-install/argocd
-      repoURL: https://bitbucket.org/spydersoftteam/ops-argo
+      repoURL: https://github.com/spydersoft-consulting/ops-argo
       targetRevision: HEAD
     syncPolicy:
       syncOptions:
@@ -59,7 +59,7 @@ argocd-apps:
     project: argocd
     source:
       path: apps
-      repoURL: https://bitbucket.org/spydersoftteam/ops-argo
+      repoURL: https://github.com/spydersoft-consulting/ops-argo
       targetRevision: HEAD
       directory:
         recurse: true
@@ -76,7 +76,7 @@ argocd-apps:
     project: argocd
     source:
       path: projects
-      repoURL: https://bitbucket.org/spydersoftteam/ops-argo
+      repoURL: https://github.com/spydersoft-consulting/ops-argo
       targetRevision: HEAD
       directory:
         recurse: true
@@ -93,7 +93,7 @@ argocd-apps:
     project: argocd
     source:
       path: secrets
-      repoURL: https://bitbucket.org/spydersoftteam/ops-argo
+      repoURL: https://github.com/spydersoft-consulting/ops-argo
       targetRevision: HEAD
       directory:
         recurse: true

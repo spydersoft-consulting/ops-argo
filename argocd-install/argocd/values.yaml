@@ -89,10 +89,10 @@ argo-cd:
         type: helm
       git-ops-nonprod-cluster:
         name: git-ops-nonprod-cluster
-        url: https://bitbucket.org/spydersoftteam/ops-nonprod-cluster
+        url: https://github.com/spydersoft-consulting/ops-nonprod-cluster
         type: git
       git-ops-prod-cluster:
         name: git-ops-nonprod-cluster
-        url: https://bitbucket.org/spydersoftteam/ops-nonprod-cluster
+        url: https://github.com/spydersoft-consulting/ops-nonprod-cluster
         type: git
     
