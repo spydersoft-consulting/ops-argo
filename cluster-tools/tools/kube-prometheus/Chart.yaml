@@ -1,11 +1,11 @@
-apiVersion: v2
-dependencies:
-- version: 8.22.8
-  name: kube-prometheus
-  repository: https://charts.bitnami.com/bitnami
-version: 8.22.8
-name: kube-prometheus
-type: application
 appVersion: 0.59.2
+type: application
+version: 8.23.2
+apiVersion: v2
+name: kube-prometheus
+dependencies:
+- repository: https://charts.bitnami.com/bitnami
+  version: 8.23.2
+  name: kube-prometheus
 
 
