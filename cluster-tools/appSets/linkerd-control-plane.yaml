@@ -31,3 +31,6 @@ spec:
         kind: "cronjob"
         jsonPointers:
         - /spec/schedule
+      syncPolicy:
+        syncOptions:
+        - RespectIgnoreDifferences=true
