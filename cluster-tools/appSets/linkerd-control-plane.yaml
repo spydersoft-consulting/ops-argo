@@ -26,4 +26,8 @@ spec:
       destination:
         server: '{{ server }}'
         namespace: 'linkerd'
-      
+      ignoreDifferences:
+      - group: "*"
+        kind: "cronjob"
+        jsonPointers:
+        - /spec/schedule
