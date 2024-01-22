@@ -1,0 +1,11 @@
+name: linkerd-control-plane
+apiVersion: v2
+dependencies:
+- version: 2.14.9
+  name: linkerd-control-plane
+  repository: https://helm.linkerd.io/stable
+type: application
+version: 2.14.9
+appVersion: stable-2.14.9
+
+
