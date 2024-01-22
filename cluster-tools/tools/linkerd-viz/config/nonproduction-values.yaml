@@ -1,4 +1,6 @@
 linkerd-viz:
   prometheusUrl: https://nonprod-cluster.mattgerega.net/prometheus
+  grafana:
+    uidPrefix: nonprod
 ingress:
   host: nonprod-cluster.mattgerega.net
