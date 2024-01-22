@@ -2,13 +2,46 @@ linkerd-control-plane:
   installNamespace: false
   policyValidator:
     externalSecret: true
-    injectCaFrom: linkerd-policy-validator
+    caBundle: |
+      -----BEGIN CERTIFICATE-----
+      MIIBlTCCATqgAwIBAgIRALtrDsRnldb8/Fl48T48D4EwCgYIKoZIzj0EAwIwKDEm
+      MCQGA1UEAxMdd2ViaG9vay5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMjIwNjMw
+      MTY1NDAzWhcNMjcwNjI5MTY1NDAzWjAoMSYwJAYDVQQDEx13ZWJob29rLmxpbmtl
+      cmQuY2x1c3Rlci5sb2NhbDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABEMGzw8o
+      jkN9+agfCaXGvxBQ9zrTA9KjjrWKtjYnENE+DbcgtmFpRc0bLatGv1nsS1RX/Ge4
+      DrTQnpMbHOCbVoejRTBDMA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/
+      AgEBMB0GA1UdDgQWBBQnkBlvddok5ypt6IutQsur92W06zAKBggqhkjOPQQDAgNJ
+      ADBGAiEAilyr2DmQ8MIRGaak2+pQnrmcg7SWljiDWIL/IFJmieACIQClCWFPRMQJ
+      9DMD/KIJWeWLzCpDSMnBxr1Vn3iYHWvMdg==
+      -----END CERTIFICATE-----
   proxyInjector:
     externalSecret: true
-    injectCaFrom: linkerd-proxy-injector
+    caBundle: |
+      -----BEGIN CERTIFICATE-----
+      MIIBlTCCATqgAwIBAgIRALtrDsRnldb8/Fl48T48D4EwCgYIKoZIzj0EAwIwKDEm
+      MCQGA1UEAxMdd2ViaG9vay5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMjIwNjMw
+      MTY1NDAzWhcNMjcwNjI5MTY1NDAzWjAoMSYwJAYDVQQDEx13ZWJob29rLmxpbmtl
+      cmQuY2x1c3Rlci5sb2NhbDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABEMGzw8o
+      jkN9+agfCaXGvxBQ9zrTA9KjjrWKtjYnENE+DbcgtmFpRc0bLatGv1nsS1RX/Ge4
+      DrTQnpMbHOCbVoejRTBDMA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/
+      AgEBMB0GA1UdDgQWBBQnkBlvddok5ypt6IutQsur92W06zAKBggqhkjOPQQDAgNJ
+      ADBGAiEAilyr2DmQ8MIRGaak2+pQnrmcg7SWljiDWIL/IFJmieACIQClCWFPRMQJ
+      9DMD/KIJWeWLzCpDSMnBxr1Vn3iYHWvMdg==
+      -----END CERTIFICATE-----
   profileValidator:
     externalSecret: true
-    injectCaFrom: linkerd-sp-validator
+    caBundle: |
+      -----BEGIN CERTIFICATE-----
+      MIIBlTCCATqgAwIBAgIRALtrDsRnldb8/Fl48T48D4EwCgYIKoZIzj0EAwIwKDEm
+      MCQGA1UEAxMdd2ViaG9vay5saW5rZXJkLmNsdXN0ZXIubG9jYWwwHhcNMjIwNjMw
+      MTY1NDAzWhcNMjcwNjI5MTY1NDAzWjAoMSYwJAYDVQQDEx13ZWJob29rLmxpbmtl
+      cmQuY2x1c3Rlci5sb2NhbDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABEMGzw8o
+      jkN9+agfCaXGvxBQ9zrTA9KjjrWKtjYnENE+DbcgtmFpRc0bLatGv1nsS1RX/Ge4
+      DrTQnpMbHOCbVoejRTBDMA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAGAQH/
+      AgEBMB0GA1UdDgQWBBQnkBlvddok5ypt6IutQsur92W06zAKBggqhkjOPQQDAgNJ
+      ADBGAiEAilyr2DmQ8MIRGaak2+pQnrmcg7SWljiDWIL/IFJmieACIQClCWFPRMQJ
+      9DMD/KIJWeWLzCpDSMnBxr1Vn3iYHWvMdg==
+      -----END CERTIFICATE-----
   identity:
     issuer:
       scheme: kubernetes.io/tls
