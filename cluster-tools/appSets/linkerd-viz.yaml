@@ -27,5 +27,8 @@ spec:
           - 'config/{{name}}-values.yaml'
       destination:
         server: '{{ server }}'
-        namespace: 'linkerd'
+        namespace: 'linkerd-viz'
+      syncPolicy:
+        syncOptions:     # Sync options which modifies sync behavior
+        - CreateNamespace=true
       
