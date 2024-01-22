@@ -2,10 +2,13 @@ linkerd-control-plane:
   installNamespace: false
   policyValidator:
     externalSecret: true
+    injectCaFrom: linkerd-policy-validator
   proxyInjector:
     externalSecret: true
+    injectCaFrom: linkerd-proxy-injector
   profileValidator:
     externalSecret: true
+    injectCaFrom: linkerd-sp-validator
   identity:
     issuer:
       scheme: kubernetes.io/tls
