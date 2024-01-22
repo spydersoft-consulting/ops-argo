@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: linkerd-viz-tool
+  labels:
+    spydersoft.io/category: cluster-tools
+spec:
+  generators:
+   - clusters:
+      selector:
+        matchLabels:
+          argocd.argoproj.io/secret-type: cluster
+          spydersoft.io/linkerd-viz: 'true'
+  template:
+    metadata:
+      name: '{{ nameNormalized }}-linkerd-viz'
+      labels:
+        spydersoft.io/category: cluster-tools 
+    spec:
+      project: cluster-tools
+      source:
+        repoURL: https://github.com/spydersoft-consulting/ops-argo
+        targetRevision: main
+        path: 'cluster-tools/tools/linkerd-viz'
+        helm: {}
+      destination:
+        server: '{{ server }}'
+        namespace: 'linkerd'
+      
