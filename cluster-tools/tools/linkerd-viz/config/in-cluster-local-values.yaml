@@ -1,4 +1,6 @@
 linkerd-viz:
   prometheusUrl: https://internal-cluster.mattgerega.net/prometheus
+  grafana:
+    uidPrefix: internal
 ingress:
   host: internal-cluster.mattgerega.net
