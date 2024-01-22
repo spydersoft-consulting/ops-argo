@@ -13,7 +13,7 @@ spec:
           spydersoft.io/linkerd-control-plane: 'true'
   template:
     metadata:
-      name: '{{ nameNormalized }}-linkerd-control-planes'
+      name: '{{ nameNormalized }}-linkerd-control-plane'
       labels:
         spydersoft.io/category: cluster-tools 
     spec:
@@ -21,12 +21,9 @@ spec:
       source:
         repoURL: https://github.com/spydersoft-consulting/ops-argo
         targetRevision: main
-        path: 'cluster-tools/tools/linkerd-control-planes'
+        path: 'cluster-tools/tools/linkerd-control-plane'
         helm: {}
       destination:
         server: '{{ server }}'
         namespace: 'linkerd'
-      syncPolicy:
-        syncOptions:     # Sync options which modifies sync behavior
-        - CreateNamespace=true
       
