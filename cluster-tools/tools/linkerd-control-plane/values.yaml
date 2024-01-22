@@ -1,0 +1,11 @@
+linkerd-control-plane:
+  installNamespace: false
+  policyValidator:
+    externalSecret: true
+  proxyInjector:
+    externalSecret: true
+  profileValidator:
+    externalSecret: true
+  identity:
+    issuer:
+      scheme: kubernetes.io/tls
