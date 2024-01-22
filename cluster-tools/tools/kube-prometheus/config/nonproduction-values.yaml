@@ -1,3 +1,6 @@
+nonproduction_scrape_config:
+  enabled: true
+  name: production-scrape-config
 kube-prometheus:
   prometheus:
     ingress:

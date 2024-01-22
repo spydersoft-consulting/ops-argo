@@ -4,6 +4,9 @@ internal_scrape_config:
 production_scrape_config:
   enabled: false
   name: ''
+nonproduction_scrape_config:
+  enabled: false
+  name: ''
 
 kube-prometheus:
   prometheus:
