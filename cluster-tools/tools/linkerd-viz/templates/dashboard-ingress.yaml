@@ -3,16 +3,8 @@ kind: Ingress
 metadata:
   name: linkerd-viz-dashboard
   annotations:
-    nginx.ingress.kubernetes.io/upstream-vhost: $service_name.$namespace.svc.cluster.local:8084
-    # viz does not support base url, therefore substituting by nginx
-    # nginx.ingress.kubernetes.io/configuration-snippet: |
-    #   sub_filter_once off;
-    #   sub_filter '<head>' '<head> <base href="linkerd/">';
-    #   sub_filter 'src="/' 'src="/linkerd/';
-    #   sub_filter 'href="/' 'href="/linkerd/';
-    #   sub_filter '/\/api\/v1\/namespaces\/.*\/proxy/g' '/\/linkerd/g';
-    #   sub_filter_types text/html text/css text/javascript;
-    #   proxy_set_header Origin "";
+    ## only use this if the nginx ingress controller is meshed
+    # nginx.ingress.kubernetes.io/upstream-vhost: $service_name.$namespace.svc.cluster.local:8084
 spec:
   ingressClassName: nginx
   rules:
