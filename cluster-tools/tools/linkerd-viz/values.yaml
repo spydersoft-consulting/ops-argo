@@ -28,6 +28,6 @@ linkerd-viz:
       9DMD/KIJWeWLzCpDSMnBxr1Vn3iYHWvMdg==
       -----END CERTIFICATE-----
   grafana: 
-    externalUrl: grafana.mattgerega.net
+    externalUrl: https://grafana.mattgerega.net/
   prometheus:
     enabled: false
