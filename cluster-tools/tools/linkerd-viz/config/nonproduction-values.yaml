@@ -3,4 +3,4 @@ linkerd-viz:
   grafana:
     uidPrefix: nonprod
 ingress:
-  host: nonprod-cluster.mattgerega.net
+  host: linkerd-nonprod.mattgerega.net
