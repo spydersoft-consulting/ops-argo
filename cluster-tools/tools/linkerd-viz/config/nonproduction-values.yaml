@@ -1,5 +1,5 @@
 linkerd-viz:
-  prometheusUrl: https://nonprod-cluster.mattgerega.net/prometheus
+  prometheusUrl: http://nonproduction-kube-prometh-prometheus.monitoring:9090
   grafana:
     uidPrefix: nonprod
 ingress:
