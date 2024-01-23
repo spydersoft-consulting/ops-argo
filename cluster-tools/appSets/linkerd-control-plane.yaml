@@ -28,7 +28,7 @@ spec:
         namespace: 'linkerd'
       ignoreDifferences:
       - group: "*"
-        kind: "cronjob"
+        kind: "CronJob"
         jsonPointers:
         - /spec/schedule
       syncPolicy:
