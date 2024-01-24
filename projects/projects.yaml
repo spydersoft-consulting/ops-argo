@@ -191,9 +191,9 @@ spec:
     server: https://cp-nonprod.gerega.net:6443
   - namespace: ra-stage-*
     server: https://cp-nonprod.gerega.net:6443
-  - namespace: ra-prod-*
+  - namespace: ra-production-*
     server: https://cp-production.gerega.net:6443
-  - namespace: ra-prod-*
+  - namespace: ra-production-*
     server: https://cp-prod.gerega.net:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
