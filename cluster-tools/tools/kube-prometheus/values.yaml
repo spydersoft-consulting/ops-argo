@@ -9,6 +9,8 @@ nonproduction_scrape_config:
   name: ''
 
 kube-prometheus:
+  operator:
+    automountServiceAccountToken: true
   prometheus:
     retention: 4d
     remoteWrite:
