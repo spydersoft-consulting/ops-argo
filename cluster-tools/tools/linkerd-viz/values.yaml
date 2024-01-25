@@ -31,3 +31,5 @@ linkerd-viz:
     externalUrl: https://grafana.mattgerega.net/
   prometheus:
     enabled: false
+  podAnnotations:
+    linkerd.io/inject: enabled
