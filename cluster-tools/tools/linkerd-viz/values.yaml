@@ -33,4 +33,3 @@ linkerd-viz:
     enabled: false
   podAnnotations:
     linkerd.io/inject: enabled
-    config.linkerd.io/enable-debug-sidecar: "true"
