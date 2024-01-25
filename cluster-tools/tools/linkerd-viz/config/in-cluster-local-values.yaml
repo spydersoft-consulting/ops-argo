@@ -3,4 +3,4 @@ linkerd-viz:
   grafana:
     uidPrefix: internal
 ingress:
-  host: internal-cluster.mattgerega.net
+  host: linkerd-internal.mattgerega.net
