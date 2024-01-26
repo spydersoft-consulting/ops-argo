@@ -2,5 +2,7 @@ linkerd-viz:
   prometheusUrl: http://nonproduction-kube-prometh-prometheus.monitoring:9090
   grafana:
     uidPrefix: nonprod
+  podAnnotations:
+    config.linkerd.io/enable-debug-sidecar: "true"
 ingress:
   host: linkerd-nonprod.mattgerega.net
