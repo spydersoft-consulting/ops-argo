@@ -45,7 +45,7 @@ argo-cd:
         nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
         kubernetes.io/ingress.class: nginx
       hosts:
-      - argo.mattgerega.net
+      - argogrpc.mattgerega.net
 
     config:
       url: https://argo.mattgerega.net
