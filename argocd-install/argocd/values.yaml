@@ -33,6 +33,7 @@ argo-cd:
       enabled: true
       annotations:
         nginx.ingress.kubernetes.io/service-upstream: "true"
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
         kubernetes.io/ingress.class: nginx
       hosts:
       - argo.mattgerega.net
@@ -41,10 +42,11 @@ argo-cd:
       enabled: true
       annotations:
         nginx.ingress.kubernetes.io/service-upstream: "true"
+        nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
         kubernetes.io/ingress.class: nginx
       hosts:
       - argo.mattgerega.net
-      
+
     config:
       url: https://argo.mattgerega.net
       resource.customizations.ignoreDifferences.all: |
