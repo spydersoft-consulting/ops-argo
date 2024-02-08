@@ -28,26 +28,7 @@ argo-cd:
       enabled: true
       serviceMonitor:
         enabled: true
-  cm:
-    url: https://argo.mattgerega.net
-    resource.customizations.ignoreDifferences.all: |
-      managedFieldsManagers:
-      - external-secrets
-    "dex.config": |
-        logger:
-          format: json
-        connectors:
-        - type: saml
-          id: saml
-          name: Azure AD
-          config:
-            entityIssuer: https://argo.mattgerega.net/api/dex/callback
-            ssoURL: https://login.microsoftonline.com/70965cdd-c60c-4109-9fcf-709b2f23bd0c/saml2
-            caData: $argo-azuread-secret:cert
-            redirectURI: https://argo.mattgerega.net/api/dex/callback
-            usernameAttr: email
-            emailAttr: email
-            groupsAttr: group
+
   server:
     ingress:
       enabled: true
@@ -62,7 +43,8 @@ argo-cd:
       serviceMonitor:
         enabled: true
 
-    rbacConfig:
+  configs:
+    rbac: 
       policy.default: role:readonly
       policy.csv: |
         p, role:org-admin, applications, *, */*, allow
@@ -72,11 +54,27 @@ argo-cd:
         p, role:org-admin, repositories, update, *, allow
         p, role:org-admin, repositories, delete, *, allow
         g, "bad2673a-2a0e-46f0-ab2f-bfe0c9b67274", role:org-admin
-
-  configs:
     cm:
+      url: https://argo.mattgerega.net
       help.chatUrl: https://spydersoft.slack.com/archives/C04S4AJV6E6
-
+      resource.customizations.ignoreDifferences.all: |
+        managedFieldsManagers:
+        - external-secrets
+      "dex.config": |
+          logger:
+            format: json
+          connectors:
+          - type: saml
+            id: saml
+            name: Azure AD
+            config:
+              entityIssuer: https://argo.mattgerega.net/api/dex/callback
+              ssoURL: https://login.microsoftonline.com/70965cdd-c60c-4109-9fcf-709b2f23bd0c/saml2
+              caData: $argo-azuread-secret:cert
+              redirectURI: https://argo.mattgerega.net/api/dex/callback
+              usernameAttr: email
+              emailAttr: email
+              groupsAttr: group
     params:
       server.insecure: true
       server.repo.server.strict.tls: false
