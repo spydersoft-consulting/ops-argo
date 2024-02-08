@@ -1,11 +1,11 @@
-name: cert-manager
-dependencies:
-- name: cert-manager
-  version: v1.14.1
-  repository: https://charts.jetstack.io
-version: v1.14.1
-apiVersion: v2
 appVersion: 1.9.1
+apiVersion: v2
+dependencies:
+- repository: https://charts.jetstack.io
+  version: v1.14.2
+  name: cert-manager
+name: cert-manager
+version: v1.14.2
 type: application
 
 
