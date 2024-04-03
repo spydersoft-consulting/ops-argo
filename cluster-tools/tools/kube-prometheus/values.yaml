@@ -11,6 +11,7 @@ nonproduction_scrape_config:
 kube-prometheus:
   operator:
     automountServiceAccountToken: true
+    resourcesPreset: micro
   prometheus:
     retention: 4d
     remoteWrite:
