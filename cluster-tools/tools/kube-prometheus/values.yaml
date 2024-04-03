@@ -13,6 +13,7 @@ kube-prometheus:
     automountServiceAccountToken: true
     resourcesPreset: micro
   prometheus:
+    resourcesPreset: medium
     retention: 4d
     remoteWrite:
       - url: https://mimir.mattgerega.net/api/v1/push
