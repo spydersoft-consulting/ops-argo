@@ -1,11 +1,11 @@
+type: application
 dependencies:
 - name: argo-cd
-  version: 6.10.2
   repository: https://argoproj.github.io/argo-helm
-type: application
-appVersion: v2.4.13
+  version: 6.11.1
 apiVersion: v2
-version: 6.10.2
 name: argocd
+version: 6.11.1
+appVersion: v2.4.13
 
 
