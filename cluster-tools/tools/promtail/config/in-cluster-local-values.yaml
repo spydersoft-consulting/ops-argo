@@ -10,3 +10,8 @@ promtail:
             - "__meta_kubernetes_pod_label_app_kubernetes_io_component"
           regex: "(canary|read|write)"
           action: "drop"
+  service:
+    labels:
+      fix: 'true'
+    annotations:
+      fix: 'true'

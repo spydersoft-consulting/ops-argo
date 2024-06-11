@@ -4,3 +4,8 @@ promtail:
     - url: 'https://loki.mattgerega.net/loki/api/v1/push'
       external_labels:
         cluster: non-production
+  service:
+    labels:
+      fix: 'true'
+    annotations:
+      fix: 'true'
