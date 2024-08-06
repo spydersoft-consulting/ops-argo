@@ -10,29 +10,29 @@ spec:
   description: Spydersoft Applications
   # Allow manifests to deploy from any Git repos
   sourceRepos:
-  - '*'
+    - "*"
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
-  - namespace: test
-    server: https://cp-nonprod.gerega.net:6443
-  - namespace: stage
-    server: https://cp-nonprod.gerega.net:6443
-  - namespace: production
-    server: https://cp-prod.gerega.net:6443
-  - namespace: production
-    server: https://cp-production.gerega.net:6443
+    - namespace: test
+      server: https://cp-nonprod.gerega.net:6443
+    - namespace: stage
+      server: https://cp-nonprod.gerega.net:6443
+    - namespace: production
+      server: https://cp-prod.gerega.net:6443
+    - namespace: production
+      server: https://cp-production.gerega.net:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
-  - group: ''
-    kind: Namespace
+    - group: ""
+      kind: Namespace
   # Allow all namespaced-scoped resources to be created, except for ResourceQuota, LimitRange, NetworkPolicy
   namespaceResourceBlacklist:
-  - group: ''
-    kind: ResourceQuota
-  - group: ''
-    kind: LimitRange
-  - group: ''
-    kind: NetworkPolicy
+    - group: ""
+      kind: ResourceQuota
+    - group: ""
+      kind: LimitRange
+    - group: ""
+      kind: NetworkPolicy
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
@@ -46,29 +46,29 @@ spec:
   description: Home Automation Applications
   # Allow manifests to deploy from any Git repos
   sourceRepos:
-  - '*'
+    - "*"
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
-  - namespace: test
-    server: https://cp-nonprod.gerega.net:6443
-  - namespace: stage
-    server: https://cp-nonprod.gerega.net:6443
-  - namespace: production
-    server: https://cp-production.gerega.net:6443
-  - namespace: production
-    server: https://cp-prod.gerega.net:6443
+    - namespace: test
+      server: https://cp-nonprod.gerega.net:6443
+    - namespace: stage
+      server: https://cp-nonprod.gerega.net:6443
+    - namespace: production
+      server: https://cp-production.gerega.net:6443
+    - namespace: production
+      server: https://cp-prod.gerega.net:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
-  - group: ''
-    kind: Namespace
+    - group: ""
+      kind: Namespace
   # Allow all namespaced-scoped resources to be created, except for ResourceQuota, LimitRange, NetworkPolicy
   namespaceResourceBlacklist:
-  - group: ''
-    kind: ResourceQuota
-  - group: ''
-    kind: LimitRange
-  - group: ''
-    kind: NetworkPolicy
+    - group: ""
+      kind: ResourceQuota
+    - group: ""
+      kind: LimitRange
+    - group: ""
+      kind: NetworkPolicy
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
@@ -82,29 +82,29 @@ spec:
   description: Identity Applications
   # Allow manifests to deploy from any Git repos
   sourceRepos:
-  - '*'
+    - "*"
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
-  - namespace: test
-    server: https://cp-nonprod.gerega.net:6443
-  - namespace: stage
-    server: https://cp-nonprod.gerega.net:6443
-  - namespace: production
-    server: https://cp-production.gerega.net:6443
-  - namespace: production
-    server: https://cp-prod.gerega.net:6443
+    - namespace: test
+      server: https://cp-nonprod.gerega.net:6443
+    - namespace: stage
+      server: https://cp-nonprod.gerega.net:6443
+    - namespace: production
+      server: https://cp-production.gerega.net:6443
+    - namespace: production
+      server: https://cp-prod.gerega.net:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
-  - group: ''
-    kind: Namespace
+    - group: ""
+      kind: Namespace
   # Allow all namespaced-scoped resources to be created, except for ResourceQuota, LimitRange, NetworkPolicy
   namespaceResourceBlacklist:
-  - group: ''
-    kind: ResourceQuota
-  - group: ''
-    kind: LimitRange
-  - group: ''
-    kind: NetworkPolicy
+    - group: ""
+      kind: ResourceQuota
+    - group: ""
+      kind: LimitRange
+    - group: ""
+      kind: NetworkPolicy
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
@@ -118,29 +118,29 @@ spec:
   description: Cluster Management Tools
   # Allow manifests to deploy from any Git repos
   sourceRepos:
-  - '*'
+    - "*"
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
-  - namespace: '*'
-    server: https://kubernetes.default.svc
-  - namespace: '*'
-    server: https://cp-nonprod.gerega.net:6443
-  - namespace: '*'
-    server: https://cp-prod.gerega.net:6443
-  - namespace: '*'
-    server: https://cp-production.gerega.net:6443
+    - namespace: "*"
+      server: https://kubernetes.default.svc
+    - namespace: "*"
+      server: https://cp-nonprod.gerega.net:6443
+    - namespace: "*"
+      server: https://cp-prod.gerega.net:6443
+    - namespace: "*"
+      server: https://cp-production.gerega.net:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
-  - group: '*'
-    kind: '*'
+    - group: "*"
+      kind: "*"
   # Allow all namespaced-scoped resources to be created, except for ResourceQuota, LimitRange, NetworkPolicy
   namespaceResourceBlacklist:
-  - group: ''
-    kind: ResourceQuota
-  - group: ''
-    kind: LimitRange
-  - group: ''
-    kind: NetworkPolicy
+    - group: ""
+      kind: ResourceQuota
+    - group: ""
+      kind: LimitRange
+    - group: ""
+      kind: NetworkPolicy
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
@@ -154,23 +154,23 @@ spec:
   description: External Applications
   # Allow manifests to deploy from any Git repos
   sourceRepos:
-  - '*'
+    - "*"
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
-  - namespace: opstools
-    server: https://cp-nonprod.gerega.net:6443
-  - namespace: '*'
-    server: https://cp-nonprod.gerega.net:6443
-  - namespace: '*'
-    server: https://cp-prod.gerega.net:6443
-  - namespace: '*'
-    server: https://cp-production.gerega.net:6443
-  - namespace: '*'
-    server: https://kubernetes.default.svc
+    - namespace: opstools
+      server: https://cp-nonprod.gerega.net:6443
+    - namespace: "*"
+      server: https://cp-nonprod.gerega.net:6443
+    - namespace: "*"
+      server: https://cp-prod.gerega.net:6443
+    - namespace: "*"
+      server: https://cp-production.gerega.net:6443
+    - namespace: "*"
+      server: https://kubernetes.default.svc
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
-  - group: '*'
-    kind: '*'
+    - group: "*"
+      kind: "*"
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
@@ -184,26 +184,26 @@ spec:
   description: Reference Architecture Applications
   # Allow manifests to deploy from any Git repos
   sourceRepos:
-  - '*'
+    - "*"
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
-  - namespace: ra-test-*
-    server: https://cp-nonprod.gerega.net:6443
-  - namespace: ra-stage-*
-    server: https://cp-nonprod.gerega.net:6443
-  - namespace: ra-production-*
-    server: https://cp-production.gerega.net:6443
-  - namespace: ra-production-*
-    server: https://cp-prod.gerega.net:6443
+    - namespace: ra-test-*
+      server: https://cp-nonprod.gerega.net:6443
+    - namespace: ra-stage-*
+      server: https://cp-nonprod.gerega.net:6443
+    - namespace: ra-production-*
+      server: https://cp-production.gerega.net:6443
+    - namespace: ra-production-*
+      server: https://cp-prod.gerega.net:6443
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
-  - group: ''
-    kind: Namespace
+    - group: ""
+      kind: Namespace
   # Allow all namespaced-scoped resources to be created, except for ResourceQuota, LimitRange, NetworkPolicy
   namespaceResourceBlacklist:
-  - group: ''
-    kind: ResourceQuota
-  - group: ''
-    kind: LimitRange
-  - group: ''
-    kind: NetworkPolicy
+    - group: ""
+      kind: ResourceQuota
+    - group: ""
+      kind: LimitRange
+    - group: ""
+      kind: NetworkPolicy
