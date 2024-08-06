@@ -1,11 +1,9 @@
 name: linkerd-crds
 apiVersion: v2
 dependencies:
-- version: 1.8.0
-  name: linkerd-crds
-  repository: https://helm.linkerd.io/stable
+  - version: 1.8.0
+    name: linkerd-crds
+    repository: https://helm.linkerd.io/stable
 type: application
 version: 1.8.0
 appVersion: 1.8.0
-
-

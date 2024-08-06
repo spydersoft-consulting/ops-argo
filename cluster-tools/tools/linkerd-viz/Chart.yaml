@@ -1,11 +1,9 @@
 apiVersion: v2
 name: linkerd-viz
 dependencies:
-- name: linkerd-viz
-  version: 30.12.11
-  repository: https://helm.linkerd.io/stable
+  - name: linkerd-viz
+    version: 30.12.11
+    repository: https://helm.linkerd.io/stable
 type: application
 version: 30.12.11
 appVersion: stable-2.14.9
-
-

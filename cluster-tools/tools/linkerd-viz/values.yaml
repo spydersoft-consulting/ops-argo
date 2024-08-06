@@ -27,7 +27,7 @@ linkerd-viz:
       ADBGAiEAilyr2DmQ8MIRGaak2+pQnrmcg7SWljiDWIL/IFJmieACIQClCWFPRMQJ
       9DMD/KIJWeWLzCpDSMnBxr1Vn3iYHWvMdg==
       -----END CERTIFICATE-----
-  grafana: 
+  grafana:
     externalUrl: https://grafana.mattgerega.net/
   prometheus:
     enabled: false

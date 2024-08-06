@@ -6,27 +6,26 @@ metadata:
     spydersoft.io/category: cluster-tools
 spec:
   generators:
-   - clusters:
-      selector:
-        matchLabels:
-          argocd.argoproj.io/secret-type: cluster
-          spydersoft.io/linkerd-crds: 'true'
+    - clusters:
+        selector:
+          matchLabels:
+            argocd.argoproj.io/secret-type: cluster
+            spydersoft.io/linkerd-crds: "true"
   template:
     metadata:
-      name: '{{ nameNormalized }}-linkerd-crds'
+      name: "{{ nameNormalized }}-linkerd-crds"
       labels:
-        spydersoft.io/category: cluster-tools 
+        spydersoft.io/category: cluster-tools
     spec:
       project: cluster-tools
       source:
         repoURL: https://github.com/spydersoft-consulting/ops-argo
         targetRevision: main
-        path: 'cluster-tools/tools/linkerd-crds'
+        path: "cluster-tools/tools/linkerd-crds"
         helm: {}
       destination:
-        server: '{{ server }}'
-        namespace: 'linkerd'
+        server: "{{ server }}"
+        namespace: "linkerd"
       syncPolicy:
-        syncOptions:     # Sync options which modifies sync behavior
-        - CreateNamespace=true
-      
+        syncOptions: # Sync options which modifies sync behavior
+          - CreateNamespace=true

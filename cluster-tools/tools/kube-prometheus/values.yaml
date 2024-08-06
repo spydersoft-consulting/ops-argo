@@ -1,12 +1,12 @@
 internal_scrape_config:
   enabled: false
-  name: ''
+  name: ""
 production_scrape_config:
   enabled: false
-  name: ''
+  name: ""
 nonproduction_scrape_config:
   enabled: false
-  name: ''
+  name: ""
 
 kube-prometheus:
   operator:

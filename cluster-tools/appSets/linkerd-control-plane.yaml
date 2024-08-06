@@ -6,31 +6,31 @@ metadata:
     spydersoft.io/category: cluster-tools
 spec:
   generators:
-   - clusters:
-      selector:
-        matchLabels:
-          argocd.argoproj.io/secret-type: cluster
-          spydersoft.io/linkerd-control-plane: 'true'
+    - clusters:
+        selector:
+          matchLabels:
+            argocd.argoproj.io/secret-type: cluster
+            spydersoft.io/linkerd-control-plane: "true"
   template:
     metadata:
-      name: '{{ nameNormalized }}-linkerd-control-plane'
+      name: "{{ nameNormalized }}-linkerd-control-plane"
       labels:
-        spydersoft.io/category: cluster-tools 
+        spydersoft.io/category: cluster-tools
     spec:
       project: cluster-tools
       source:
         repoURL: https://github.com/spydersoft-consulting/ops-argo
         targetRevision: main
-        path: 'cluster-tools/tools/linkerd-control-plane'
+        path: "cluster-tools/tools/linkerd-control-plane"
         helm: {}
       destination:
-        server: '{{ server }}'
-        namespace: 'linkerd'
+        server: "{{ server }}"
+        namespace: "linkerd"
       ignoreDifferences:
-      - group: "*"
-        kind: "CronJob"
-        jsonPointers:
-        - /spec/schedule
+        - group: "*"
+          kind: "CronJob"
+          jsonPointers:
+            - /spec/schedule
       syncPolicy:
         syncOptions:
-        - RespectIgnoreDifferences=true
+          - RespectIgnoreDifferences=true

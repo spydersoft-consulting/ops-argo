@@ -3,7 +3,7 @@ external-secrets:
   securityContext:
     capabilities:
       drop:
-      - ALL
+        - ALL
     readOnlyRootFilesystem: true
     runAsNonRoot: true
     runAsUser: 1000
@@ -18,7 +18,7 @@ external-secrets:
     securityContext:
       capabilities:
         drop:
-        - ALL
+          - ALL
       readOnlyRootFilesystem: true
       runAsNonRoot: true
       runAsUser: 1000
@@ -37,7 +37,7 @@ external-secrets:
     securityContext:
       capabilities:
         drop:
-        - ALL
+          - ALL
       readOnlyRootFilesystem: true
       runAsNonRoot: true
       runAsUser: 1000
@@ -53,6 +53,6 @@ external-secrets:
         cpu: 10m
         memory: 32Mi
   serviceMonitor:
-      enabled: true
-      interval: 1m
-      scrapeTimeout: 30s
+    enabled: true
+    interval: 1m
+    scrapeTimeout: 30s
