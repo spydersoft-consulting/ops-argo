@@ -1,11 +1,11 @@
 promtail:
   config:
     clients:
-    - url: 'https://loki.mattgerega.net/loki/api/v1/push'
-      external_labels:
-        cluster: non-production
+      - url: "https://loki.mattgerega.net/loki/api/v1/push"
+        external_labels:
+          cluster: non-production
   service:
     labels:
-      fix: 'true'
+      fix: "true"
     annotations:
-      fix: 'true'
+      fix: "true"

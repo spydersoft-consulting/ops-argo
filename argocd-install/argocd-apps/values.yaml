@@ -10,13 +10,13 @@ argocd-apps:
         helm:
           version: v3
           valueFiles:
-          - values.yaml
+            - values.yaml
         path: argocd-install/argocd-apps
         repoURL: https://github.com/spydersoft-consulting/ops-argo
         targetRevision: HEAD
       syncPolicy:
         syncOptions:
-        - CreateNamespace=true
+          - CreateNamespace=true
     argocd:
       namespace: argo
       destination:
@@ -27,13 +27,13 @@ argocd-apps:
         helm:
           version: v3
           valueFiles:
-          - values.yaml
+            - values.yaml
         path: argocd-install/argocd
         repoURL: https://github.com/spydersoft-consulting/ops-argo
         targetRevision: HEAD
       syncPolicy:
         syncOptions:
-        - CreateNamespace=true
+          - CreateNamespace=true
     argocd-appsets:
       namespace: argo
       destination:
@@ -85,32 +85,29 @@ argocd-apps:
         automated:
           selfHeal: true
           prune: true
-  projects: 
+  projects:
     argocd:
       namespace: argo
       additionalLabels: {}
       additionalAnnotations: {}
       description: Argocd Project
       sourceRepos:
-      - '*'
+        - "*"
       destinations:
-      - namespace: argo
-        server: https://kubernetes.default.svc
-      - namespace: external-secrets
-        server: https://kubernetes.default.svc
-      - namespace: cattle-system
-        server: https://kubernetes.default.svc
-      - namespace: cluster-tools
-        server: https://kubernetes.default.svc
-      - namespace: kube-state-metrics
-        server: https://kubernetes.default.svc
-      - namespace: kube-monitoring
-        server: https://kubernetes.default.svc
+        - namespace: argo
+          server: https://kubernetes.default.svc
+        - namespace: external-secrets
+          server: https://kubernetes.default.svc
+        - namespace: cattle-system
+          server: https://kubernetes.default.svc
+        - namespace: cluster-tools
+          server: https://kubernetes.default.svc
+        - namespace: kube-state-metrics
+          server: https://kubernetes.default.svc
+        - namespace: kube-monitoring
+          server: https://kubernetes.default.svc
       clusterResourceWhitelist:
-      - group: '*'
-        kind: '*'
+        - group: "*"
+          kind: "*"
       orphanedResources:
         warn: false
-
-
-    

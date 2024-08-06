@@ -43,7 +43,7 @@ argo-cd:
         enabled: true
 
   configs:
-    rbac: 
+    rbac:
       policy.default: role:readonly
       policy.csv: |
         p, role:org-admin, applications, *, */*, allow
@@ -60,24 +60,24 @@ argo-cd:
         managedFieldsManagers:
         - external-secrets
       "dex.config": |
-          logger:
-            format: json
-          connectors:
-          - type: saml
-            id: saml
-            name: Azure AD
-            config:
-              entityIssuer: https://argo.mattgerega.net/api/dex/callback
-              ssoURL: https://login.microsoftonline.com/70965cdd-c60c-4109-9fcf-709b2f23bd0c/saml2
-              caData: $argo-azuread-secret:cert
-              redirectURI: https://argo.mattgerega.net/api/dex/callback
-              usernameAttr: email
-              emailAttr: email
-              groupsAttr: group
+        logger:
+          format: json
+        connectors:
+        - type: saml
+          id: saml
+          name: Azure AD
+          config:
+            entityIssuer: https://argo.mattgerega.net/api/dex/callback
+            ssoURL: https://login.microsoftonline.com/70965cdd-c60c-4109-9fcf-709b2f23bd0c/saml2
+            caData: $argo-azuread-secret:cert
+            redirectURI: https://argo.mattgerega.net/api/dex/callback
+            usernameAttr: email
+            emailAttr: email
+            groupsAttr: group
     params:
       server.insecure: true
       server.repo.server.strict.tls: false
-      server.rootpath: ''
+      server.rootpath: ""
     repositories:
       argo-helm:
         url: https://argoproj.github.io/argo-helm
@@ -91,4 +91,3 @@ argo-cd:
         name: git-ops-nonprod-cluster
         url: https://github.com/spydersoft-consulting/ops-nonprod-cluster
         type: git
-    

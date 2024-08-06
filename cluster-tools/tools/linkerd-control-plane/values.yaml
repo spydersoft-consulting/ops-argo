@@ -17,15 +17,15 @@ linkerd-control-plane:
   proxyInjector:
     namespaceSelector:
       matchExpressions:
-      - key: config.linkerd.io/admission-webhooks
-        operator: NotIn
-        values:
-        - disabled
-      - key: kubernetes.io/metadata.name
-        operator: NotIn
-        values:
-        # - kube-system
-        - cert-manager
+        - key: config.linkerd.io/admission-webhooks
+          operator: NotIn
+          values:
+            - disabled
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            # - kube-system
+            - cert-manager
     externalSecret: true
     caBundle: |
       -----BEGIN CERTIFICATE-----

@@ -4,8 +4,6 @@ appVersion: stable-2.14.9
 type: application
 version: 1.16.11
 dependencies:
-- name: linkerd-control-plane
-  version: 1.16.11
-  repository: https://helm.linkerd.io/stable
-
-
+  - name: linkerd-control-plane
+    version: 1.16.11
+    repository: https://helm.linkerd.io/stable
