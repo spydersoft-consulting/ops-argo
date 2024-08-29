@@ -1,11 +1,11 @@
-type: application
-version: 0.10.1
-name: external-secrets
 dependencies:
-- version: 0.10.1
+- version: 0.10.2
   repository: https://charts.external-secrets.io
   name: external-secrets
-appVersion: 0.5.9
 apiVersion: v2
+appVersion: 0.5.9
+version: 0.10.2
+name: external-secrets
+type: application
 
 
