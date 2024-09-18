@@ -1,11 +1,11 @@
-type: application
+apiVersion: v2
 dependencies:
-- repository: https://grafana.github.io/helm-charts
-  name: promtail
-  version: 6.16.5
+- name: promtail
+  version: 6.16.6
+  repository: https://grafana.github.io/helm-charts
 name: promtail
 appVersion: 2.6.1
-version: 6.16.5
-apiVersion: v2
+version: 6.16.6
+type: application
 
 
