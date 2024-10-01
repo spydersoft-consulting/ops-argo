@@ -14,9 +14,9 @@ spec:
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
     - namespace: test
-      server: https://cp-nonprod.gerega.net:6443
+      server: https://cp-nonproduction.gerega.net:6443
     - namespace: stage
-      server: https://cp-nonprod.gerega.net:6443
+      server: https://cp-nonproduction.gerega.net:6443
     - namespace: production
       server: https://cp-prod.gerega.net:6443
     - namespace: production
@@ -50,9 +50,9 @@ spec:
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
     - namespace: test
-      server: https://cp-nonprod.gerega.net:6443
+      server: https://cp-nonproduction.gerega.net:6443
     - namespace: stage
-      server: https://cp-nonprod.gerega.net:6443
+      server: https://cp-nonproduction.gerega.net:6443
     - namespace: production
       server: https://cp-production.gerega.net:6443
     - namespace: production
@@ -86,9 +86,9 @@ spec:
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
     - namespace: test
-      server: https://cp-nonprod.gerega.net:6443
+      server: https://cp-nonproduction.gerega.net:6443
     - namespace: stage
-      server: https://cp-nonprod.gerega.net:6443
+      server: https://cp-nonproduction.gerega.net:6443
     - namespace: production
       server: https://cp-production.gerega.net:6443
     - namespace: production
@@ -124,7 +124,7 @@ spec:
     - namespace: "*"
       server: https://kubernetes.default.svc
     - namespace: "*"
-      server: https://cp-nonprod.gerega.net:6443
+      server: https://cp-nonproduction.gerega.net:6443
     - namespace: "*"
       server: https://cp-prod.gerega.net:6443
     - namespace: "*"
@@ -158,9 +158,9 @@ spec:
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
     - namespace: opstools
-      server: https://cp-nonprod.gerega.net:6443
+      server: https://cp-nonproduction.gerega.net:6443
     - namespace: "*"
-      server: https://cp-nonprod.gerega.net:6443
+      server: https://cp-nonproduction.gerega.net:6443
     - namespace: "*"
       server: https://cp-prod.gerega.net:6443
     - namespace: "*"
@@ -188,9 +188,9 @@ spec:
   # Only permit applications to deploy to the guestbook namespace in the same cluster
   destinations:
     - namespace: ra-test-*
-      server: https://cp-nonprod.gerega.net:6443
+      server: https://cp-nonproduction.gerega.net:6443
     - namespace: ra-stage-*
-      server: https://cp-nonprod.gerega.net:6443
+      server: https://cp-nonproduction.gerega.net:6443
     - namespace: ra-production-*
       server: https://cp-production.gerega.net:6443
     - namespace: ra-production-*
