@@ -1,11 +1,11 @@
 type: application
-appVersion: 0.59.2
-dependencies:
-- version: 10.0.0
-  repository: https://charts.bitnami.com/bitnami
-  name: kube-prometheus
 name: kube-prometheus
-version: 10.0.0
+dependencies:
+- version: 10.0.1
+  name: kube-prometheus
+  repository: https://charts.bitnami.com/bitnami
 apiVersion: v2
+version: 10.0.1
+appVersion: 0.59.2
 
 
