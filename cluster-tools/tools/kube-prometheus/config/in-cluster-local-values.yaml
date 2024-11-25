@@ -3,6 +3,7 @@ internal_scrape_config:
   name: internal-scrape-config
 kube-prometheus:
   prometheus:
+    resourcesPreset: "large"
     ingress:
       hostname: internal-cluster.mattgerega.net
     thanos:
