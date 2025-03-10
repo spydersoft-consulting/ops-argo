@@ -1,11 +1,11 @@
-apiVersion: v2
-type: application
 dependencies:
-- version: 11.1.1
-  repository: https://charts.bitnami.com/bitnami
+- repository: https://charts.bitnami.com/bitnami
   name: kube-prometheus
-version: 11.1.1
-appVersion: 0.59.2
+  version: 11.1.2
 name: kube-prometheus
+type: application
+version: 11.1.2
+appVersion: 0.59.2
+apiVersion: v2
 
 
