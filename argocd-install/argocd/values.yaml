@@ -24,6 +24,10 @@ argo-cd:
       serviceMonitor:
         enabled: true
   notifications:
+    secret:
+      create: false
+      name: argocd-notifications-secret
+
     metrics:
       enabled: true
       serviceMonitor:
