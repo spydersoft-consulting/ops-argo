@@ -3,7 +3,7 @@ kind: Application
 metadata:
   name: cluster-tools
   labels:
-    accruent.io/category: cluster-tools
+    spydersoft.io/category: cluster-tools
 spec:
   destination:
     namespace: argo
