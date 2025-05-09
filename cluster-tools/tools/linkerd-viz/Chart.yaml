@@ -2,8 +2,8 @@ apiVersion: v2
 name: linkerd-viz
 dependencies:
   - name: linkerd-viz
-    version: 30.12.11
-    repository: https://helm.linkerd.io/stable
+    version: 2025.5.2
+    repository: https://helm.linkerd.io/edge
 type: application
-version: 30.12.11
-appVersion: stable-2.14.9
+version: 2025.5.2
+appVersion: edge-25.5.2
