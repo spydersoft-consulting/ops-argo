@@ -6,4 +6,4 @@ version: 2025.5.2
 dependencies:
   - name: linkerd-control-plane
     version: 2025.5.2
-    repository: https://helm.linkerd.io/stable
+    repository: https://helm.linkerd.io/edge
