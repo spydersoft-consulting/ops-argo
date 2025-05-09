@@ -1,9 +1,9 @@
 apiVersion: v2
 name: linkerd-control-plane
-appVersion: stable-2.14.9
+appVersion: edge-25.5.2
 type: application
-version: 1.16.11
+version: 2025.5.2
 dependencies:
   - name: linkerd-control-plane
-    version: 1.16.11
+    version: 2025.5.2
     repository: https://helm.linkerd.io/stable
