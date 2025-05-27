@@ -47,10 +47,10 @@ argocd-apps:
         directory:
           recurse: true
           jsonnet: {}
-      syncPolicy:
-        automated:
-          selfHeal: false #true
-          prune: true
+      # syncPolicy:
+      #   automated:
+      #     selfHeal: true
+      #     prune: true
     argocd-appprojects:
       namespace: argo
       destination:
@@ -64,10 +64,10 @@ argocd-apps:
         directory:
           recurse: true
           jsonnet: {}
-      syncPolicy:
-        automated:
-          selfHeal: false #true
-          prune: true
+      # syncPolicy:
+      #   automated:
+      #     selfHeal: true
+      #     prune: true
     argocd-secrets:
       namespace: argo
       destination:
@@ -81,10 +81,10 @@ argocd-apps:
         directory:
           recurse: true
           jsonnet: {}
-      syncPolicy:
-        automated:
-          selfHeal: false #true
-          prune: true
+      # syncPolicy:
+      #   automated:
+      #     selfHeal: true
+      #     prune: true
   projects:
     argocd:
       namespace: argo
