@@ -19,5 +19,5 @@ spec:
       jsonnet: {}
   syncPolicy:
     automated:
-      selfHeal: true
+      selfHeal: false #true
       prune: true
