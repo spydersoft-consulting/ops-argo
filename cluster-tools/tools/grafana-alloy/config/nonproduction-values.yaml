@@ -21,6 +21,11 @@ alloy:
           }
         }
 
+        prometheus.scrape "pods" {
+          targets    = discovery.kubernetes.pods.targets
+          forward_to = [prometheus.remote_write.default.receiver]
+        }
+
         // discovery.relabel rewrites the label set of the input targets by applying one or more relabeling rules.
         // If no rules are defined, then the input targets are exported as-is.
         discovery.relabel "pod_logs" {
