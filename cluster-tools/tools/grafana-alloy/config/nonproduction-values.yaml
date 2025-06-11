@@ -28,9 +28,13 @@ alloy:
           }
         }
 
-
-        discovery.relabel "pod_metrics" {
+        prometheus.scrape "pod_metrics" {
           targets = discovery.kubernetes.pod.targets
+          forward_to = [prometheus.relabel.pod_metrics.receiver]
+        }
+
+        prometheus.relabel "pod_metrics" {
+          forward_to = [prometheus.remote_write.default.receiver]
 
           // drop all metrics from the go runtime
           rule {
@@ -45,6 +49,14 @@ alloy:
             regex = "prometheus_.*"
             action = "drop"
           }
+
+          // drop all metrics from alloy
+          rule {
+            source_labels = ["__name__"]
+            regex = "alloy_.*"
+            action = "drop"
+          }
+
 
           // Drop all linkerd containers
           rule {
@@ -159,10 +171,7 @@ alloy:
           forward_to = [loki.process.pod_logs.receiver]
         }
 
-        prometheus.scrape "pod_metrics" {
-          targets    = discovery.relabel.pod_metrics.output
-          forward_to = [prometheus.remote_write.default.receiver]
-        }
+
 
         // loki.process receives log entries from other Loki components, applies one or more processing stages,
         // and forwards the results to the list of receivers in the component's arguments.
