@@ -19,7 +19,7 @@ kube-prometheus:
       external:
         name: production-scrape-config
         key: scrape-jobs.yaml
-    remote_write:
+    remoteWrite:
       writeRelabelConfigs:
         - sourceLabels: [__name__]
           regex: 'go_.*'
