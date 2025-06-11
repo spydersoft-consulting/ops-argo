@@ -23,7 +23,7 @@ external-secrets:
       runAsNonRoot: true
       runAsUser: 1000
     serviceMonitor:
-      enabled: true
+      enabled: false
       interval: 1m
       scrapeTimeout: 30s
     resources:
@@ -42,7 +42,7 @@ external-secrets:
       runAsNonRoot: true
       runAsUser: 1000
     serviceMonitor:
-      enabled: true
+      enabled: false
       interval: 1m
       scrapeTimeout: 30s
     resources:
