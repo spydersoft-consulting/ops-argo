@@ -10,6 +10,11 @@ alloy:
             cluster = "nonproduction",
           }
         }
+
+        namespaces {
+          own_namespace = false
+        }
+
         loki.write "default" {
           endpoint {
             url = "https://loki.mattgerega.net/loki/api/v1/push"
