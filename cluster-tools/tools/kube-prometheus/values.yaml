@@ -21,6 +21,9 @@ kube-prometheus:
         - sourceLabels: [__name__]
           regex: 'go_.*'
           action: drop
+        - sourceLabels: [__name__]
+          regex: 'prometheus_.*'
+          action: drop
 
     persistence:
       enabled: true
