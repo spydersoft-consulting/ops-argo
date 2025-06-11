@@ -11,10 +11,6 @@ alloy:
           }
         }
 
-        namespaces {
-          own_namespace = false
-        }
-
         loki.write "default" {
           endpoint {
             url = "https://loki.mattgerega.net/loki/api/v1/push"
@@ -26,6 +22,9 @@ alloy:
           selectors {
             role  = "pod"
             field = "spec.nodeName=" + coalesce(env("HOSTNAME"), constants.hostname)
+          }
+          namespaces {
+            own_namespace = false
           }
         }
 
