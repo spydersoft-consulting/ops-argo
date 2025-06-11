@@ -10,6 +10,10 @@ alloy:
 
         discovery.kubernetes "pod" {
           role = "pod"
+          selectors {
+            role  = "pod"
+            field = "spec.nodeName=" + coalesce(env("HOSTNAME"), constants.hostname)
+          }
         }
 
         // discovery.relabel rewrites the label set of the input targets by applying one or more relabeling rules.
@@ -17,10 +21,17 @@ alloy:
         discovery.relabel "pod_logs" {
           targets = discovery.kubernetes.pod.targets
 
-          // 
+          // Drop all linkerd containers
           rule {
             source_labels = ["__meta_kubernetes_pod_container_name"]
             regex = "linkerd-.*"
+            action = "drop"
+          }
+
+          // drop all kube-system pods
+          rule {
+            source_labels = ["__meta_kubernetes_namespace"]
+            regex = "kube-system"
             action = "drop"
           }
 
