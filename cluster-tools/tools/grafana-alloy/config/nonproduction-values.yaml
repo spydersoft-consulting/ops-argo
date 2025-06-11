@@ -6,7 +6,7 @@ alloy:
           endpoint {
             url = "https://mimir.mattgerega.net/api/v1/push"
           }
-          externalLabels {
+          externalLabels = {
             cluster = "nonproduction"
           }
         }
