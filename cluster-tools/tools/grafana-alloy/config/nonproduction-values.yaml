@@ -28,10 +28,39 @@ alloy:
           }
         }
 
-        prometheus.scrape "pods" {
-          targets    = discovery.kubernetes.pod.targets
-          forward_to = [prometheus.remote_write.default.receiver]
+
+        discovery.relabel "pod_metrics" {
+          targets = discovery.kubernetes.pod.targets
+
+          // drop all metrics from the go runtime
+          rule {
+            source_labels = ["__name__"]
+            regex = "go_.*"
+            action = "drop"
+          }
+
+          // drop all metrics from prometheus
+          rule {
+            source_labels = ["__name__"]
+            regex = "prometheus_.*"
+            action = "drop"
+          }
+
+          // Drop all linkerd containers
+          rule {
+            source_labels = ["__meta_kubernetes_pod_container_name"]
+            regex = "linkerd-.*"
+            action = "drop"
+          }
+
+          // drop all kube-system pods
+          rule {
+            source_labels = ["__meta_kubernetes_namespace"]
+            regex = "kube-system"
+            action = "drop"
+          }
         }
+
 
         // discovery.relabel rewrites the label set of the input targets by applying one or more relabeling rules.
         // If no rules are defined, then the input targets are exported as-is.
@@ -128,6 +157,11 @@ alloy:
         loki.source.kubernetes "pod_logs" {
           targets    = discovery.relabel.pod_logs.output
           forward_to = [loki.process.pod_logs.receiver]
+        }
+
+        prometheus.scrape "pod_metrics" {
+          targets    = discovery.relable.pod_metrics.targets
+          forward_to = [prometheus.remote_write.default.receiver]
         }
 
         // loki.process receives log entries from other Loki components, applies one or more processing stages,
