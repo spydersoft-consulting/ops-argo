@@ -2,6 +2,11 @@ alloy:
   alloy:
     configMap:
       content: |
+        prometheus.remote_write "default" {
+          endpoint {
+            url = "https://mimir.mattgerega.net/api/v1/push"
+          }
+        }
         loki.write "default" {
           endpoint {
             url = "https://loki.mattgerega.net/loki/api/v1/push"
@@ -20,6 +25,20 @@ alloy:
         // If no rules are defined, then the input targets are exported as-is.
         discovery.relabel "pod_logs" {
           targets = discovery.kubernetes.pod.targets
+
+          // drop all metrics from the go runtime
+          rule {
+            source_labels = ["__name__"]
+            regex = "go_.*"
+            action = "drop"
+          }
+
+          // drop all metrics from prometheus
+          rule {
+            source_labels = ["__name__"]
+            regex = "prometheus_.*"
+            action = "drop"
+          }
 
           // Drop all linkerd containers
           rule {
