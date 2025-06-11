@@ -160,7 +160,7 @@ alloy:
         }
 
         prometheus.scrape "pod_metrics" {
-          targets    = discovery.relable.pod_metrics.targets
+          targets    = discovery.relabel.pod_metrics.targets
           forward_to = [prometheus.remote_write.default.receiver]
         }
 
