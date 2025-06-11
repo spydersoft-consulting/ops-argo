@@ -22,9 +22,9 @@ spec:
         repoURL: https://github.com/spydersoft-consulting/ops-argo
         targetRevision: main
         path: "cluster-tools/tools/grafana-alloy"
-        # helm:
-        #   valueFiles:
-        #     - "config/{{name}}-values.yaml"
+        helm:
+          valueFiles:
+            - "config/{{name}}-values.yaml"
       destination:
         server: "{{ server }}"
         namespace: "grafana"
