@@ -12,17 +12,17 @@ argo-cd:
     metrics:
       enabled: true
       serviceMonitor:
-        enabled: true
+        enabled: false
   redis:
     metrics:
       enabled: true
       serviceMonitor:
-        enabled: true
+        enabled: false
   applicationSet:
     metrics:
       enabled: true
       serviceMonitor:
-        enabled: true
+        enabled: false
   notifications:
     secret:
       create: false
