@@ -22,7 +22,7 @@ alloy:
         }
 
         prometheus.scrape "pods" {
-          targets    = discovery.kubernetes.pods.targets
+          targets    = discovery.kubernetes.pod.targets
           forward_to = [prometheus.remote_write.default.receiver]
         }
 
