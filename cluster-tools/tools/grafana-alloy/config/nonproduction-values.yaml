@@ -17,6 +17,13 @@ alloy:
         discovery.relabel "pod_logs" {
           targets = discovery.kubernetes.pod.targets
 
+          // 
+          rule {
+            source_labels = ["__meta_kubernetes_pod_container_name"]
+            regex = "linkerd-.*"
+            action = "drop"
+          }
+
           // Label creation - "namespace" field from "__meta_kubernetes_namespace"
           rule {
             source_labels = ["__meta_kubernetes_namespace"]
