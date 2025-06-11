@@ -7,7 +7,7 @@ alloy:
             url = "https://mimir.mattgerega.net/api/v1/push"
           }
           externalLabels = {
-            cluster = "nonproduction"
+            cluster = "nonproduction",
           }
         }
         loki.write "default" {
