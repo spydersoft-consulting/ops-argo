@@ -17,6 +17,11 @@ kube-prometheus:
     retention: 4d
     remoteWrite:
       - url: https://mimir.mattgerega.net/api/v1/push
+        writeRelabelConfigs:
+        - sourceLabels: [__name__]
+          regex: 'go_.*'
+          action: drop
+
     persistence:
       enabled: true
       storageClass: nfs-client
