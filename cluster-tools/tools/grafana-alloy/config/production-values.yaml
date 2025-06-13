@@ -2,6 +2,7 @@ alloy:
   alloy:
     configMap:
       content: |
+        
         remote.kubernetes.secret "vault_app_role_secret" {
           namespace = "cluster-tools"
           name = "k8-app-role-secret"
@@ -15,7 +16,7 @@ alloy:
           auth {
             app_role {
               role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
-              secret = remote.kubernetes.secret.vault_app_role_secret.data.secret-id
+              secret = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
             }
           }
         }
