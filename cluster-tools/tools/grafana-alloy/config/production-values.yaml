@@ -17,7 +17,7 @@ alloy:
         loki.write "default" {
           endpoint {
             url = "https://loki.mattgerega.net/loki/api/v1/push"
-            tenant_id = "nonproduction"
+            tenant_id = "production"
           }
         }
 
@@ -137,7 +137,7 @@ alloy:
         loki.process "pod_logs" {
           stage.static_labels {
               values = {
-                cluster = "nonproduction",
+                cluster = "production",
               }
           }
 
