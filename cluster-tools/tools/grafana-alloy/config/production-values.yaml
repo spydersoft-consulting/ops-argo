@@ -78,7 +78,7 @@ alloy:
 
         prometheus.scrape "minio_job" {
           targets = [{
-            __address__ = insensitive(remote.vault.targets.data.minio-targets),
+            __address__ = remote.vault.targets.data["minio-targets"],
           }]
           forward_to   = [prometheus.remote_write.default.receiver]
           job_name     = "minio-job"
@@ -92,7 +92,7 @@ alloy:
 
         prometheus.scrape "vault_job" {
           targets = [{
-            __address__ = insensitive(remote.vault.targets.data.vault-targets),
+            __address__ = remote.vault.targets.data["vault-targets"],
           }]
           forward_to = [prometheus.remote_write.default.receiver]
           job_name   = "vault-job"
@@ -104,7 +104,7 @@ alloy:
 
           authorization {
             type        = "Bearer"
-            credentials = remote.vault.vault.data.metric-token
+            credentials = remote.vault.vault.data["metric-token"]
           }
         }
 
