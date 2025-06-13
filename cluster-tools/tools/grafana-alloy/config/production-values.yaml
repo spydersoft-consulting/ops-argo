@@ -2,6 +2,24 @@ alloy:
   alloy:
     configMap:
       content: |
+        remote.kubernetes.secret "vault_app_role_secret" {
+          namespace = "cluster-tools"
+          name = "k8-app-role-secret"
+        }
+
+        remote.vault "hass" {
+          server: "https://hcvault.mattgerega.net"
+          path = "secrets-k8/hass"
+          engine_version = 2
+
+          auth {
+            app_role {
+              role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
+              secret = remote.kubernetes.secret.vault_app_role_secret.data.secret-id
+            }
+          }
+        }
+
         prometheus.remote_write "default" {
           endpoint {
             url = "https://mimir.mattgerega.net/api/v1/push"
@@ -13,6 +31,23 @@ alloy:
             cluster = "production",
           }
         }
+
+        // Scrape configuration for Home Assistant Metrics
+        prometheus.scrape "hass" {
+          targets = [{
+            __address__ = "home.mattgerega.net",
+          }]
+          forward_to   = [prometheus.remote_write.default.receiver]
+          job_name     = "hass"
+          metrics_path = "/api/prometheus"
+          scheme       = "https"
+
+          authorization {
+            type        = "Bearer"
+            credentials = remote.vault.hass.data.token
+          }
+        }
+
 
         loki.write "default" {
           endpoint {
