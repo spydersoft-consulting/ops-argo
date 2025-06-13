@@ -5,6 +5,9 @@ alloy:
         prometheus.remote_write "default" {
           endpoint {
             url = "https://mimir.mattgerega.net/api/v1/push"
+            headers = {
+              "X-Scope-OrgID" = "nonproduction",
+            }
           }
           external_labels = {
             cluster = "nonproduction",
@@ -14,6 +17,7 @@ alloy:
         loki.write "default" {
           endpoint {
             url = "https://loki.mattgerega.net/loki/api/v1/push"
+            tenant_id = "nonproduction"
           }
         }
 
