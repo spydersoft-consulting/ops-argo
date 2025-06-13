@@ -8,7 +8,7 @@ alloy:
         }
 
         remote.vault "hass" {
-          server: "https://hcvault.mattgerega.net"
+          server = "https://hcvault.mattgerega.net"
           path = "secrets-k8/hass"
           engine_version = 2
 
