@@ -36,8 +36,6 @@ alloy:
           }
         }
 
-
-
         otelcol.processor.memory_limiter "default" {
           check_interval = "1s"
           limit          = "1GiB"
