@@ -141,6 +141,13 @@ alloy:
             action = "drop"
           }
 
+          // Drop all identity-server containers (testing OTLP exporting)
+          rule {
+            source_labels = ["__meta_kubernetes_pod_container_name"]
+            regex = "identity-server-main.*"
+            action = "drop"
+          }
+
           // drop all kube-system pods
           rule {
             source_labels = ["__meta_kubernetes_namespace"]
@@ -274,6 +281,9 @@ alloy:
             endpoint = "tfx-internal.gerega.net:32326"
             headers = {
               "X-Scope-OrgID" = "nonproduction",
+            }
+            tls {
+              insecure = true
             }
           }
         }
