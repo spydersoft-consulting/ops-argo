@@ -1,5 +1,14 @@
 alloy:
   alloy:
+    extraPorts:
+      - name: "otlp-grpc"
+        port: 4317
+        targetPort: 4317
+        protocol: "TCP"
+      - name: "otlp-http"
+        port: 4318
+        targetPort: 4318
+        protocol: "TCP"
     configMap:
       content: |
         
@@ -238,4 +247,55 @@ alloy:
           }
 
           forward_to = [loki.write.default.receiver]
+        }
+
+        otelcol.processor.memory_limiter "default" {
+          check_interval = "1s"
+          limit          = "1GiB"
+
+          output {
+            metrics = [otelcol.processor.batch.default.input]
+            logs    = [otelcol.processor.batch.default.input]
+            traces  = [otelcol.processor.batch.default.input]
+          }
+        }
+
+        otelcol.processor.batch "default" {
+          output {
+            metrics = [otelcol.exporter.prometheus.default.input]
+            logs    = [otelcol.exporter.loki.default.input]
+            traces  = [otelcol.exporter.otlp.default.input]
+          }
+        }
+        otelcol.receiver.otlp "example" {
+          grpc {
+            endpoint = "127.0.0.1:4317"
+          }
+
+          http {
+            endpoint = "127.0.0.1:4318"
+          }
+
+          output {
+            metrics = [otelcol.processor.batch.example.input]
+            logs    = [otelcol.processor.batch.example.input]
+            traces  = [otelcol.processor.batch.example.input]
+          }
+        }
+
+        otelcol.exporter.loki "default" {
+          forward_to = [loki.write.default.receiver]
+        }
+
+        otelcol.exporter.prometheus "default" {
+          forward_to = [prometheus.remote_write.default.receiver]
+        }
+
+        otelcol.exporter.otlp "default" {
+          client {
+            endpoint = "tfx-internal.gerega.net:32326"
+            headers = {
+              "X-Scope-OrgID" = "production",
+            }
+          }
         }
