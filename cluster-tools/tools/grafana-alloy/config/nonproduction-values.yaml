@@ -255,9 +255,9 @@ alloy:
           }
 
           output {
-            metrics = [otelcol.processor.batch.example.input]
-            logs    = [otelcol.processor.batch.example.input]
-            traces  = [otelcol.processor.batch.example.input]
+            metrics = [otelcol.processor.batch.default.input]
+            logs    = [otelcol.processor.batch.default.input]
+            traces  = [otelcol.processor.batch.default.input]
           }
         }
 
