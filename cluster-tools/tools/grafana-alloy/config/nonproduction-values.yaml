@@ -20,6 +20,7 @@ alloy:
           }
           external_labels = {
             cluster = "nonproduction",
+            exporter = "grafana-alloy"
           }
         }
 
@@ -30,7 +31,7 @@ alloy:
           }
           
           external_labels = {
-            cluster = "nonproduction"
+            cluster = "nonproduction",
             exporter = "grafana-alloy"
           }
         }
