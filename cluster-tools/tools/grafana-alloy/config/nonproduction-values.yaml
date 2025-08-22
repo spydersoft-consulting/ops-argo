@@ -28,6 +28,11 @@ alloy:
             url = "https://loki.mattgerega.net/loki/api/v1/push"
             tenant_id = "nonproduction"
           }
+          
+          external_labels = {
+            cluster = "nonproduction",
+            exporter = "grafana-alloy"
+          }
         }
 
 
