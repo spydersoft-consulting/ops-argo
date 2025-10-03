@@ -1,5 +1,5 @@
 linkerd-viz:
-  prometheusUrl: http://nonproduction-kube-prometh-prometheus.monitoring:9090
+  prometheusUrl: https://mimir.mattgerega.net/prometheus
   grafana:
     uidPrefix: nonprod
   # podAnnotations:

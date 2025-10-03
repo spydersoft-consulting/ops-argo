@@ -1,5 +1,5 @@
 linkerd-viz:
-  prometheusUrl: https://prod-cluster.mattgerega.net/prometheus
+  prometheusUrl: https://mimir.mattgerega.net/prometheus
   grafana:
     uidPrefix: prod
 ingress:
