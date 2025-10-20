@@ -7,7 +7,7 @@ argo-cd:
     metrics:
       enabled: true
       serviceMonitor:
-        enabled: true
+        enabled: false
   repoServer:
     metrics:
       enabled: true
@@ -31,7 +31,7 @@ argo-cd:
     metrics:
       enabled: true
       serviceMonitor:
-        enabled: true
+        enabled: false
 
   server:
     ingress:
@@ -44,7 +44,7 @@ argo-cd:
     metrics:
       enabled: true
       serviceMonitor:
-        enabled: true
+        enabled: false
 
   configs:
     rbac:
