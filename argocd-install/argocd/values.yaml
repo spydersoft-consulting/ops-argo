@@ -41,6 +41,7 @@ argo-cd:
       annotations:
         nginx.ingress.kubernetes.io/service-upstream: "true"
         nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+      # Note: Gateway API HTTPRoute is also enabled (see templates/httproute.yaml)
     metrics:
       enabled: true
       serviceMonitor:
