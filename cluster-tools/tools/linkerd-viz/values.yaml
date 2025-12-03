@@ -1,5 +1,6 @@
 linkerd-viz:
-  enforcedHostRegexp: .*
+  dashboard:
+    enforcedHostRegexp: .*
   tap:
     externalSecret: true
     caBundle: |
