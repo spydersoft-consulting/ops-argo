@@ -19,6 +19,3 @@ spec:
                         operator: DoesNotExist
       envoyService:
         type: {{ .Values.envoyProxy.serviceType | default "LoadBalancer" }}
-        {{- if eq (.Values.envoyProxy.serviceType | default "LoadBalancer") "NodePort" }}
-        allocateLoadBalancerNodePorts: false
-        {{- end }}
