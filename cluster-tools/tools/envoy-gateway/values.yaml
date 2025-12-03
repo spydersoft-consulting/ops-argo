@@ -1,1 +1,9 @@
+
+
+gatewayClass:
+  name: main
+gateway:
+  name: main
+  port: 8080
+
 envoy-gateway: {}
