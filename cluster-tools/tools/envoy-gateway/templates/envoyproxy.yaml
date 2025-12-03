@@ -18,4 +18,18 @@ spec:
                       - key: node-role.kubernetes.io/control-plane
                         operator: DoesNotExist
       envoyService:
-        type: {{ .Values.envoyProxy.serviceType | default "LoadBalancer" }}
+        type: {{ .Values.envoyProxy.serviceType | default "NodePort" }}
+        {{- if .Values.envoyProxy.nodePort }}
+        patch:
+          type: StrategicMerge
+          value:
+            spec:
+              ports:
+                - name: http
+                  port: {{ .Values.gateway.port }}
+                  protocol: TCP
+                  targetPort: 8080
+                  nodePort: {{ .Values.envoyProxy.nodePort }}
+        {{- end }}
+      envoyHpa:
+        minReplicas: {{ .Values.envoyProxy.replicas | default 2 }}

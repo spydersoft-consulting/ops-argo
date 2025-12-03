@@ -8,5 +8,6 @@ gateway:
 envoyProxy:
   replicas: 2
   serviceType: NodePort
+  nodePort: 30080
 
 envoy-gateway: {}
