@@ -32,4 +32,4 @@ spec:
         #  selfHeal: false
         syncOptions: # Sync options which modifies sync behavior
           - CreateNamespace=true
-          - RespectIgnoreDifferences=true
+          - ServerSideApply=true
