@@ -1,11 +1,11 @@
 type: application
-appVersion: 0.5.9
+appVersion: 1.6.0
 apiVersion: v2
-name: external-secrets
-version: 0.20.3
+name: envoy-gateway
+version: v1.6.0
 dependencies:
-- version: 0.20.3
-  repository: https://charts.external-secrets.io
-  name: external-secrets
+- version: v1.6.0
+  repository: https://docker.io/envoyproxy
+  name: gateway-helm
 
 
