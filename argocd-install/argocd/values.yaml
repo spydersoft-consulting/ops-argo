@@ -35,7 +35,7 @@ argo-cd:
 
   server:
     ingress:
-      enabled: true
+      enabled: false
       hostname: argo.mattgerega.net
       ingressClassName: nginx
       annotations:
