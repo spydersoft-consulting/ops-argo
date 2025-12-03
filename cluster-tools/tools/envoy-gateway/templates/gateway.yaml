@@ -4,8 +4,16 @@ metadata:
   name: {{ .Values.gateway.name }}
 spec:
   gatewayClassName: {{ .Values.gatewayClass.name }}
+  infrastructure:
+    parametersRef:
+      group: gateway.envoyproxy.io
+      kind: EnvoyProxy
+      name: {{ .Values.gateway.name }}
   listeners:
     - name: http
       protocol: HTTP
       port: {{ .Values.gateway.port }}
+      allowedRoutes:
+        namespaces:
+          from: All
 
