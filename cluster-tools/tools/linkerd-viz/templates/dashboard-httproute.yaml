@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: linkerd-viz-dashboard
+spec:
+  parentRefs:
+    - name: main
+      namespace: envoy-gateway-system
+      group: gateway.networking.k8s.io
+      kind: Gateway
+  hostnames:
+    - {{ .Values.ingress.host }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: web
+          port: 8084
