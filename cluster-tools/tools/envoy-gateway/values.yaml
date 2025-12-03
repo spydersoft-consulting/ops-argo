@@ -5,5 +5,8 @@ gatewayClass:
 gateway:
   name: main
   port: 8080
+envoyProxy:
+  replicas: 2
+  serviceType: NodePort
 
 envoy-gateway: {}
