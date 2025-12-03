@@ -31,5 +31,3 @@ spec:
                   targetPort: 8080
                   nodePort: {{ .Values.envoyProxy.nodePort }}
         {{- end }}
-      envoyHpa:
-        minReplicas: {{ .Values.envoyProxy.replicas | default 2 }}
