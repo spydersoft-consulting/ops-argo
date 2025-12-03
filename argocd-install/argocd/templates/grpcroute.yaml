@@ -1,0 +1,22 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GRPCRoute
+metadata:
+  name: argocd-server-grpc
+  namespace: argo
+spec:
+  parentRefs:
+    - name: main
+      namespace: envoy-gateway-system
+      group: gateway.networking.k8s.io
+      kind: Gateway
+  hostnames:
+    - argo.mattgerega.net
+  rules:
+    - backendRefs:
+        - name: argocd-server
+          port: 443
+      matches:
+        - headers:
+            - name: Content-Type
+              type: RegularExpression
+              value: "^application/grpc.*$"
