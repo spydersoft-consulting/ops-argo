@@ -17,7 +17,9 @@ spec:
     directory:
       recurse: true
       jsonnet: {}
-  # syncPolicy:
+  syncPolicy:
+    syncOptions: # Sync options which modifies sync behavior
+    - ServerSideApply=true 
   #   automated:
   #     selfHeal: true
   #     prune: true
