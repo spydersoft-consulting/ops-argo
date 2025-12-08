@@ -42,3 +42,4 @@ spec:
         syncOptions: # Sync options which modifies sync behavior
           - CreateNamespace=true
           - Validate=false
+          - ServerSideApply=true
