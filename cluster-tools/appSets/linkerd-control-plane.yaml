@@ -34,3 +34,4 @@ spec:
       syncPolicy:
         syncOptions:
           - RespectIgnoreDifferences=true
+          - ServerSideApply=true
