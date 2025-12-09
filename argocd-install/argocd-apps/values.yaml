@@ -17,6 +17,7 @@ argocd-apps:
       syncPolicy:
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
     argocd:
       namespace: argo
       destination:
@@ -34,6 +35,7 @@ argocd-apps:
       syncPolicy:
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
     argocd-appsets:
       namespace: argo
       destination:
@@ -47,10 +49,9 @@ argocd-apps:
         directory:
           recurse: true
           jsonnet: {}
-      # syncPolicy:
-      #   automated:
-      #     selfHeal: true
-      #     prune: true
+      syncPolicy:
+        syncOptions: # Sync options which modifies sync behavior
+        - ServerSideApply=true
     argocd-appprojects:
       namespace: argo
       destination:
@@ -64,10 +65,9 @@ argocd-apps:
         directory:
           recurse: true
           jsonnet: {}
-      # syncPolicy:
-      #   automated:
-      #     selfHeal: true
-      #     prune: true
+      syncPolicy:
+        syncOptions: # Sync options which modifies sync behavior
+        - ServerSideApply=true 
     argocd-secrets:
       namespace: argo
       destination:
@@ -81,10 +81,9 @@ argocd-apps:
         directory:
           recurse: true
           jsonnet: {}
-      # syncPolicy:
-      #   automated:
-      #     selfHeal: true
-      #     prune: true
+      syncPolicy:
+        syncOptions: # Sync options which modifies sync behavior
+        - ServerSideApply=true 
   projects:
     argocd:
       namespace: argo
