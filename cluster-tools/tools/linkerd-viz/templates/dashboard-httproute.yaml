@@ -16,5 +16,8 @@ spec:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: web
+        - group: ''
+          kind: Service
+          name: web
           port: 8084
+          weight: 1
