@@ -14,6 +14,8 @@ spec:
   template:
     metadata:
       name: "{{ nameNormalized }}-cert-manager"
+      annotations:
+        argocd.argoproj.io/compare-options: ServerSideDiff=true
       labels:
         spydersoft.io/category: cluster-tools
     spec:
