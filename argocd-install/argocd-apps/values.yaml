@@ -2,14 +2,13 @@ argocd-apps:
   applications:
     argocd-apps:
       namespace: argo
+      additionalAnnotations:
+        argocd.argoproj.io/compare-options: ServerSideDiff=true
       destination:
         namespace: cattle-system
         server: https://kubernetes.default.svc
       project: argocd
       source:
-        metadata:
-          annotations:
-            argocd.argoproj.io/compare-options: ServerSideDiff=true
         helm:
           version: v3
           valueFiles:
@@ -23,14 +22,13 @@ argocd-apps:
           - ServerSideApply=true
     argocd:
       namespace: argo
+      additionalAnnotations:
+        argocd.argoproj.io/compare-options: ServerSideDiff=true
       destination:
         namespace: argo
         server: https://kubernetes.default.svc
       project: argocd
       source:
-        metadata:
-          annotations:
-            argocd.argoproj.io/compare-options: ServerSideDiff=true
         helm:
           version: v3
           valueFiles:
@@ -44,14 +42,13 @@ argocd-apps:
           - ServerSideApply=true
     argocd-appsets:
       namespace: argo
+      additionalAnnotations:
+        argocd.argoproj.io/compare-options: ServerSideDiff=true
       destination:
         namespace: argo
         server: https://kubernetes.default.svc
       project: argocd
       source:
-        metadata:
-          annotations:
-            argocd.argoproj.io/compare-options: ServerSideDiff=true
         path: apps
         repoURL: https://github.com/spydersoft-consulting/ops-argo
         targetRevision: HEAD
@@ -63,14 +60,13 @@ argocd-apps:
         - ServerSideApply=true
     argocd-appprojects:
       namespace: argo
+      additionalAnnotations:
+        argocd.argoproj.io/compare-options: ServerSideDiff=true
       destination:
         namespace: argo
         server: https://kubernetes.default.svc
       project: argocd
       source:
-        metadata:
-          annotations:
-            argocd.argoproj.io/compare-options: ServerSideDiff=true
         path: projects
         repoURL: https://github.com/spydersoft-consulting/ops-argo
         targetRevision: HEAD
@@ -82,14 +78,13 @@ argocd-apps:
         - ServerSideApply=true 
     argocd-secrets:
       namespace: argo
+      additionalAnnotations:
+        argocd.argoproj.io/compare-options: ServerSideDiff=true
       destination:
         namespace: argo
         server: https://kubernetes.default.svc
       project: argocd
-      source:
-        metadata:
-          annotations:
-            argocd.argoproj.io/compare-options: ServerSideDiff=true
+      source:          
         path: secrets
         repoURL: https://github.com/spydersoft-consulting/ops-argo
         targetRevision: HEAD
