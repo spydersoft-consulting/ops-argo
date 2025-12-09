@@ -56,6 +56,7 @@ argo-cd:
         p, role:org-admin, logs, *, */*, allow
         g, "bad2673a-2a0e-46f0-ab2f-bfe0c9b67274", role:org-admin
     cm:
+      controller.diff.server.side: "true"
       url: https://argo.mattgerega.net
       help.chatUrl: https://spydersoft.slack.com/archives/C04S4AJV6E6
       resource.customizations.ignoreDifferences.all: |
