@@ -38,6 +38,16 @@ alloy:
           }
         }
 
+        remote.vault "garage" {
+          server = "https://hcvault.mattgerega.net"
+          path = "secrets-k8/monitoring/garage/metrics"
+
+          auth.approle {
+            role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
+            secret = remote.kubernetes.secret.vault_app_role_secret.data["metrics-token"]
+          }
+        }
+
         prometheus.remote_write "default" {
           endpoint {
             url = "https://mimir.mattgerega.net/api/v1/push"
@@ -81,6 +91,16 @@ alloy:
             type        = "Bearer"
             credentials = remote.vault.vault.data["metric-token"]
           }
+        }
+
+        prometheus.scrape "garage_job" {
+          targets = [{
+            __address__ = convert.nonsensitive(remote.vault.targets.data["garage-target"]),
+          }]
+          forward_to   = [prometheus.remote_write.default.receiver]
+          job_name     = "garage-job"
+          metrics_path = "/metrics"
+          scheme       = "http"
         }
 
 
