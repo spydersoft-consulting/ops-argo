@@ -27,7 +27,13 @@ spec:
     remoteRef:
       key: secrets-k8/linkerd
       property: cacrt
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
   - secretKey: certKey
     remoteRef:
       key: secrets-k8/linkerd
       property: cakey
+      conversionStrategy: Default
+      decodingStrategy: None
+      metadataPolicy: None
