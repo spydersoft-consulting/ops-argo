@@ -27,26 +27,6 @@ alloy:
           }
         }
 
-        remote.vault "targets" {
-          server = "https://hcvault.mattgerega.net"
-          path = "secrets-k8/monitoring/targets/internal"
-
-          auth.approle {
-            role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
-            secret = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
-          }
-        }
-
-        remote.vault "minio" {
-          server = "https://hcvault.mattgerega.net"
-          path = "secrets-k8/monitoring/minio"
-
-          auth.approle {
-            role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
-            secret = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
-          }
-        }
-
         remote.vault "vault" {
           server = "https://hcvault.mattgerega.net"
           path = "secrets-k8/monitoring/vault"
@@ -85,39 +65,6 @@ alloy:
             credentials = remote.vault.hass.data.token
           }
         }
-
-        prometheus.scrape "minio_job" {
-          targets = [{
-            __address__ = convert.nonsensitive(remote.vault.targets.data["minio-target"]),
-          }]
-          forward_to   = [prometheus.remote_write.default.receiver]
-          job_name     = "minio-job"
-          metrics_path = "/minio/v2/metrics/cluster"
-
-          authorization {
-            type        = "Bearer"
-            credentials = remote.vault.minio.data.authtoken
-          }
-        }
-
-        prometheus.scrape "vault_job" {
-          targets = [{
-            __address__ = convert.nonsensitive(remote.vault.targets.data["vault-target"]),
-          }]
-          forward_to = [prometheus.remote_write.default.receiver]
-          job_name   = "vault-job"
-          params     = {
-            format = ["prometheus"],
-          }
-          metrics_path = "/v1/sys/metrics"
-          scheme       = "https"
-
-          authorization {
-            type        = "Bearer"
-            credentials = remote.vault.vault.data["metric-token"]
-          }
-        }
-
 
         loki.write "default" {
           endpoint {
