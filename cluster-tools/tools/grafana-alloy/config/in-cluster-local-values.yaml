@@ -87,10 +87,10 @@ alloy:
         loki.write "default" {
           endpoint {
             url = "https://loki.mattgerega.net/loki/api/v1/push"
-            tenant_id = "production"
+            tenant_id = "internal"
           }
           external_labels = {
-            cluster = "production",
+            cluster = "internal",
             custom_source = "grafana-alloy",
           }
         }
