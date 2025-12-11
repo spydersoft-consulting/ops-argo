@@ -53,3 +53,5 @@ Thumbs.db
 Chart.lock
 .vs/
 .vscode/
+
+.claude/
