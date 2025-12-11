@@ -44,7 +44,7 @@ alloy:
 
           auth.approle {
             role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
-            secret = remote.kubernetes.secret.vault_app_role_secret.data["metrics-token"]
+            secret = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
           }
         }
 
@@ -101,6 +101,11 @@ alloy:
           job_name     = "garage-job"
           metrics_path = "/metrics"
           scheme       = "http"
+
+          authorization {
+            type        = "Bearer"
+            credentials = remote.vault.garage.data["metric-token"]
+          }
         }
 
 
