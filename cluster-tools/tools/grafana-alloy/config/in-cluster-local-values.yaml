@@ -108,6 +108,16 @@ alloy:
           }
         }
 
+        prometheus.scrape "unifi_poller_job" {
+          targets = [{
+            __address__ = "unifi-poller.monitoring.svc.cluster.local:9130",
+          }]
+          forward_to   = [prometheus.remote_write.default.receiver]
+          job_name     = "unifi-poller-job"
+          metrics_path = "/metrics"
+          scheme       = "http"
+        }
+
 
         loki.write "default" {
           endpoint {
