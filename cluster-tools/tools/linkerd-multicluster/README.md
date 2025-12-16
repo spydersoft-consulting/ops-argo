@@ -139,6 +139,28 @@ kubectl logs -n linkerd-multicluster -l component=linkerd-gateway
 - Verify all clusters share the same trust anchor
 - Check certificate validity: `linkerd check --proxy`
 
+### Probe health check failures (Known Limitation)
+
+When using NodePort mode, the probe health checks will fail with "liveness checks failed" even though service mirroring works correctly. This is because:
+
+- The gateway probe endpoint (port 4191) is the Linkerd proxy's admin interface
+- The admin interface requires mTLS authentication by default
+- Traffic via NodePort doesn't have the proper mTLS context that Linkerd expects
+- This is a fundamental architectural limitation of NodePort mode
+
+**Impact**: The `linkerd multicluster check` command will show a failure for "probe services able to communicate with all gateway mirrors", but this does NOT affect service mirroring functionality. All mirrored services will have endpoints and traffic will flow correctly through the gateway with mTLS.
+
+**Verification**: To verify service mirroring is working despite probe failures:
+
+```bash
+# Check that mirror services have endpoints
+kubectl get svc --all-namespaces -l mirror.linkerd.io/mirrored-service
+
+# Verify actual traffic flows through mirrored services
+kubectl run test --rm -i --restart=Never --image=curlimages/curl --annotations="linkerd.io/inject=enabled" -- \
+  curl -s http://<mirrored-service>.<namespace>.svc.cluster.local
+```
+
 ## References
 
 - [Linkerd Multi-cluster Documentation](https://linkerd.io/2-edge/features/multicluster/)

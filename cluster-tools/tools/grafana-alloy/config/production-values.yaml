@@ -39,7 +39,7 @@ alloy:
 
         prometheus.remote_write "default" {
           endpoint {
-            url = "https://mimir.mattgerega.net/api/v1/push"
+            url = "http://mimir-gateway-internal.monitoring.svc.cluster.local/api/v1/push"
             headers = {
               "X-Scope-OrgID" = "production",
             }
@@ -68,7 +68,7 @@ alloy:
 
         loki.write "default" {
           endpoint {
-            url = "https://loki.mattgerega.net/loki/api/v1/push"
+            url = "http://loki-gateway-internal.monitoring.svc.cluster.local/loki/api/v1/push"
             tenant_id = "production"
           }
           external_labels = {
@@ -121,7 +121,7 @@ alloy:
 
         otelcol.exporter.otlp "default" {
           client {
-            endpoint = "tfx-internal.gerega.net:32326"
+            endpoint = "tempo-gateway-internal.monitoring.svc.cluster.local:4317"
             headers = {
               "X-Scope-OrgID" = "production",
             }
