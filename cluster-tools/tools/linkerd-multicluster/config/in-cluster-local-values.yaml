@@ -1,11 +1,4 @@
 linkerd-multicluster:
-  # Internal cluster acts as the telemetry hub
-  # Gateway enabled to accept connections from production and nonproduction
-  gateway: true
-
   # Grant access to service accounts from production and nonproduction clusters
   # These will be created when those clusters link to internal
-  remoteMirrorServiceAccountName: "production,nonproduction"
-
-  # Gateway configuration
-  gatewayPort: 4143
+  remoteMirrorServiceAccountName: linkerd-service-mirror-remote-access-production,linkerd-service-mirror-remote-access-nonproduction
