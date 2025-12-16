@@ -2,9 +2,7 @@
 # Cluster-specific values are in config/<cluster-name>-values.yaml
 
 linkerd-multicluster:
-  # Production cluster will link to internal for telemetry
-  # Gateway enabled to expose services to internal if needed
+  # Base configuration - gateway disabled by default
+  # Internal cluster overrides this to enable gateway with NodePort
   gateway:
-    enabled: true
-    port: 4143
-    serviceType: LoadBalancer
+    enabled: false
