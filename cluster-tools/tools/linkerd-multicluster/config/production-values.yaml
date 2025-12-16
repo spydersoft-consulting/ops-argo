@@ -1,17 +1,8 @@
 linkerd-multicluster:
   # Production cluster will link to internal for telemetry
-  # Gateway enabled to expose services to internal if needed
+  # Gateway disabled - using flat network mode for direct pod-to-pod communication
   gateway:
-    enabled: true
-    port: 4143
-    # Use NodePort since we don't have a LoadBalancer controller
-    serviceType: NodePort
-    # Static NodePort for gateway traffic
-    nodePort: 30143
-    probe:
-      port: 4191
-      # Static NodePort for health probes
-      nodePort: 30191
+    enabled: false
 
   # Grant access to internal cluster
   remoteMirrorServiceAccountName: linkerd-service-mirror-remote-access-in-cluster-local
@@ -23,3 +14,6 @@ linkerd-multicluster:
         ref:
           name: internal
       logLevel: info
+      # Disable gateway mode for flat network
+      gateway:
+        enabled: false
