@@ -1,0 +1,10 @@
+linkerd-multicluster:
+  # Nonproduction cluster will link to internal for telemetry
+  # Gateway enabled to expose services to internal if needed
+  gateway: true
+
+  # Grant access to internal cluster
+  remoteMirrorServiceAccountName: "in-cluster-local"
+
+  # Gateway configuration
+  gatewayPort: 4143

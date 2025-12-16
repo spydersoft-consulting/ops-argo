@@ -1,0 +1,9 @@
+version: 2025.12.2
+name: linkerd-multicluster
+apiVersion: v2
+type: application
+dependencies:
+- name: linkerd-multicluster
+  repository: https://helm.linkerd.io/edge
+  version: 2025.12.2
+appVersion: edge-25.12.2
