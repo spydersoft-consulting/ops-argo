@@ -118,6 +118,16 @@ alloy:
           scheme       = "http"
         }
 
+        prometheus.scrape "linkerd_gateway_job" {
+          targets = [{
+            __address__ = "linkerd-gateway.linkerd-multicluster.svc.cluster.local:4191",
+          }]
+          forward_to   = [prometheus.remote_write.default.receiver]
+          job_name     = "linkerd-multicluster-gateway-job"
+          metrics_path = "/metrics"
+          scheme       = "http"
+        }
+
 
         loki.write "default" {
           endpoint {
