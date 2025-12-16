@@ -1,4 +1,7 @@
 alloy:
+  controller:
+    podAnnotations:
+      linkerd.io/inject: enabled
   alloy:
     extraPorts:
       - name: "otlp-grpc"
@@ -9,8 +12,6 @@ alloy:
         port: 4318
         targetPort: 4318
         protocol: "TCP"
-    podAnnotations:
-      linkerd.io/inject: enabled
     configMap:
       content: |
         prometheus.remote_write "default" {
