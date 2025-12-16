@@ -1,4 +1,18 @@
 linkerd-multicluster:
+  # Internal cluster acts as the telemetry hub
+  # Gateway enabled to accept connections from production and nonproduction
+  gateway:
+    enabled: true
+    port: 4143
+    # Use NodePort since we don't have a LoadBalancer controller
+    serviceType: NodePort
+    # Static NodePort for gateway traffic
+    nodePort: 30143
+    probe:
+      port: 4191
+      # Static NodePort for health probes
+      nodePort: 30191
+
   # Grant access to service accounts from production and nonproduction clusters
   # These will be created when those clusters link to internal
   remoteMirrorServiceAccountName: linkerd-service-mirror-remote-access-production,linkerd-service-mirror-remote-access-nonproduction

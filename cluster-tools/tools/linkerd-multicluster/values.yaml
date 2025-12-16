@@ -1,5 +1,6 @@
 # Base values for linkerd-multicluster
 # Cluster-specific values are in config/<cluster-name>-values.yaml
+
 linkerd-multicluster:
   # Production cluster will link to internal for telemetry
   # Gateway enabled to expose services to internal if needed
