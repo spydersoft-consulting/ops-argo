@@ -32,20 +32,21 @@ kubectl label secret -n argocd <production-cluster-secret> spydersoft.io/linkerd
 kubectl label secret -n argocd <nonproduction-cluster-secret> spydersoft.io/linkerd-multicluster=true
 ```
 
-## Architecture: Flat Network Mode
+## Architecture: Gateway Mode
 
-This setup uses **flat network mode** (no gateway) for direct pod-to-pod communication between clusters. Since all clusters are on the same network (192.168.1.x), pods can communicate directly without a gateway, providing better performance and simpler configuration.
+This setup uses **gateway mode** with the gateway running on the internal cluster. Production and nonproduction clusters connect to the internal cluster's gateway via NodePort to access mirrored services.
 
 ## Post-Installation: Linking Clusters
 
-After the multi-cluster components are deployed, you need to manually link the clusters using flat network mode:
+After the multi-cluster components are deployed, you need to manually link the clusters using gateway mode:
 
 ### 1. Link production to internal
 
 ```bash
-# Link to internal cluster (flat network mode - no gateway addresses)
+# Link to internal cluster (gateway mode via NodePort)
 /c/Users/mattg/.linkerd2/bin/linkerd --context=internal multicluster link \
   --cluster-name internal \
+  --gateway-addresses tfx-internal.gerega.net:30143 \
   --service-account-name linkerd-service-mirror-remote-access-production \
   | kubectl --context=production apply -f -
 ```
@@ -53,9 +54,10 @@ After the multi-cluster components are deployed, you need to manually link the c
 ### 2. Link nonproduction to internal
 
 ```bash
-# Link to internal cluster (flat network mode - no gateway addresses)
+# Link to internal cluster (gateway mode via NodePort)
 /c/Users/mattg/.linkerd2/bin/linkerd --context=internal multicluster link \
   --cluster-name internal \
+  --gateway-addresses tfx-internal.gerega.net:30143 \
   --service-account-name linkerd-service-mirror-remote-access-nonproduction \
   | kubectl --context=nonproduction apply -f -
 ```
@@ -75,22 +77,20 @@ After the multi-cluster components are deployed, you need to manually link the c
 
 ## Exporting Services
 
-In flat network mode, services are exported using the `mirror.linkerd.io/exported=remote-discovery` label:
+In gateway mode, services are exported using the `mirror.linkerd.io/exported=true` label:
 
 ```bash
-# Example: Export Grafana Alloy service from internal for flat network mode
-kubectl --context=internal label svc -n grafana alloy mirror.linkerd.io/exported=remote-discovery
-
-# Or for traditional gateway mode (not used in this setup):
-# kubectl label svc -n grafana alloy mirror.linkerd.io/exported=true
+# Example: Export Grafana Alloy service from internal for gateway mode
+kubectl --context=internal label svc -n monitoring alloy mirror.linkerd.io/exported=true
 ```
 
 The service will then be mirrored to linked clusters as `<service-name>-<cluster-name>`.
 
-### Flat Network Mode vs Gateway Mode
+### Gateway Mode
 
-- **Flat network** (`remote-discovery`): Direct pod-to-pod communication, requires pod network routing between clusters
-- **Gateway mode** (`true`): Traffic goes through a gateway, works across networks but requires LoadBalancer or NodePort
+- **Gateway mode** (`mirror.linkerd.io/exported=true`): Traffic goes through the gateway on the internal cluster
+- The gateway uses NodePort (30143) to allow external access
+- All traffic is encrypted with mTLS via the Linkerd proxy
 
 ## Configuration
 
