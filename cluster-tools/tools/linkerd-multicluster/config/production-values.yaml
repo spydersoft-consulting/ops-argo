@@ -15,3 +15,11 @@ linkerd-multicluster:
 
   # Grant access to internal cluster
   remoteMirrorServiceAccountName: linkerd-service-mirror-remote-access-in-cluster-local
+
+  # Configure service mirror controller for the internal link
+  # This must match the Link resource created by `linkerd multicluster link`
+  controllers:
+    - link:
+        ref:
+          name: internal
+      logLevel: info

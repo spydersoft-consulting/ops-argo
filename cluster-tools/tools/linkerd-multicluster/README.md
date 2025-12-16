@@ -43,8 +43,7 @@ After the multi-cluster components are deployed, you need to manually link the c
 kubectl config use-context production
 
 # Link to internal cluster
-linkerd multicluster link --cluster-name production --context internal | \
-  kubectl apply -f -
+linkerd --context=internal multicluster link-gen --cluster-name internal --gateway-addresses tfx-internal.gerega.net:30143 --service-account-name linkerd-service-mirror-remote-access-production | kubectl --context=production apply -f -
 ```
 
 ### 2. Link nonproduction to internal
@@ -54,8 +53,7 @@ linkerd multicluster link --cluster-name production --context internal | \
 kubectl config use-context nonproduction
 
 # Link to internal cluster
-linkerd multicluster link --cluster-name nonproduction --context internal | \
-  kubectl apply -f -
+linkerd --context=internal multicluster link-gen --cluster-name internal --gateway-addresses tfx-internal.gerega.net:30143 --service-account-name linkerd-service-mirror-remote-access-nonproduction | kubectl --context=nonproduction apply -f -
 ```
 
 ### 3. Verify links
@@ -88,6 +86,7 @@ The service will then be mirrored to linked clusters as `<service-name>-<cluster
 ## Configuration
 
 Each cluster has its own configuration file:
+
 - `config/in-cluster-local-values.yaml` - Internal cluster (telemetry hub)
 - `config/production-values.yaml` - Production cluster
 - `config/nonproduction-values.yaml` - Nonproduction cluster
@@ -115,16 +114,19 @@ kubectl logs -n linkerd-multicluster -l component=linkerd-gateway
 ## Troubleshooting
 
 ### Gateway not accessible
+
 - Verify LoadBalancer has assigned an external IP: `kubectl get svc -n linkerd-multicluster linkerd-gateway`
 - Check gateway logs for errors
 - Verify firewall rules allow traffic on port 4143
 
 ### Services not mirroring
+
 - Ensure service has the correct export label: `mirror.linkerd.io/exported=true`
 - Check service-mirror controller logs: `kubectl logs -n linkerd-multicluster -l component=linkerd-service-mirror`
 - Verify link is established: `linkerd multicluster check`
 
 ### Certificate errors
+
 - Verify all clusters share the same trust anchor
 - Check certificate validity: `linkerd check --proxy`
 
