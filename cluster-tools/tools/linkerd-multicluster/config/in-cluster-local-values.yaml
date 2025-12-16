@@ -1,8 +1,14 @@
 linkerd-multicluster:
   # Internal cluster acts as the telemetry hub
-  # Gateway disabled - using flat network mode for direct pod-to-pod communication
+  # Gateway enabled with NodePort for cross-cluster service mirroring
   gateway:
-    enabled: false
+    enabled: true
+    port: 4143
+    serviceType: NodePort
+    nodePort: 30143
+    probe:
+      port: 4191
+      nodePort: 30191
 
   # Grant access to service accounts from production and nonproduction clusters
   # These will be created when those clusters link to internal
