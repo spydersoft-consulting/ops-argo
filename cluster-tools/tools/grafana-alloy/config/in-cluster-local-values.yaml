@@ -4,6 +4,8 @@ syslog:
   enabled: true
   port: 1514
   nodePort: 31050
+  tcpPort: 1515
+  tcpNodePort: 31051
 
 alloy:
   alloy:
@@ -16,9 +18,13 @@ alloy:
         port: 4318
         targetPort: 4318
         protocol: "TCP"
-      - name: "tcp-syslog"
+      - name: "udp-syslog"
         port: 1514
         targetPort: 1514
+        protocol: "UDP"
+      - name: "tcp-syslog"
+        port: 1515
+        targetPort: 1515
         protocol: "TCP"
     configMap:
       create: false
