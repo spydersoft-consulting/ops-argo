@@ -165,15 +165,32 @@ loki.write "default" {
 // -----------------------------------------------------------------------------
 // Loki Syslog Receiver
 // -----------------------------------------------------------------------------
-// Receive syslog messages over TCP on port 1514 (exposed via NodePort 31050)
+// Receive syslog messages on port 1514 (exposed via NodePort 31050)
 
-loki.source.syslog "syslog_receiver" {
+// UDP receiver (most common for syslog)
+loki.source.syslog "syslog_receiver_udp" {
   listener {
     address      = "0.0.0.0:1514"
+    protocol     = "udp"
+    labels = {
+      job          = "syslog-receiver",
+      transport    = "udp",
+    }
+    // Use RFC 3164 (BSD syslog) format - most network devices use this
+    syslog_format = "rfc3164"
+  }
+  forward_to = [loki.relabel.syslog.receiver]
+}
+
+// TCP receiver (fallback)
+loki.source.syslog "syslog_receiver_tcp" {
+  listener {
+    address      = "0.0.0.0:1515"
     protocol     = "tcp"
     idle_timeout = "12h"
     labels = {
-      job = "syslog-receiver",
+      job          = "syslog-receiver",
+      transport    = "tcp",
     }
     // Use RFC 3164 (BSD syslog) format - most network devices use this
     syslog_format = "rfc3164"

@@ -15,10 +15,15 @@ spec:
     app.kubernetes.io/name: alloy
     app.kubernetes.io/instance: {{ .Release.Name }}
   ports:
-    - name: tcp-syslog
+    - name: udp-syslog
       port: {{ .Values.syslog.port | default 1514 }}
       targetPort: {{ .Values.syslog.port | default 1514 }}
-      protocol: TCP
+      protocol: UDP
       nodePort: {{ .Values.syslog.nodePort }}
+    - name: tcp-syslog
+      port: {{ .Values.syslog.tcpPort | default 1515 }}
+      targetPort: {{ .Values.syslog.tcpPort | default 1515 }}
+      protocol: TCP
+      nodePort: {{ .Values.syslog.tcpNodePort | default 31051 }}
 {{- end }}
 {{- end }}
