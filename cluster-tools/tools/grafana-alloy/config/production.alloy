@@ -1,28 +1,39 @@
+// =============================================================================
+// Vault Configuration
+// =============================================================================
+// Read AppRole credentials from Kubernetes secret for Vault authentication
 
 remote.kubernetes.secret "vault_app_role_secret" {
   namespace = "cluster-tools"
-  name = "k8-app-role-secret"
+  name      = "k8-app-role-secret"
 }
 
+// Vault remote configuration for Home Assistant credentials
 remote.vault "hass" {
   server = "https://hcvault.mattgerega.net"
-  path = "secrets-k8/hass"
+  path   = "secrets-k8/hass"
 
   auth.approle {
     role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
-    secret = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
+    secret  = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
   }
 }
 
+// Vault remote configuration for Vault metrics token
 remote.vault "vault" {
   server = "https://hcvault.mattgerega.net"
-  path = "secrets-k8/monitoring/vault"
+  path   = "secrets-k8/monitoring/vault"
 
   auth.approle {
     role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
-    secret = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
+    secret  = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
   }
 }
+
+// =============================================================================
+// Prometheus Configuration
+// =============================================================================
+// Remote write endpoint for pushing metrics to Mimir (via Linkerd mirror)
 
 prometheus.remote_write "default" {
   endpoint {
@@ -32,12 +43,16 @@ prometheus.remote_write "default" {
     }
   }
   external_labels = {
-    cluster = "production",
+    cluster       = "production",
     custom_source = "grafana-alloy",
   }
 }
 
-// Scrape configuration for Home Assistant Metrics
+// -----------------------------------------------------------------------------
+// Prometheus Scrape Jobs
+// -----------------------------------------------------------------------------
+
+// Scrape Home Assistant metrics
 prometheus.scrape "hass" {
   targets = [{
     __address__ = "home.mattgerega.net",
@@ -53,17 +68,53 @@ prometheus.scrape "hass" {
   }
 }
 
+// =============================================================================
+// Loki Configuration
+// =============================================================================
+// Remote write endpoint for pushing logs to Loki (via Linkerd mirror)
+
 loki.write "default" {
   endpoint {
-    url = "http://loki-gateway-internal.monitoring.svc.cluster.local/loki/api/v1/push"
+    url       = "http://loki-gateway-internal.monitoring.svc.cluster.local/loki/api/v1/push"
     tenant_id = "production"
   }
   external_labels = {
-    cluster = "production",
+    cluster       = "production",
     custom_source = "grafana-alloy",
   }
 }
 
+// =============================================================================
+// OpenTelemetry Configuration
+// =============================================================================
+// Receive, process, and export OpenTelemetry metrics, logs, and traces
+
+// -----------------------------------------------------------------------------
+// OTLP Receiver
+// -----------------------------------------------------------------------------
+// Accept OTLP data via gRPC (4317) and HTTP (4318)
+
+otelcol.receiver.otlp "example" {
+  grpc {
+    endpoint = "0.0.0.0:4317"
+  }
+
+  http {
+    endpoint = "0.0.0.0:4318"
+  }
+
+  output {
+    metrics = [otelcol.processor.memory_limiter.default.input]
+    logs    = [otelcol.processor.memory_limiter.default.input]
+    traces  = [otelcol.processor.memory_limiter.default.input]
+  }
+}
+
+// -----------------------------------------------------------------------------
+// OTLP Processors
+// -----------------------------------------------------------------------------
+
+// Limit memory usage to prevent OOM
 otelcol.processor.memory_limiter "default" {
   check_interval = "1s"
   limit          = "1GiB"
@@ -75,6 +126,7 @@ otelcol.processor.memory_limiter "default" {
   }
 }
 
+// Batch telemetry data for efficient export
 otelcol.processor.batch "default" {
   output {
     metrics = [otelcol.exporter.prometheus.default.input]
@@ -82,30 +134,22 @@ otelcol.processor.batch "default" {
     traces  = [otelcol.exporter.otlp.default.input]
   }
 }
-otelcol.receiver.otlp "example" {
-  grpc {
-    endpoint = "0.0.0.0:4317"
-  }
 
-  http {
-    endpoint = "0.0.0.0:4318"
-  }
+// -----------------------------------------------------------------------------
+// OTLP Exporters
+// -----------------------------------------------------------------------------
 
-  output {
-    metrics = [otelcol.processor.batch.default.input]
-    logs    = [otelcol.processor.batch.default.input]
-    traces  = [otelcol.processor.batch.default.input]
-  }
-}
-
+// Export logs to Loki (via Linkerd mirror)
 otelcol.exporter.loki "default" {
   forward_to = [loki.write.default.receiver]
 }
 
+// Export metrics to Prometheus/Mimir (via Linkerd mirror)
 otelcol.exporter.prometheus "default" {
   forward_to = [prometheus.remote_write.default.receiver]
 }
 
+// Export traces to Tempo (via Linkerd mirror)
 otelcol.exporter.otlp "default" {
   client {
     endpoint = "tempo-gateway-internal.monitoring.svc.cluster.local:4317"
