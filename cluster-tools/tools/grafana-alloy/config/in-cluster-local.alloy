@@ -167,27 +167,59 @@ loki.write "default" {
 // -----------------------------------------------------------------------------
 // Receive syslog messages on port 1514 (exposed via NodePort 31050)
 
-// Relabel rules to extract internal syslog labels and identify source
-loki.relabel "syslog_processing" {
+// UDP receiver (most common for syslog)
+loki.source.syslog "syslog_receiver_udp" {
+  listener {
+    address      = "0.0.0.0:1514"
+    protocol     = "udp"
+    labels = {
+      job          = "syslog-receiver",
+      transport    = "udp",
+    }
+    // Use RFC 3164 (BSD syslog) format - most network devices use this
+    syslog_format = "rfc3164"
+  }
+  forward_to = [loki.process.extract_hostname.receiver]
+}
+
+// TCP receiver (fallback)
+loki.source.syslog "syslog_receiver_tcp" {
+  listener {
+    address      = "0.0.0.0:1515"
+    protocol     = "tcp"
+    idle_timeout = "12h"
+    labels = {
+      job          = "syslog-receiver",
+      transport    = "tcp",
+    }
+    // Use RFC 3164 (BSD syslog) format - most network devices use this
+    syslog_format = "rfc3164"
+  }
+  forward_to = [loki.process.extract_hostname.receiver]
+}
+
+// Extract hostname from syslog message content using regex
+// This is necessary because RFC 3164 internal labels (__syslog_message_hostname)
+// are not reliably populated. We extract directly from the log message.
+loki.process "extract_hostname" {
+  forward_to = [loki.relabel.identify_source.receiver]
+
+  // RFC 3164 format: hostname is the first word in the message
+  // Example: "UCG-Max mcad[3252]: teleport.prepare_inform_teleport_json()..."
+  stage.regex {
+    expression = "^(?P<hostname>[^\\s]+)"
+  }
+
+  stage.labels {
+    values = {
+      hostname = "hostname",
+    }
+  }
+}
+
+// Identify source based on hostname pattern
+loki.relabel "identify_source" {
   forward_to = [loki.write.default.receiver]
-
-  // Extract hostname from internal __syslog_message_hostname label
-  rule {
-    source_labels = ["__syslog_message_hostname"]
-    target_label  = "hostname"
-  }
-
-  // Extract severity as level
-  rule {
-    source_labels = ["__syslog_message_severity"]
-    target_label  = "level"
-  }
-
-  // Extract application name
-  rule {
-    source_labels = ["__syslog_message_app_name"]
-    target_label  = "application"
-  }
 
   // Identify UniFi devices by hostname pattern (UDM, USW, UAP, UCG, UXG)
   rule {
@@ -233,37 +265,6 @@ loki.relabel "syslog_processing" {
     target_label  = "source_type"
     replacement   = "unknown"
   }
-}
-
-// UDP receiver (most common for syslog)
-loki.source.syslog "syslog_receiver_udp" {
-  listener {
-    address      = "0.0.0.0:1514"
-    protocol     = "udp"
-    labels = {
-      job          = "syslog-receiver",
-      transport    = "udp",
-    }
-    // Use RFC 3164 (BSD syslog) format - most network devices use this
-    syslog_format = "rfc3164"
-  }
-  relabel_rules = loki.relabel.syslog_processing.rules
-}
-
-// TCP receiver (fallback)
-loki.source.syslog "syslog_receiver_tcp" {
-  listener {
-    address      = "0.0.0.0:1515"
-    protocol     = "tcp"
-    idle_timeout = "12h"
-    labels = {
-      job          = "syslog-receiver",
-      transport    = "tcp",
-    }
-    // Use RFC 3164 (BSD syslog) format - most network devices use this
-    syslog_format = "rfc3164"
-  }
-  relabel_rules = loki.relabel.syslog_processing.rules
 }
 
 // =============================================================================
