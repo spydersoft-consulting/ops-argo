@@ -1,3 +1,5 @@
+configFile: config/in-cluster-local.alloy
+
 syslog:
   enabled: true
   port: 1514
@@ -19,5 +21,5 @@ alloy:
         targetPort: 1514
         protocol: "TCP"
     configMap:
-      content: |-
-{{ .Files.Get "config/in-cluster-local.alloy" | indent 8 }}
+      create: false
+      name: in-cluster-local-grafana-alloy-config

@@ -1,0 +1,14 @@
+{{- if .Values.configFile }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "grafana-alloy.fullname" . }}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: alloy
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  config.alloy: |-
+{{ .Files.Get .Values.configFile | indent 4 }}
+{{- end }}

@@ -1,5 +1,7 @@
+configFile: config/nonproduction.alloy
+
 alloy:
   alloy:
     configMap:
-      content: |-
-{{ .Files.Get "config/nonproduction.alloy" | indent 8 }}
+      create: false
+      name: nonproduction-grafana-alloy-config
