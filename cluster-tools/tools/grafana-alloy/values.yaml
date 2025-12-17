@@ -1,3 +1,5 @@
+configFile: ""
+
 alloy:
   controller:
     podAnnotations:
