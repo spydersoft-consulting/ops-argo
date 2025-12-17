@@ -1,5 +1,18 @@
 alloy:
   alloy:
+    extraPorts:
+      - name: "otlp-grpc"
+        port: 4317
+        targetPort: 4317
+        protocol: "TCP"
+      - name: "otlp-http"
+        port: 4318
+        targetPort: 4318
+        protocol: "TCP"
+      - name: "tcp-syslog"
+        port: 1514
+        targetPort: 1514
+        protocol: "TCP"
     configMap:
       content: |
         
@@ -140,6 +153,52 @@ alloy:
           }
         }
 
+        loki.source.syslog "syslog_receiver" {
+          listener {
+            address = "0.0.0.0:1514"
+            protocol = "tcp"
+            idle_timeout = "12h"
+            labels = {
+              job = "syslog-receiver",
+            }
+          }
+          forward_to = [loki.relabel.syslog.receiver]
+        }
+
+        loki.relabel "syslog" {
+          forward_to = [loki.write.default.receiver]
+
+          rule {
+            source_labels = ["__syslog_message_hostname"]
+            target_label  = "host"
+          }
+
+          rule {
+            source_labels = ["__syslog_message_hostname"]
+            target_label  = "hostname"
+          }
+
+          rule {
+            source_labels = ["__syslog_message_severity"]
+            target_label  = "level"
+          }
+
+          rule {
+            source_labels = ["__syslog_message_app_name"]
+            target_label  = "application"
+          }
+
+          rule {
+            source_labels = ["__syslog_message_facility"]
+            target_label  = "facility"
+          }
+
+          rule {
+            source_labels = ["__syslog_connection_hostname"]
+            target_label  = "connection_hostname"
+          }
+        }
+
         otelcol.processor.memory_limiter "default" {
           check_interval = "1s"
           limit          = "1GiB"
@@ -193,3 +252,24 @@ alloy:
             }
           }
         }
+
+extraObjects:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: grafana-alloy-syslog
+      namespace: cluster-tools
+      labels:
+        app.kubernetes.io/name: alloy
+        app.kubernetes.io/instance: grafana-alloy
+    spec:
+      type: NodePort
+      selector:
+        app.kubernetes.io/name: alloy
+        app.kubernetes.io/instance: grafana-alloy
+      ports:
+        - name: tcp-syslog
+          port: 1514
+          targetPort: 1514
+          protocol: TCP
+          nodePort: 31050
