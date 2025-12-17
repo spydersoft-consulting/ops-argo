@@ -179,7 +179,7 @@ loki.source.syslog "syslog_receiver_udp" {
     // Use RFC 3164 (BSD syslog) format - most network devices use this
     syslog_format = "rfc3164"
   }
-  forward_to = [loki.relabel.syslog.receiver]
+  forward_to = [loki.process.extract_hostname.receiver]
 }
 
 // TCP receiver (fallback)
@@ -195,38 +195,31 @@ loki.source.syslog "syslog_receiver_tcp" {
     // Use RFC 3164 (BSD syslog) format - most network devices use this
     syslog_format = "rfc3164"
   }
-  forward_to = [loki.relabel.syslog.receiver]
+  forward_to = [loki.process.extract_hostname.receiver]
 }
 
-// Relabel to extract syslog fields and identify source
-loki.relabel "syslog" {
+// Extract hostname from syslog message content
+loki.process "extract_hostname" {
+  forward_to = [loki.relabel.identify_source.receiver]
+
+  // RFC 3164 format: hostname is the first word in the message
+  // Example: "UCG-Max mcad[3252]: teleport.prepare_inform_teleport_json()..."
+  stage.regex {
+    expression = "^(?P<hostname>[^\\s]+)"
+  }
+
+  stage.labels {
+    values = {
+      hostname = "hostname",
+    }
+  }
+}
+
+// Identify source based on hostname pattern
+loki.relabel "identify_source" {
   forward_to = [loki.write.default.receiver]
 
-  // Extract hostname from syslog
-  rule {
-    source_labels = ["__syslog_message_hostname"]
-    target_label  = "hostname"
-  }
-
-  // Extract severity as level
-  rule {
-    source_labels = ["__syslog_message_severity"]
-    target_label  = "level"
-  }
-
-  // Extract application
-  rule {
-    source_labels = ["__syslog_message_app_name"]
-    target_label  = "application"
-  }
-
-  // Extract facility
-  rule {
-    source_labels = ["__syslog_message_facility"]
-    target_label  = "facility"
-  }
-
-  // Identify UniFi devices by hostname pattern (UDM, USW, UAP, etc.)
+  // Identify UniFi devices by hostname pattern (UDM, USW, UAP, UCG, UXG)
   rule {
     source_labels = ["hostname"]
     regex         = "(UDM|USW|UAP|UCG|UXG).*"
