@@ -1,3 +1,8 @@
+syslog:
+  enabled: true
+  port: 1514
+  nodePort: 31050
+
 alloy:
   alloy:
     extraPorts:
@@ -252,24 +257,3 @@ alloy:
             }
           }
         }
-
-extraObjects:
-  - apiVersion: v1
-    kind: Service
-    metadata:
-      name: grafana-alloy-syslog
-      namespace: cluster-tools
-      labels:
-        app.kubernetes.io/name: alloy
-        app.kubernetes.io/instance: grafana-alloy
-    spec:
-      type: NodePort
-      selector:
-        app.kubernetes.io/name: alloy
-        app.kubernetes.io/instance: grafana-alloy
-      ports:
-        - name: tcp-syslog
-          port: 1514
-          targetPort: 1514
-          protocol: TCP
-          nodePort: 31050

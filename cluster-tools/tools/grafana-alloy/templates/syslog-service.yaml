@@ -1,0 +1,24 @@
+{{- if .Values.syslog }}
+{{- if .Values.syslog.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "grafana-alloy.fullname" . }}-syslog
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: alloy
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: syslog
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: alloy
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  ports:
+    - name: tcp-syslog
+      port: {{ .Values.syslog.port | default 1514 }}
+      targetPort: {{ .Values.syslog.port | default 1514 }}
+      protocol: TCP
+      nodePort: {{ .Values.syslog.nodePort }}
+{{- end }}
+{{- end }}
