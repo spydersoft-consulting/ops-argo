@@ -183,20 +183,6 @@ loki.source.syslog "syslog_receiver" {
 loki.process "parse_message" {
   forward_to = [loki.relabel.syslog.receiver]
 
-  // Extract internal syslog fields to regular labels so we can see them in Grafana
-  stage.labels {
-    values = {
-      syslog_hostname  = "__syslog_message_hostname",
-      syslog_app       = "__syslog_message_app_name",
-      syslog_facility  = "__syslog_message_facility",
-      syslog_severity  = "__syslog_message_severity",
-      syslog_msgid     = "__syslog_message_msg_id",
-      syslog_procid    = "__syslog_message_proc_id",
-      syslog_conn_ip   = "__syslog_connection_ip_address",
-      syslog_conn_host = "__syslog_connection_hostname",
-    }
-  }
-
   // Label all syslog as Synology since it's the only device sending to this receiver
   stage.static_labels {
     values = {
@@ -205,46 +191,38 @@ loki.process "parse_message" {
       device      = "cloud.gerega.net",
     }
   }
+
+  // Add hostname, app, facility as structured metadata (won't create high-cardinality labels)
+  stage.structured_metadata {
+    values = {
+      syslog_hostname = "__syslog_message_hostname",
+      syslog_app = "__syslog_message_app_name",
+      syslog_facility = "__syslog_message_facility",
+      syslog_severity = "__syslog_message_severity",
+    }
+  }
 }
 
-// Relabel syslog messages and add source identification
+// Relabel to extract basic syslog fields as regular labels
 loki.relabel "syslog" {
   forward_to = [loki.write.default.receiver]
 
-  // Extract standard syslog fields
-  rule {
-    source_labels = ["__syslog_message_hostname"]
-    target_label  = "host"
-  }
-
+  // Extract hostname if available
   rule {
     source_labels = ["__syslog_message_hostname"]
     target_label  = "hostname"
   }
 
+  // Extract severity as level
   rule {
     source_labels = ["__syslog_message_severity"]
     target_label  = "level"
   }
 
+  // Extract application if available
   rule {
     source_labels = ["__syslog_message_app_name"]
     target_label  = "application"
-  }
-
-  rule {
-    source_labels = ["__syslog_message_facility"]
-    target_label  = "facility"
-  }
-
-  rule {
-    source_labels = ["__syslog_connection_hostname"]
-    target_label  = "connection_hostname"
-  }
-
-  rule {
-    source_labels = ["__syslog_connection_ip_address"]
-    target_label  = "connection_ip"
   }
 }
 
