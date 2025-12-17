@@ -1,3 +1,8 @@
+// =============================================================================
+// Prometheus Configuration
+// =============================================================================
+// Remote write endpoint for pushing metrics to Mimir (via Linkerd mirror)
+
 prometheus.remote_write "default" {
   endpoint {
     url = "http://mimir-gateway-internal.monitoring.svc.cluster.local/api/v1/push"
@@ -6,41 +11,37 @@ prometheus.remote_write "default" {
     }
   }
   external_labels = {
-    cluster = "nonproduction",
+    cluster       = "nonproduction",
     custom_source = "grafana-alloy",
   }
 }
 
+// =============================================================================
+// Loki Configuration
+// =============================================================================
+// Remote write endpoint for pushing logs to Loki (via Linkerd mirror)
+
 loki.write "default" {
   endpoint {
-    url = "http://loki-gateway-internal.monitoring.svc.cluster.local/loki/api/v1/push"
+    url       = "http://loki-gateway-internal.monitoring.svc.cluster.local/loki/api/v1/push"
     tenant_id = "nonproduction"
   }
 
   external_labels = {
-    cluster = "nonproduction",
+    cluster       = "nonproduction",
     custom_source = "grafana-alloy",
   }
 }
 
-otelcol.processor.memory_limiter "default" {
-  check_interval = "1s"
-  limit          = "1GiB"
+// =============================================================================
+// OpenTelemetry Configuration
+// =============================================================================
+// Receive, process, and export OpenTelemetry metrics, logs, and traces
 
-  output {
-    metrics = [otelcol.processor.batch.default.input]
-    logs    = [otelcol.processor.batch.default.input]
-    traces  = [otelcol.processor.batch.default.input]
-  }
-}
-
-otelcol.processor.batch "default" {
-  output {
-    metrics = [otelcol.exporter.prometheus.default.input]
-    logs    = [otelcol.exporter.loki.default.input]
-    traces  = [otelcol.exporter.otlp.default.input]
-  }
-}
+// -----------------------------------------------------------------------------
+// OTLP Receiver
+// -----------------------------------------------------------------------------
+// Accept OTLP data via gRPC (4317) and HTTP (4318)
 
 otelcol.receiver.otlp "example" {
   grpc {
@@ -52,20 +53,52 @@ otelcol.receiver.otlp "example" {
   }
 
   output {
+    metrics = [otelcol.processor.memory_limiter.default.input]
+    logs    = [otelcol.processor.memory_limiter.default.input]
+    traces  = [otelcol.processor.memory_limiter.default.input]
+  }
+}
+
+// -----------------------------------------------------------------------------
+// OTLP Processors
+// -----------------------------------------------------------------------------
+
+// Limit memory usage to prevent OOM
+otelcol.processor.memory_limiter "default" {
+  check_interval = "1s"
+  limit          = "1GiB"
+
+  output {
     metrics = [otelcol.processor.batch.default.input]
     logs    = [otelcol.processor.batch.default.input]
     traces  = [otelcol.processor.batch.default.input]
   }
 }
 
+// Batch telemetry data for efficient export
+otelcol.processor.batch "default" {
+  output {
+    metrics = [otelcol.exporter.prometheus.default.input]
+    logs    = [otelcol.exporter.loki.default.input]
+    traces  = [otelcol.exporter.otlp.default.input]
+  }
+}
+
+// -----------------------------------------------------------------------------
+// OTLP Exporters
+// -----------------------------------------------------------------------------
+
+// Export logs to Loki (via Linkerd mirror)
 otelcol.exporter.loki "default" {
   forward_to = [loki.write.default.receiver]
 }
 
+// Export metrics to Prometheus/Mimir (via Linkerd mirror)
 otelcol.exporter.prometheus "default" {
   forward_to = [prometheus.remote_write.default.receiver]
 }
 
+// Export traces to Tempo (via Linkerd mirror)
 otelcol.exporter.otlp "default" {
   client {
     endpoint = "tempo-gateway-internal.monitoring.svc.cluster.local:4317"

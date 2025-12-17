@@ -1,48 +1,61 @@
+// =============================================================================
+// Vault Configuration
+// =============================================================================
+// Read AppRole credentials from Kubernetes secret for Vault authentication
 
 remote.kubernetes.secret "vault_app_role_secret" {
   namespace = "cluster-tools"
-  name = "k8-app-role-secret"
+  name      = "k8-app-role-secret"
 }
 
+// Vault remote configuration for monitoring targets
 remote.vault "targets" {
   server = "https://hcvault.mattgerega.net"
-  path = "secrets-k8/monitoring/targets/internal"
+  path   = "secrets-k8/monitoring/targets/internal"
 
   auth.approle {
     role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
-    secret = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
+    secret  = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
   }
 }
 
+// Vault remote configuration for MinIO credentials
 remote.vault "minio" {
   server = "https://hcvault.mattgerega.net"
-  path = "secrets-k8/monitoring/minio"
+  path   = "secrets-k8/monitoring/minio"
 
   auth.approle {
     role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
-    secret = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
+    secret  = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
   }
 }
 
+// Vault remote configuration for Vault metrics token
 remote.vault "vault" {
   server = "https://hcvault.mattgerega.net"
-  path = "secrets-k8/monitoring/vault"
+  path   = "secrets-k8/monitoring/vault"
 
   auth.approle {
     role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
-    secret = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
+    secret  = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
   }
 }
 
+// Vault remote configuration for Garage S3 metrics token
 remote.vault "garage" {
   server = "https://hcvault.mattgerega.net"
-  path = "secrets-k8/monitoring/garage/metrics"
+  path   = "secrets-k8/monitoring/garage/metrics"
 
   auth.approle {
     role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
-    secret = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
+    secret  = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
   }
 }
+
+// =============================================================================
+// Prometheus Configuration
+// =============================================================================
+// Remote write endpoint for pushing metrics to Mimir
 
 prometheus.remote_write "default" {
   endpoint {
@@ -52,11 +65,16 @@ prometheus.remote_write "default" {
     }
   }
   external_labels = {
-    cluster = "internal",
+    cluster       = "internal",
     custom_source = "grafana-alloy",
   }
 }
 
+// -----------------------------------------------------------------------------
+// Prometheus Scrape Jobs
+// -----------------------------------------------------------------------------
+
+// Scrape MinIO S3 cluster metrics
 prometheus.scrape "minio_job" {
   targets = [{
     __address__ = convert.nonsensitive(remote.vault.targets.data["minio-target"]),
@@ -71,13 +89,14 @@ prometheus.scrape "minio_job" {
   }
 }
 
+// Scrape HashiCorp Vault metrics
 prometheus.scrape "vault_job" {
   targets = [{
     __address__ = convert.nonsensitive(remote.vault.targets.data["vault-target"]),
   }]
-  forward_to = [prometheus.remote_write.default.receiver]
-  job_name   = "vault-job"
-  params     = {
+  forward_to   = [prometheus.remote_write.default.receiver]
+  job_name     = "vault-job"
+  params = {
     format = ["prometheus"],
   }
   metrics_path = "/v1/sys/metrics"
@@ -89,6 +108,7 @@ prometheus.scrape "vault_job" {
   }
 }
 
+// Scrape Garage S3 metrics
 prometheus.scrape "garage_job" {
   targets = [{
     __address__ = convert.nonsensitive(remote.vault.targets.data["garage-target"]),
@@ -104,6 +124,7 @@ prometheus.scrape "garage_job" {
   }
 }
 
+// Scrape Unifi Poller metrics (network monitoring)
 prometheus.scrape "unifi_poller_job" {
   targets = [{
     __address__ = "unifi-poller.monitoring.svc.cluster.local:9130",
@@ -114,6 +135,7 @@ prometheus.scrape "unifi_poller_job" {
   scheme       = "http"
 }
 
+// Scrape Linkerd multicluster gateway metrics
 prometheus.scrape "linkerd_gateway_job" {
   targets = [{
     __address__ = "linkerd-gateway.linkerd-multicluster.svc.cluster.local:4191",
@@ -124,22 +146,31 @@ prometheus.scrape "linkerd_gateway_job" {
   scheme       = "http"
 }
 
+// =============================================================================
+// Loki Configuration
+// =============================================================================
+// Remote write endpoint for pushing logs to Loki
 
 loki.write "default" {
   endpoint {
-    url = "http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push"
+    url       = "http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push"
     tenant_id = "internal"
   }
   external_labels = {
-    cluster = "internal",
+    cluster       = "internal",
     custom_source = "grafana-alloy",
   }
 }
 
+// -----------------------------------------------------------------------------
+// Loki Syslog Receiver
+// -----------------------------------------------------------------------------
+// Receive syslog messages over TCP on port 1514
+
 loki.source.syslog "syslog_receiver" {
   listener {
-    address = "0.0.0.0:1514"
-    protocol = "tcp"
+    address      = "0.0.0.0:1514"
+    protocol     = "tcp"
     idle_timeout = "12h"
     labels = {
       job = "syslog-receiver",
@@ -148,6 +179,7 @@ loki.source.syslog "syslog_receiver" {
   forward_to = [loki.relabel.syslog.receiver]
 }
 
+// Relabel syslog messages to extract metadata as labels
 loki.relabel "syslog" {
   forward_to = [loki.write.default.receiver]
 
@@ -182,6 +214,37 @@ loki.relabel "syslog" {
   }
 }
 
+// =============================================================================
+// OpenTelemetry Configuration
+// =============================================================================
+// Receive, process, and export OpenTelemetry metrics, logs, and traces
+
+// -----------------------------------------------------------------------------
+// OTLP Receiver
+// -----------------------------------------------------------------------------
+// Accept OTLP data via gRPC (4317) and HTTP (4318)
+
+otelcol.receiver.otlp "example" {
+  grpc {
+    endpoint = "0.0.0.0:4317"
+  }
+
+  http {
+    endpoint = "0.0.0.0:4318"
+  }
+
+  output {
+    metrics = [otelcol.processor.memory_limiter.default.input]
+    logs    = [otelcol.processor.memory_limiter.default.input]
+    traces  = [otelcol.processor.memory_limiter.default.input]
+  }
+}
+
+// -----------------------------------------------------------------------------
+// OTLP Processors
+// -----------------------------------------------------------------------------
+
+// Limit memory usage to prevent OOM
 otelcol.processor.memory_limiter "default" {
   check_interval = "1s"
   limit          = "1GiB"
@@ -193,6 +256,7 @@ otelcol.processor.memory_limiter "default" {
   }
 }
 
+// Batch telemetry data for efficient export
 otelcol.processor.batch "default" {
   output {
     metrics = [otelcol.exporter.prometheus.default.input]
@@ -200,30 +264,22 @@ otelcol.processor.batch "default" {
     traces  = [otelcol.exporter.otlp.default.input]
   }
 }
-otelcol.receiver.otlp "example" {
-  grpc {
-    endpoint = "0.0.0.0:4317"
-  }
 
-  http {
-    endpoint = "0.0.0.0:4318"
-  }
+// -----------------------------------------------------------------------------
+// OTLP Exporters
+// -----------------------------------------------------------------------------
 
-  output {
-    metrics = [otelcol.processor.batch.default.input]
-    logs    = [otelcol.processor.batch.default.input]
-    traces  = [otelcol.processor.batch.default.input]
-  }
-}
-
+// Export logs to Loki
 otelcol.exporter.loki "default" {
   forward_to = [loki.write.default.receiver]
 }
 
+// Export metrics to Prometheus/Mimir
 otelcol.exporter.prometheus "default" {
   forward_to = [prometheus.remote_write.default.receiver]
 }
 
+// Export traces to Tempo
 otelcol.exporter.otlp "default" {
   client {
     endpoint = "tempo-gateway.monitoring.svc.cluster.local:4317"
