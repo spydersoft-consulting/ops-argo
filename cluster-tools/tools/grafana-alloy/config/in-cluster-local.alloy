@@ -183,9 +183,16 @@ loki.source.syslog "syslog_receiver" {
 loki.process "source_identifier" {
   forward_to = [loki.relabel.syslog.receiver]
 
+  // First, extract the connection IP as a temporary label
+  stage.labels {
+    values = {
+      __tmp_ip = "__syslog_connection_ip_address",
+    }
+  }
+
   // Synology NAS - 192.168.1.12
   stage.match {
-    selector = "{__syslog_connection_ip_address=~\"192.168.1.12.*\"}"
+    selector = "{__tmp_ip=~\"192.168.1.12.*\"}"
     stage.static_labels {
       values = {
         source      = "synology-nas",
@@ -197,7 +204,7 @@ loki.process "source_identifier" {
 
   // nginx Proxy - 192.168.1.13 (for future use)
   stage.match {
-    selector = "{__syslog_connection_ip_address=~\"192.168.1.13.*\"}"
+    selector = "{__tmp_ip=~\"192.168.1.13.*\"}"
     stage.static_labels {
       values = {
         source      = "nginx-proxy",
@@ -209,7 +216,7 @@ loki.process "source_identifier" {
 
   // UniFi Gateway - 192.168.1.1
   stage.match {
-    selector = "{__syslog_connection_ip_address=~\"192.168.1.1:.*\"}"
+    selector = "{__tmp_ip=~\"192.168.1.1:.*\"}"
     stage.static_labels {
       values = {
         source      = "unifi-gateway",
@@ -228,6 +235,11 @@ loki.process "source_identifier" {
         source_type = "unknown",
       }
     }
+  }
+
+  // Drop the temporary label
+  stage.label_drop {
+    values = ["__tmp_ip"]
   }
 }
 
