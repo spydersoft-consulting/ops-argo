@@ -176,7 +176,29 @@ loki.source.syslog "syslog_receiver" {
       job = "syslog-receiver",
     }
   }
+  forward_to = [loki.process.parse_message.receiver]
+}
+
+// Parse message content to extract source information
+loki.process "parse_message" {
   forward_to = [loki.relabel.syslog.receiver]
+
+  // For Synology: match "Synology" in the message
+  stage.match {
+    selector = "{job=\"syslog-receiver\"}"
+
+    stage.regex {
+      expression = "(?i)synology"
+    }
+
+    stage.static_labels {
+      values = {
+        source      = "synology-nas",
+        source_type = "infrastructure",
+        device      = "cloud.gerega.net",
+      }
+    }
+  }
 }
 
 // Relabel syslog messages and add source identification
@@ -219,30 +241,7 @@ loki.relabel "syslog" {
     target_label  = "connection_ip"
   }
 
-  // Source identification based on hostname (since connection_ip is empty)
-  // Synology NAS - cloud.gerega.net
-  rule {
-    source_labels = ["__syslog_message_hostname"]
-    regex         = "cloud\\.gerega\\.net"
-    target_label  = "source"
-    replacement   = "synology-nas"
-  }
-
-  rule {
-    source_labels = ["__syslog_message_hostname"]
-    regex         = "cloud\\.gerega\\.net"
-    target_label  = "source_type"
-    replacement   = "infrastructure"
-  }
-
-  rule {
-    source_labels = ["__syslog_message_hostname"]
-    regex         = "cloud\\.gerega\\.net"
-    target_label  = "device"
-    replacement   = "cloud.gerega.net"
-  }
-
-  // Set source=unknown if not matched (only if source is empty)
+  // Fallback: Set source=unknown if not matched by loki.process
   rule {
     source_labels = ["source"]
     regex         = "^$"
