@@ -183,6 +183,20 @@ loki.source.syslog "syslog_receiver" {
 loki.process "parse_message" {
   forward_to = [loki.relabel.syslog.receiver]
 
+  // Extract internal syslog fields to regular labels so we can see them in Grafana
+  stage.labels {
+    values = {
+      syslog_hostname  = "__syslog_message_hostname",
+      syslog_app       = "__syslog_message_app_name",
+      syslog_facility  = "__syslog_message_facility",
+      syslog_severity  = "__syslog_message_severity",
+      syslog_msgid     = "__syslog_message_msg_id",
+      syslog_procid    = "__syslog_message_proc_id",
+      syslog_conn_ip   = "__syslog_connection_ip_address",
+      syslog_conn_host = "__syslog_connection_hostname",
+    }
+  }
+
   // Label all syslog as Synology since it's the only device sending to this receiver
   stage.static_labels {
     values = {
