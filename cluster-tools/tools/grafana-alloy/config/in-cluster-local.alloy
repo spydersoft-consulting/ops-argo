@@ -165,7 +165,7 @@ loki.write "default" {
 // -----------------------------------------------------------------------------
 // Loki Syslog Receiver
 // -----------------------------------------------------------------------------
-// Receive syslog messages over TCP on port 1514
+// Receive syslog messages over TCP on port 1514 (exposed via NodePort 31050)
 
 loki.source.syslog "syslog_receiver" {
   listener {
@@ -175,41 +175,15 @@ loki.source.syslog "syslog_receiver" {
     labels = {
       job = "syslog-receiver",
     }
-    // Try BSD syslog (RFC 3164) format instead of IETF (RFC 5424)
-    syslog_format = "rfc3164"
   }
-  forward_to = [loki.process.parse_message.receiver]
-}
-
-// Add static labels for all syslog from this receiver (only Synology uses it)
-loki.process "parse_message" {
   forward_to = [loki.relabel.syslog.receiver]
-
-  // Label all syslog as Synology since it's the only device sending to this receiver
-  stage.static_labels {
-    values = {
-      source      = "synology-nas",
-      source_type = "infrastructure",
-      device      = "cloud.gerega.net",
-    }
-  }
-
-  // Add hostname, app, facility as structured metadata (won't create high-cardinality labels)
-  stage.structured_metadata {
-    values = {
-      syslog_hostname = "__syslog_message_hostname",
-      syslog_app = "__syslog_message_app_name",
-      syslog_facility = "__syslog_message_facility",
-      syslog_severity = "__syslog_message_severity",
-    }
-  }
 }
 
-// Relabel to extract basic syslog fields as regular labels
+// Relabel to extract syslog fields and identify source
 loki.relabel "syslog" {
   forward_to = [loki.write.default.receiver]
 
-  // Extract hostname if available
+  // Extract hostname from syslog
   rule {
     source_labels = ["__syslog_message_hostname"]
     target_label  = "hostname"
@@ -221,10 +195,61 @@ loki.relabel "syslog" {
     target_label  = "level"
   }
 
-  // Extract application if available
+  // Extract application
   rule {
     source_labels = ["__syslog_message_app_name"]
     target_label  = "application"
+  }
+
+  // Extract facility
+  rule {
+    source_labels = ["__syslog_message_facility"]
+    target_label  = "facility"
+  }
+
+  // Identify UniFi devices by hostname pattern (UDM, USW, UAP, etc.)
+  rule {
+    source_labels = ["hostname"]
+    regex         = "(UDM|USW|UAP|UCG|UXG).*"
+    target_label  = "source"
+    replacement   = "unifi-network"
+  }
+
+  rule {
+    source_labels = ["hostname"]
+    regex         = "(UDM|USW|UAP|UCG|UXG).*"
+    target_label  = "source_type"
+    replacement   = "network"
+  }
+
+  // Identify Synology by hostname pattern
+  rule {
+    source_labels = ["hostname"]
+    regex         = "(cloud|synology).*"
+    target_label  = "source"
+    replacement   = "synology-nas"
+  }
+
+  rule {
+    source_labels = ["hostname"]
+    regex         = "(cloud|synology).*"
+    target_label  = "source_type"
+    replacement   = "infrastructure"
+  }
+
+  // Default for unknown sources
+  rule {
+    source_labels = ["source"]
+    regex         = "^$"
+    target_label  = "source"
+    replacement   = "unknown"
+  }
+
+  rule {
+    source_labels = ["source_type"]
+    regex         = "^$"
+    target_label  = "source_type"
+    replacement   = "unknown"
   }
 }
 
