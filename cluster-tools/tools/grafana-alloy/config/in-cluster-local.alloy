@@ -175,6 +175,8 @@ loki.source.syslog "syslog_receiver" {
     labels = {
       job = "syslog-receiver",
     }
+    // Try BSD syslog (RFC 3164) format instead of IETF (RFC 5424)
+    syslog_format = "rfc3164"
   }
   forward_to = [loki.process.parse_message.receiver]
 }
