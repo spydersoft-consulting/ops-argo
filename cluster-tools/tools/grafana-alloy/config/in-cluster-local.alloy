@@ -169,6 +169,8 @@ loki.write "default" {
 
 // Relabel rules to extract internal syslog labels and identify source
 loki.relabel "syslog_processing" {
+  forward_to = [loki.write.default.receiver]
+
   // Extract hostname from internal __syslog_message_hostname label
   rule {
     source_labels = ["__syslog_message_hostname"]
@@ -246,7 +248,6 @@ loki.source.syslog "syslog_receiver_udp" {
     syslog_format = "rfc3164"
   }
   relabel_rules = loki.relabel.syslog_processing.rules
-  forward_to    = [loki.write.default.receiver]
 }
 
 // TCP receiver (fallback)
@@ -263,7 +264,6 @@ loki.source.syslog "syslog_receiver_tcp" {
     syslog_format = "rfc3164"
   }
   relabel_rules = loki.relabel.syslog_processing.rules
-  forward_to    = [loki.write.default.receiver]
 }
 
 // =============================================================================
