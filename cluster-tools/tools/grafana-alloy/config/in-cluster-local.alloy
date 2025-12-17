@@ -176,7 +176,59 @@ loki.source.syslog "syslog_receiver" {
       job = "syslog-receiver",
     }
   }
+  forward_to = [loki.process.source_identifier.receiver]
+}
+
+// Source identification based on connection IP address
+loki.process "source_identifier" {
   forward_to = [loki.relabel.syslog.receiver]
+
+  // Synology NAS - 192.168.1.12
+  stage.match {
+    selector = "{__syslog_connection_ip_address=\"192.168.1.12\"}"
+    stage.static_labels {
+      values = {
+        source      = "synology-nas",
+        source_type = "infrastructure",
+        device      = "cloud.gerega.net",
+      }
+    }
+  }
+
+  // nginx Proxy - 192.168.1.13 (for future use)
+  stage.match {
+    selector = "{__syslog_connection_ip_address=\"192.168.1.13\"}"
+    stage.static_labels {
+      values = {
+        source      = "nginx-proxy",
+        source_type = "infrastructure",
+        device      = "m5proxy",
+      }
+    }
+  }
+
+  // UniFi Gateway - 192.168.1.1
+  stage.match {
+    selector = "{__syslog_connection_ip_address=\"192.168.1.1\"}"
+    stage.static_labels {
+      values = {
+        source      = "unifi-gateway",
+        source_type = "network",
+        device      = "UCG-Max",
+      }
+    }
+  }
+
+  // Catch-all for unknown sources
+  stage.match {
+    selector = "{source=\"\"}"
+    stage.static_labels {
+      values = {
+        source      = "unknown",
+        source_type = "unknown",
+      }
+    }
+  }
 }
 
 // Relabel syslog messages to extract metadata as labels
@@ -211,6 +263,11 @@ loki.relabel "syslog" {
   rule {
     source_labels = ["__syslog_connection_hostname"]
     target_label  = "connection_hostname"
+  }
+
+  rule {
+    source_labels = ["__syslog_connection_ip_address"]
+    target_label  = "connection_ip"
   }
 }
 
