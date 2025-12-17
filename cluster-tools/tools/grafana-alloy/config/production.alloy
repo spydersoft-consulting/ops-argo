@@ -1,0 +1,119 @@
+
+remote.kubernetes.secret "vault_app_role_secret" {
+  namespace = "cluster-tools"
+  name = "k8-app-role-secret"
+}
+
+remote.vault "hass" {
+  server = "https://hcvault.mattgerega.net"
+  path = "secrets-k8/hass"
+
+  auth.approle {
+    role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
+    secret = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
+  }
+}
+
+remote.vault "vault" {
+  server = "https://hcvault.mattgerega.net"
+  path = "secrets-k8/monitoring/vault"
+
+  auth.approle {
+    role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
+    secret = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
+  }
+}
+
+prometheus.remote_write "default" {
+  endpoint {
+    url = "http://mimir-gateway-internal.monitoring.svc.cluster.local/api/v1/push"
+    headers = {
+      "X-Scope-OrgID" = "production",
+    }
+  }
+  external_labels = {
+    cluster = "production",
+    custom_source = "grafana-alloy",
+  }
+}
+
+// Scrape configuration for Home Assistant Metrics
+prometheus.scrape "hass" {
+  targets = [{
+    __address__ = "home.mattgerega.net",
+  }]
+  forward_to   = [prometheus.remote_write.default.receiver]
+  job_name     = "hass"
+  metrics_path = "/api/prometheus"
+  scheme       = "https"
+
+  authorization {
+    type        = "Bearer"
+    credentials = remote.vault.hass.data.token
+  }
+}
+
+loki.write "default" {
+  endpoint {
+    url = "http://loki-gateway-internal.monitoring.svc.cluster.local/loki/api/v1/push"
+    tenant_id = "production"
+  }
+  external_labels = {
+    cluster = "production",
+    custom_source = "grafana-alloy",
+  }
+}
+
+otelcol.processor.memory_limiter "default" {
+  check_interval = "1s"
+  limit          = "1GiB"
+
+  output {
+    metrics = [otelcol.processor.batch.default.input]
+    logs    = [otelcol.processor.batch.default.input]
+    traces  = [otelcol.processor.batch.default.input]
+  }
+}
+
+otelcol.processor.batch "default" {
+  output {
+    metrics = [otelcol.exporter.prometheus.default.input]
+    logs    = [otelcol.exporter.loki.default.input]
+    traces  = [otelcol.exporter.otlp.default.input]
+  }
+}
+otelcol.receiver.otlp "example" {
+  grpc {
+    endpoint = "0.0.0.0:4317"
+  }
+
+  http {
+    endpoint = "0.0.0.0:4318"
+  }
+
+  output {
+    metrics = [otelcol.processor.batch.default.input]
+    logs    = [otelcol.processor.batch.default.input]
+    traces  = [otelcol.processor.batch.default.input]
+  }
+}
+
+otelcol.exporter.loki "default" {
+  forward_to = [loki.write.default.receiver]
+}
+
+otelcol.exporter.prometheus "default" {
+  forward_to = [prometheus.remote_write.default.receiver]
+}
+
+otelcol.exporter.otlp "default" {
+  client {
+    endpoint = "tempo-gateway-internal.monitoring.svc.cluster.local:4317"
+    headers = {
+      "X-Scope-OrgID" = "production",
+    }
+    tls {
+      insecure = true
+    }
+  }
+}
