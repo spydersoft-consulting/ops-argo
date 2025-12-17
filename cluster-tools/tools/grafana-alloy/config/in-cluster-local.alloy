@@ -183,9 +183,9 @@ loki.source.syslog "syslog_receiver" {
 loki.process "source_identifier" {
   forward_to = [loki.relabel.syslog.receiver]
 
-  // Synology NAS - 192.168.1.12
+  // Synology NAS - 192.168.1.12 (matches IP with or without port)
   stage.match {
-    selector = "{__syslog_connection_ip_address=\"192.168.1.12\"}"
+    selector = "{__syslog_connection_ip_address=~\"192\\.168\\.1\\.12(:[0-9]+)?\"}"
     stage.static_labels {
       values = {
         source      = "synology-nas",
@@ -197,7 +197,7 @@ loki.process "source_identifier" {
 
   // nginx Proxy - 192.168.1.13 (for future use)
   stage.match {
-    selector = "{__syslog_connection_ip_address=\"192.168.1.13\"}"
+    selector = "{__syslog_connection_ip_address=~\"192\\.168\\.1\\.13(:[0-9]+)?\"}"
     stage.static_labels {
       values = {
         source      = "nginx-proxy",
@@ -209,7 +209,7 @@ loki.process "source_identifier" {
 
   // UniFi Gateway - 192.168.1.1
   stage.match {
-    selector = "{__syslog_connection_ip_address=\"192.168.1.1\"}"
+    selector = "{__syslog_connection_ip_address=~\"192\\.168\\.1\\.1(:[0-9]+)?\"}"
     stage.static_labels {
       values = {
         source      = "unifi-gateway",
@@ -219,9 +219,9 @@ loki.process "source_identifier" {
     }
   }
 
-  // Catch-all for unknown sources
+  // Catch-all: if no source was set above, set to unknown
   stage.match {
-    selector = "{source=\"\"}"
+    selector = "{source!=\"synology-nas\",source!=\"nginx-proxy\",source!=\"unifi-gateway\"}"
     stage.static_labels {
       values = {
         source      = "unknown",
