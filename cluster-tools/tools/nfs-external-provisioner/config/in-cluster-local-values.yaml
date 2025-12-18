@@ -1,6 +1,6 @@
 nfs-subdir-external-provisioner:
   nfs:
-    server: 192.168.1.30
+    server: cloud.gerega.net
     path: /volume1/kubernetes/internal
   storageClass:
     pathPattern: ${.PVC.namespace}-${.PVC.name}
