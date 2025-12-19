@@ -1,11 +1,11 @@
-version: 2025.12.2
-name: linkerd-viz
-apiVersion: v2
+version: 2025.12.3
 type: application
-dependencies:
-- name: linkerd-viz
-  repository: https://helm.linkerd.io/edge
-  version: 2025.12.2
+apiVersion: v2
 appVersion: edge-25.5.2
+name: linkerd-viz
+dependencies:
+- version: 2025.12.3
+  repository: https://helm.linkerd.io/edge
+  name: linkerd-viz
 
 
