@@ -3,4 +3,4 @@ nfs-subdir-external-provisioner:
     linkerd.io/inject: enabled
   storageClass:
     pathPattern: ${.PVC.namespace}-${.PVC.name}
-    reclaimPolicy: Retain
+    reclaimPolicy: Delete
