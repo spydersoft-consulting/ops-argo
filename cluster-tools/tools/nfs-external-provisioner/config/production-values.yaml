@@ -2,5 +2,3 @@ nfs-subdir-external-provisioner:
   nfs:
     server: cloud.gerega.net
     path: /volume1/kubernetes/production
-  storageClass:
-    pathPattern: ${.PVC.namespace}-${.PVC.name}

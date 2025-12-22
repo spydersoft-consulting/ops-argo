@@ -1,3 +1,6 @@
 nfs-subdir-external-provisioner:
   podAnnotations:
     linkerd.io/inject: enabled
+  storageClass:
+    pathPattern: ${.PVC.namespace}-${.PVC.name}
+    reclaimPolicy: Retain
