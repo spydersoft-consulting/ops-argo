@@ -10,6 +10,8 @@ spec:
       envoyDeployment:
         replicas: {{ .Values.envoyProxy.replicas | default 2 }}
         pod:
+          annotations:
+            linkerd.io/inject: disabled
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
