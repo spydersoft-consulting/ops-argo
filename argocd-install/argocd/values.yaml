@@ -1,29 +1,52 @@
 argo-cd:
   global:
     storageClass: nfs-client
+    # Apply sync-wave 10 to all resources (ConfigMaps, Services, Secrets, etc.)
+    # Deployments/StatefulSets will override this with their specific waves (20+)
+    additionalAnnotations:
+      argocd.argoproj.io/sync-wave: "10"
     podAnnotations:
       linkerd.io/inject: enabled
-  controller:
-    metrics:
-      enabled: true
-      serviceMonitor:
-        enabled: false
-  repoServer:
-    metrics:
-      enabled: true
-      serviceMonitor:
-        enabled: false
+  
+  # Redis - sync first as it's required by other components
   redis:
+    statefulsetAnnotations:
+      argocd.argoproj.io/sync-wave: "20"
     metrics:
       enabled: true
       serviceMonitor:
         enabled: false
+  
+  # Application Controller - sync second, depends on Redis
+  controller:
+    statefulsetAnnotations:
+      argocd.argoproj.io/sync-wave: "30"
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: false
+  
+  # Repo Server - sync third
+  repoServer:
+    deploymentAnnotations:
+      argocd.argoproj.io/sync-wave: "40"
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: false
+  
+  # ApplicationSet Controller - sync fourth
   applicationSet:
+    deploymentAnnotations:
+      argocd.argoproj.io/sync-wave: "50"
     metrics:
       enabled: true
       serviceMonitor:
         enabled: false
+  # Notifications Controller - sync fifth
   notifications:
+    deploymentAnnotations:
+      argocd.argoproj.io/sync-wave: "60"
     secret:
       create: false
       name: argocd-notifications-secret
@@ -33,7 +56,10 @@ argo-cd:
       serviceMonitor:
         enabled: false
 
+  # Server - sync sixth (UI and API)
   server:
+    deploymentAnnotations:
+      argocd.argoproj.io/sync-wave: "70"
     ingress:
       enabled: false
     metrics:
