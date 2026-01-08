@@ -305,7 +305,7 @@ discovery.relabel "spydersoft_metrics" {
 
 prometheus.scrape "spydersoft_metrics" {
   targets    = discovery.relabel.spydersoft_metrics.output
-  forward_to = [prometheus.remote_write.mimir.receiver]
+  forward_to = [prometheus.remote_write.default.receiver]
   
   honor_labels     = true
   honor_timestamps = true
@@ -389,7 +389,7 @@ loki.source.kubernetes "spydersoft_logs" {
 
 // Process logs based on format
 loki.process "parse_logs" {
-  forward_to = [loki.write.loki.receiver]
+  forward_to = [loki.write.default.receiver]
   
   // Parse JSON logs
   stage.match {
