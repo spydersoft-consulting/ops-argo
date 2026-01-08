@@ -19,17 +19,6 @@ remote.vault "targets" {
   }
 }
 
-// Vault remote configuration for MinIO credentials
-remote.vault "minio" {
-  server = "https://hcvault.mattgerega.net"
-  path   = "secrets-k8/monitoring/minio"
-
-  auth.approle {
-    role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
-    secret  = remote.kubernetes.secret.vault_app_role_secret.data["secret-id"]
-  }
-}
-
 // Vault remote configuration for Vault metrics token
 remote.vault "vault" {
   server = "https://hcvault.mattgerega.net"
@@ -73,21 +62,6 @@ prometheus.remote_write "default" {
 // -----------------------------------------------------------------------------
 // Prometheus Scrape Jobs
 // -----------------------------------------------------------------------------
-
-// Scrape MinIO S3 cluster metrics
-prometheus.scrape "minio_job" {
-  targets = [{
-    __address__ = convert.nonsensitive(remote.vault.targets.data["minio-target"]),
-  }]
-  forward_to   = [prometheus.remote_write.default.receiver]
-  job_name     = "minio-job"
-  metrics_path = "/minio/v2/metrics/cluster"
-
-  authorization {
-    type        = "Bearer"
-    credentials = remote.vault.minio.data.authtoken
-  }
-}
 
 // Scrape HashiCorp Vault metrics
 prometheus.scrape "vault_job" {
