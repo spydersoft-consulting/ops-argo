@@ -99,15 +99,15 @@ prometheus.scrape "garage_job" {
 }
 
 // Scrape Unifi Poller metrics (network monitoring)
-# prometheus.scrape "unifi_poller_job" {
-#   targets = [{
-#     __address__ = "unifi-poller.monitoring.svc.cluster.local:9130",
-#   }]
-#   forward_to   = [prometheus.remote_write.default.receiver]
-#   job_name     = "unifi-poller-job"
-#   metrics_path = "/metrics"
-#   scheme       = "http"
-# }
+//prometheus.scrape "unifi_poller_job" {
+//  targets = [{
+//    __address__ = "unifi-poller.monitoring.svc.cluster.local:9130",
+//  }]
+//  forward_to   = [prometheus.remote_write.default.receiver]
+//  job_name     = "unifi-poller-job"
+//  metrics_path = "/metrics"
+//  scheme       = "http"
+//}
 
 // Scrape Linkerd multicluster gateway metrics
 prometheus.scrape "linkerd_gateway_job" {
