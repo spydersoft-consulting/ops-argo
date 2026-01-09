@@ -3,9 +3,9 @@ alloy:
     name: nonproduction-grafana-alloy
     namespace: grafana
 
-envoy-gateway:
+gateway-helm:
   config:
-    envoyGateway: |
+    envoyGateway:
       telemetry:
         metrics:
           sinks:

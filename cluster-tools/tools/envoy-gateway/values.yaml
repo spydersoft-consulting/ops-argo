@@ -14,9 +14,13 @@ envoyProxy:
   serviceType: NodePort
   nodePort: 30080
 
-envoy-gateway:
+gateway-helm:
   config:
     envoyGateway:
+      gateway:
+        controllerName: gateway.envoyproxy.io/gatewayclass-controller
       logging:
         level:
           default: info
+      extensionApis: {}
+
