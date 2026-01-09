@@ -2,3 +2,15 @@ alloy:
   service:
     name: in-cluster-local-grafana-alloy
     namespace: grafana
+
+envoy-gateway:
+  config:
+    envoyGateway:
+      telemetry:
+        metrics:
+          sinks:
+          - type: OpenTelemetry
+            openTelemetry:
+              host: in-cluster-local-grafana-alloy.grafana.svc.cluster.local
+              port: 4317
+              protocol: grpc
