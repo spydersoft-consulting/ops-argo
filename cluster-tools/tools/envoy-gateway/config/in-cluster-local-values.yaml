@@ -3,7 +3,7 @@ alloy:
     name: in-cluster-local-grafana-alloy
     namespace: grafana
 
-envoy-gateway:
+gateway-helm:
   config:
     envoyGateway:
       telemetry:
