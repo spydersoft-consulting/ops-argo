@@ -84,6 +84,186 @@ loki.write "default" {
   }
 }
 
+// -------------------------------------------------------------------
+// METRICS DISCOVERY - Custom Annotations
+// -------------------------------------------------------------------
+
+// Discover services using spydersoft.io annotations
+discovery.kubernetes "services" {
+  role = "service"
+}
+
+discovery.relabel "spydersoft_metrics" {
+  targets = discovery.kubernetes.services.targets
+  
+  // Use YOUR custom annotation namespace
+  // metrics.spydersoft.io/scrape instead of prometheus.io/scrape
+  rule {
+    source_labels = ["__meta_kubernetes_service_annotation_metrics_spydersoft_io_scrape"]
+    regex         = "true"
+    action        = "keep"
+  }
+  
+  // Get port from metrics.spydersoft.io/port
+  rule {
+    source_labels = ["__address__", "__meta_kubernetes_service_annotation_metrics_spydersoft_io_port"]
+    regex         = "([^:]+)(?::\\d+)?;(\\d+)"
+    target_label  = "__address__"
+    replacement   = "$1:$2"
+    action        = "replace"
+  }
+  
+  // Get path from metrics.spydersoft.io/path (default /metrics)
+  rule {
+    source_labels = ["__meta_kubernetes_service_annotation_metrics_spydersoft_io_path"]
+    regex         = "(.+)"
+    target_label  = "__metrics_path__"
+    action        = "replace"
+  }
+  
+  // Get scheme from metrics.spydersoft.io/scheme
+  rule {
+    source_labels = ["__meta_kubernetes_service_annotation_metrics_spydersoft_io_scheme"]
+    regex         = "(https?)"
+    target_label  = "__scheme__"
+    action        = "replace"
+  }
+  
+  // Add standard labels
+  rule {
+    source_labels = ["__meta_kubernetes_namespace"]
+    target_label  = "namespace"
+  }
+  
+  rule {
+    source_labels = ["__meta_kubernetes_service_name"]
+    target_label  = "service"
+  }
+  
+  rule {
+    source_labels = ["__meta_kubernetes_service_name"]
+    target_label  = "job"
+  }
+}
+
+prometheus.scrape "spydersoft_metrics" {
+  targets    = discovery.relabel.spydersoft_metrics.output
+  forward_to = [prometheus.remote_write.default.receiver]
+  
+  honor_labels     = true
+  honor_timestamps = true
+}
+
+// -------------------------------------------------------------------
+// LOGS DISCOVERY - Custom Annotations
+// -------------------------------------------------------------------
+
+// Discover pods/services for log collection
+discovery.kubernetes "log_sources" {
+  role = "pod"  // Use pod role for log collection
+}
+
+discovery.relabel "spydersoft_logs" {
+  targets = discovery.kubernetes.log_sources.targets
+  
+  // Use logs.spydersoft.io/collect annotation
+  rule {
+    source_labels = ["__meta_kubernetes_pod_annotation_logs_spydersoft_io_collect"]
+    regex         = "true"
+    action        = "keep"
+  }
+  
+  // Get log path from annotation (for file-based logs)
+  rule {
+    source_labels = ["__meta_kubernetes_pod_annotation_logs_spydersoft_io_path"]
+    regex         = "(.+)"
+    target_label  = "__path__"
+    action        = "replace"
+  }
+  
+  // Default log path if not specified (stdout)
+  rule {
+    source_labels = ["__path__"]
+    regex         = ""
+    replacement   = "/var/log/pods/*$1/*.log"
+    target_label  = "__path__"
+  }
+  
+  // Add pod metadata labels
+  rule {
+    source_labels = ["__meta_kubernetes_namespace"]
+    target_label  = "namespace"
+  }
+  
+  rule {
+    source_labels = ["__meta_kubernetes_pod_name"]
+    target_label  = "pod"
+  }
+  
+  rule {
+    source_labels = ["__meta_kubernetes_pod_container_name"]
+    target_label  = "container"
+  }
+  
+  rule {
+    source_labels = ["__meta_kubernetes_pod_node_name"]
+    target_label  = "node"
+  }
+  
+  // Get log format from annotation (json, logfmt, text)
+  rule {
+    source_labels = ["__meta_kubernetes_pod_annotation_logs_spydersoft_io_format"]
+    target_label  = "__log_format__"
+  }
+  
+  // Copy all pod labels
+  rule {
+    regex       = "__meta_kubernetes_pod_label_(.+)"
+    action      = "labelmap"
+    replacement = "$1"
+  }
+}
+
+// Collect logs from discovered pods
+loki.source.kubernetes "spydersoft_logs" {
+  targets    = discovery.relabel.spydersoft_logs.output
+  forward_to = [loki.process.parse_logs.receiver]
+}
+
+// Process logs based on format
+loki.process "parse_logs" {
+  forward_to = [loki.write.default.receiver]
+  
+  // Parse JSON logs
+  stage.match {
+    selector = "{__log_format__=\"json\"}"
+    stage.json {
+      expressions = {
+        level   = "level",
+        message = "msg",
+      }
+    }
+  }
+  
+  // Parse logfmt logs
+  stage.match {
+    selector = "{__log_format__=\"logfmt\"}"
+    stage.logfmt {
+      mapping = {
+        level = "",
+        msg   = "",
+      }
+    }
+  }
+  
+  // Extract log level and set as label
+  stage.labels {
+    values = {
+      level = "",
+    }
+  }
+}
+
 // =============================================================================
 // OpenTelemetry Configuration
 // =============================================================================
