@@ -15,13 +15,8 @@ envoyProxy:
   nodePort: 30080
 
 envoy-gateway:
-  config: 
-    envoy-gateway: |
-      telemetry:
-        metrics:
-          sinks:
-          - type: OpenTelemetry
-            openTelemetry:
-              host: "{{ .Values.alloy.service.name }}.{{ .Values.alloy.service.namespace }}"
-              port: {{ .Values.alloy.service.port }}
-              protocol: grpc
+  config:
+    envoyGateway:
+      logging:
+        level:
+          default: info

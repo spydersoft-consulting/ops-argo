@@ -2,3 +2,15 @@ alloy:
   service:
     name: nonproduction-grafana-alloy
     namespace: grafana
+
+envoy-gateway:
+  config:
+    envoyGateway: |
+      telemetry:
+        metrics:
+          sinks:
+          - type: OpenTelemetry
+            openTelemetry:
+              host: nonproduction-grafana-alloy.grafana.svc.cluster.local
+              port: 4317
+              protocol: grpc
