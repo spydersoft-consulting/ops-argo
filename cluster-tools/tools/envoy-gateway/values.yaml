@@ -1,5 +1,8 @@
-
-
+alloy:
+  service:
+    name: grafana-alloy
+    namespace: default
+    port: 4317  # OTLP gRPC port
 gatewayClass:
   name: main
 gateway:

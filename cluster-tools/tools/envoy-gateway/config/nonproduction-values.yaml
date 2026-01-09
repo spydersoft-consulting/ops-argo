@@ -1,0 +1,4 @@
+alloy:
+  service:
+    name: nonproduction-grafana-alloy
+    namespace: grafana

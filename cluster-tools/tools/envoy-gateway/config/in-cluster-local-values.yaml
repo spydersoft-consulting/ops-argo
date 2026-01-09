@@ -1,0 +1,4 @@
+alloy:
+  service:
+    name: in-cluster-local-grafana-alloy
+    namespace: grafana
