@@ -1,0 +1,4 @@
+alloy:
+  service:
+    name: production-grafana-alloy
+    namespace: grafana
