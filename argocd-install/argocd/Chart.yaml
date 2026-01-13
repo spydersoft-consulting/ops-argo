@@ -1,11 +1,11 @@
-dependencies:
-- repository: https://argoproj.github.io/argo-helm
-  version: 9.2.4
-  name: argo-cd
-type: application
-version: 9.2.4
 name: argocd
-appVersion: v2.4.13
+version: 9.3.0
 apiVersion: v2
+appVersion: v2.4.13
+dependencies:
+- name: argo-cd
+  repository: https://argoproj.github.io/argo-helm
+  version: 9.3.0
+type: application
 
 
