@@ -1,11 +1,11 @@
-type: application
-appVersion: v1.9.1
 name: grafana-alloy
+version: 1.5.2
 apiVersion: v2
-version: 1.5.1
+appVersion: v1.9.1
 dependencies:
-- version: 1.5.1
-  name: alloy
+- name: alloy
+  version: 1.5.2
   repository: https://grafana.github.io/helm-charts
+type: application
 
 
