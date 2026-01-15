@@ -1,11 +1,11 @@
-type: application
-version: 2026.1.1
-apiVersion: v2
 dependencies:
-- version: 2026.1.1
-  repository: https://helm.linkerd.io/edge
+- repository: https://helm.linkerd.io/edge
   name: linkerd-crds
-appVersion: 2025.5.2
+  version: 2026.1.2
 name: linkerd-crds
+appVersion: 2025.5.2
+version: 2026.1.2
+apiVersion: v2
+type: application
 
 
