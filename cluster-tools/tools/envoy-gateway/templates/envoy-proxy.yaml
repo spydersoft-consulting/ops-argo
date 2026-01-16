@@ -4,6 +4,15 @@ metadata:
   name: {{ .Values.gateway.name }}
   namespace: envoy-gateway-system
 spec:
+  telemetry:
+    tracing:
+      samplingRate: 100  # or whatever you prefer
+      provider:
+        type: OpenTelemetry
+        backendRefs:
+        - name: {{ .Values.alloy.service.name }}
+          namespace: {{ .Values.alloy.service.namespace }}
+          port: {{ .Values.alloy.service.port }}  # OTLP gRPC port
   provider:
     type: Kubernetes
     kubernetes:
