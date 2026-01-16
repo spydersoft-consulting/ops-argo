@@ -286,6 +286,22 @@ discovery.relabel "spydersoft_metrics" {
     action        = "replace"
   }
   
+  // Get query parameters from metrics.spydersoft.io/param_<name>
+  // For SNMP exporters: metrics.spydersoft.io/param_module and metrics.spydersoft.io/param_target
+  rule {
+    source_labels = ["__meta_kubernetes_service_annotation_metrics_spydersoft_io_param_module"]
+    regex         = "(.+)"
+    target_label  = "__param_module"
+    action        = "replace"
+  }
+  
+  rule {
+    source_labels = ["__meta_kubernetes_service_annotation_metrics_spydersoft_io_param_target"]
+    regex         = "(.+)"
+    target_label  = "__param_target"
+    action        = "replace"
+  }
+  
   // Add standard labels
   rule {
     source_labels = ["__meta_kubernetes_namespace"]
