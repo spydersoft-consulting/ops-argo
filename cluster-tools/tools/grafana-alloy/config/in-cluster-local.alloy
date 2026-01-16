@@ -302,6 +302,13 @@ discovery.relabel "spydersoft_metrics" {
     action        = "replace"
   }
   
+  rule {
+    source_labels = ["__meta_kubernetes_service_annotation_metrics_spydersoft_io_param_auth"]
+    regex         = "(.+)"
+    target_label  = "__param_auth"
+    action        = "replace"
+  }
+  
   // Add standard labels
   rule {
     source_labels = ["__meta_kubernetes_namespace"]
