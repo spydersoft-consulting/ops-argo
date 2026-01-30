@@ -58,18 +58,22 @@ function Save-Kubeconfig {
             throw "linkerd command failed with exit code $LASTEXITCODE"
         }
 
-        # Extract kubeconfig data from the output
+        # Extract and decode kubeconfig data from the output
+        # (Kubernetes will re-encode it when storing in the secret)
         $secretSection = $output -join "`n" | Select-String -Pattern "(?s)kind: Secret.*?kubeconfig: ([A-Za-z0-9+/=]+)" -AllMatches
 
         if ($secretSection.Matches.Count -eq 0) {
             throw "Could not find kubeconfig in linkerd output"
         }
 
-        $kubeconfigData = $secretSection.Matches[0].Groups[1].Value
+        $kubeconfigBase64 = $secretSection.Matches[0].Groups[1].Value
 
-        if ([string]::IsNullOrWhiteSpace($kubeconfigData)) {
+        if ([string]::IsNullOrWhiteSpace($kubeconfigBase64)) {
             throw "Extracted kubeconfig data is empty"
         }
+
+        # Decode the base64 kubeconfig
+        $kubeconfigData = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($kubeconfigBase64))
 
         Write-Host "Storing kubeconfig in Vault at $VaultPath/$VaultKey..." -ForegroundColor Green
 

@@ -46,6 +46,7 @@ store_kubeconfig() {
     echo -e "${GREEN}Generating kubeconfig for ${SOURCE_CLUSTER} -> ${INTERNAL_CLUSTER_NAME}...${NC}"
 
     # Generate the kubeconfig using linkerd multicluster link-gen
+    # Extract and decode the base64-encoded kubeconfig (Kubernetes will re-encode it)
     KUBECONFIG_DATA=$(linkerd --context=${INTERNAL_CONTEXT} multicluster link-gen \
         --cluster-name ${INTERNAL_CLUSTER_NAME} \
         --gateway-addresses ${GATEWAY_ADDRESS} \
@@ -53,7 +54,8 @@ store_kubeconfig() {
         grep -A 1000 "kind: Secret" | \
         grep "kubeconfig:" | \
         head -1 | \
-        awk '{print $2}')
+        awk '{print $2}' | \
+        base64 -d)
 
     if [ -z "$KUBECONFIG_DATA" ]; then
         echo -e "${RED}Error: Failed to generate kubeconfig${NC}"
