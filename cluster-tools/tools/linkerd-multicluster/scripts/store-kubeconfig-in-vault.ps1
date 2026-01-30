@@ -6,7 +6,7 @@ param(
     [string]$VaultAddr = $env:VAULT_ADDR ?? "https://hcvault.mattgerega.net",
     [string]$VaultPath = "secrets-k8/linkerd-multicluster",
     [string]$InternalContext = "internal",
-    [string]$InternalClusterName = "in-cluster-local",
+    [string]$InternalClusterName = "internal",
     [string]$GatewayAddress = "tfx-internal.gerega.net:30143"
 )
 
@@ -38,7 +38,7 @@ if ($continue -notmatch '^[Yy]$') {
 }
 
 # Function to generate and store kubeconfig
-function Store-Kubeconfig {
+function Save-Kubeconfig {
     param(
         [string]$SourceCluster,
         [string]$ServiceAccountName,
@@ -92,7 +92,7 @@ function Store-Kubeconfig {
 }
 
 # Generate and store production kubeconfig
-$success = Store-Kubeconfig `
+$success = Save-Kubeconfig `
     -SourceCluster "production" `
     -ServiceAccountName "linkerd-service-mirror-remote-access-production" `
     -VaultKey "production-to-internal"
@@ -103,7 +103,7 @@ if (-not $success) {
 }
 
 # Generate and store nonproduction kubeconfig
-$success = Store-Kubeconfig `
+$success = Save-Kubeconfig `
     -SourceCluster "nonproduction" `
     -ServiceAccountName "linkerd-service-mirror-remote-access-nonproduction" `
     -VaultKey "nonproduction-to-internal"

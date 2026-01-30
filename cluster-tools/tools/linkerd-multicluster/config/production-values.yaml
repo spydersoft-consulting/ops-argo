@@ -11,7 +11,7 @@ linkerd-multicluster:
   controllers:
     - link:
         ref:
-          name: in-cluster-local
+          name: internal
 
   # Grant access to internal cluster
   remoteMirrorServiceAccountName: linkerd-service-mirror-remote-access-in-cluster-local
