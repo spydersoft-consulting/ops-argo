@@ -1,0 +1,31 @@
+{{- if eq .Values.clusterName "production" }}
+---
+apiVersion: multicluster.linkerd.io/v1alpha3
+kind: Link
+metadata:
+  annotations:
+    linkerd.io/created-by: helm/gitops {{ .Chart.AppVersion }}
+  name: in-cluster-local
+  namespace: linkerd-multicluster
+spec:
+  clusterCredentialsSecret: cluster-credentials-in-cluster-local
+  federatedServiceSelector:
+    matchLabels:
+      mirror.linkerd.io/federated: member
+  gatewayAddress: tfx-internal.gerega.net:30143
+  gatewayIdentity: linkerd-gateway.linkerd-multicluster.serviceaccount.identity.linkerd.cluster.local
+  gatewayPort: "30143"
+  probeSpec:
+    path: /ready
+    period: 3s
+    port: "30191"
+  remoteDiscoverySelector:
+    matchLabels:
+      mirror.linkerd.io/exported: remote-discovery
+  selector:
+    matchLabels:
+      mirror.linkerd.io/exported: "true"
+  targetClusterDomain: cluster.local
+  targetClusterLinkerdNamespace: linkerd
+  targetClusterName: in-cluster-local
+{{- end }}
