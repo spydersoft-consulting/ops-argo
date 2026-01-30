@@ -4,7 +4,7 @@ apiVersion: multicluster.linkerd.io/v1alpha3
 kind: Link
 metadata:
   annotations:
-    linkerd.io/created-by: helm/gitops {{ .Chart.AppVersion }}
+    linkerd.io/created-by: linkerd/cli {{ .Chart.AppVersion }}
   name: internal
   namespace: linkerd-multicluster
 spec:
