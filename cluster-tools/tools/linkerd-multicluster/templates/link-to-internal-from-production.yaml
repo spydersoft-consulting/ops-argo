@@ -5,10 +5,10 @@ kind: Link
 metadata:
   annotations:
     linkerd.io/created-by: helm/gitops {{ .Chart.AppVersion }}
-  name: in-cluster-local
+  name: internal
   namespace: linkerd-multicluster
 spec:
-  clusterCredentialsSecret: cluster-credentials-in-cluster-local
+  clusterCredentialsSecret: cluster-credentials-internal
   federatedServiceSelector:
     matchLabels:
       mirror.linkerd.io/federated: member
@@ -27,5 +27,5 @@ spec:
       mirror.linkerd.io/exported: "true"
   targetClusterDomain: cluster.local
   targetClusterLinkerdNamespace: linkerd
-  targetClusterName: in-cluster-local
+  targetClusterName: internal
 {{- end }}

@@ -8,7 +8,7 @@ set -e
 VAULT_ADDR="${VAULT_ADDR:-https://hcvault.mattgerega.net}"
 VAULT_PATH="secrets-k8/linkerd-multicluster"
 INTERNAL_CONTEXT="internal"
-INTERNAL_CLUSTER_NAME="in-cluster-local"
+INTERNAL_CLUSTER_NAME="internal"
 GATEWAY_ADDRESS="tfx-internal.gerega.net:30143"
 
 # Colors for output
