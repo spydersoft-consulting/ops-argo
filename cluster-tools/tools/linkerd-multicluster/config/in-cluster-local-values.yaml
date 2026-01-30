@@ -1,3 +1,6 @@
+# Cluster identifier for conditional templates
+clusterName: in-cluster-local
+
 linkerd-multicluster:
   # Internal cluster acts as the telemetry hub
   # Gateway enabled with NodePort for cross-cluster service mirroring
@@ -9,6 +12,9 @@ linkerd-multicluster:
     probe:
       port: 4191
       nodePort: 30191
+
+  # No controllers needed on internal (it's the target, not the source)
+  # Internal receives connections, doesn't initiate them
 
   # Grant access to service accounts from production and nonproduction clusters
   # These will be created when those clusters link to internal

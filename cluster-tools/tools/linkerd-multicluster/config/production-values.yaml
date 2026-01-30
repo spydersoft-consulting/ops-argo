@@ -1,8 +1,17 @@
+# Cluster identifier for conditional templates
+clusterName: production
+
 linkerd-multicluster:
   # Production cluster will link to internal for telemetry
   # No gateway needed on production (only internal needs gateway)
   gateway:
     enabled: false
+
+  # Configure controller to manage the link
+  controllers:
+    - link:
+        ref:
+          name: in-cluster-local
 
   # Grant access to internal cluster
   remoteMirrorServiceAccountName: linkerd-service-mirror-remote-access-in-cluster-local
