@@ -1,11 +1,11 @@
-appVersion: edge-26.1.4
-type: application
-name: linkerd-multicluster
 dependencies:
-- version: 2026.3.3
+- repository: https://helm.linkerd.io/edge
   name: linkerd-multicluster
-  repository: https://helm.linkerd.io/edge
-version: 2026.3.3
+  version: 2026.4.1
 apiVersion: v2
+name: linkerd-multicluster
+type: application
+appVersion: edge-26.1.4
+version: 2026.4.1
 
 
