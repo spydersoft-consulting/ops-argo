@@ -84,6 +84,11 @@ argo-cd:
       resource.customizations.ignoreDifferences.all: |
         managedFieldsManagers:
         - external-secrets
+      resource.customizations.ignoreDifferences.external-secrets.io_ExternalSecret: |
+        jqPathExpressions:
+        - '.spec.data[]?.remoteRef.nullBytePolicy'
+        - '.spec.dataFrom[]?.extract.nullBytePolicy'
+        - '.spec.dataFrom[]?.find.nullBytePolicy'
       "dex.config": |
         logger:
           format: json
