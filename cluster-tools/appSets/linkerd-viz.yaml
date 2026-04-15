@@ -30,7 +30,19 @@ spec:
       destination:
         server: "{{ server }}"
         namespace: "linkerd-viz"
+      ignoreDifferences:
+        - group: "external-secrets.io"
+          kind: ExternalSecret
+          managedFieldsManagers:
+            - before-first-apply
+          jqPathExpressions:
+            - '.spec.data[]?.remoteRef.nullBytePolicy'
+            - '.spec.dataFrom[]?.extract.nullBytePolicy'
+            - '.spec.dataFrom[]?.find.nullBytePolicy'
+          jsonPointers:
+            - /metadata/labels
       syncPolicy:
         syncOptions: # Sync options which modifies sync behavior
           - CreateNamespace=true
+          - RespectIgnoreDifferences=true
           - ServerSideApply=true

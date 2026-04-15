@@ -33,6 +33,16 @@ spec:
           kind: "CronJob"
           jsonPointers:
             - /spec/schedule
+        - group: "external-secrets.io"
+          kind: ExternalSecret
+          managedFieldsManagers:
+            - before-first-apply
+          jqPathExpressions:
+            - '.spec.data[]?.remoteRef.nullBytePolicy'
+            - '.spec.dataFrom[]?.extract.nullBytePolicy'
+            - '.spec.dataFrom[]?.find.nullBytePolicy'
+          jsonPointers:
+            - /metadata/labels
       syncPolicy:
         syncOptions:
           - RespectIgnoreDifferences=true
