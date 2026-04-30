@@ -1,0 +1,33 @@
+kured:
+  configuration:
+    rebootDays:
+      - saturday
+    startTime: "02:00"
+    endTime: "04:00"
+    timeZone: America/New_York
+    period: 1h
+    drainTimeout: 5m
+    forceReboot: false
+
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+
+  podAnnotations:
+    logs.spydersoft.io/collect: "true"
+    logs.spydersoft.io/format: "text"
+
+  service:
+    annotations:
+      metrics.spydersoft.io/scrape: "true"
+      metrics.spydersoft.io/port: "8080"
+      metrics.spydersoft.io/path: "/metrics"
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 64Mi
+    requests:
+      cpu: 10m
+      memory: 32Mi
