@@ -26,6 +26,10 @@ argo-cd:
   repoServer:
     deploymentAnnotations:
       argocd.argoproj.io/sync-wave: "40"
+    livenessProbe:
+      timeoutSeconds: 10
+    readinessProbe:
+      timeoutSeconds: 10
     metrics:
       enabled: true
       serviceMonitor:
