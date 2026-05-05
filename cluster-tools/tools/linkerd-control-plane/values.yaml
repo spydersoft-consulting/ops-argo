@@ -1,5 +1,8 @@
 linkerd-control-plane:
   installNamespace: false
+  podAnnotations:
+    logs.spydersoft.io/collect: "true"
+    logs.spydersoft.io/format: "logfmt"
   policyValidator:
     externalSecret: true
     caBundle: |

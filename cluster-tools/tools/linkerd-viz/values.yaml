@@ -35,3 +35,5 @@ linkerd-viz:
     enabled: false
   podAnnotations:
     linkerd.io/inject: enabled
+    logs.spydersoft.io/collect: "true"
+    logs.spydersoft.io/format: "logfmt"
