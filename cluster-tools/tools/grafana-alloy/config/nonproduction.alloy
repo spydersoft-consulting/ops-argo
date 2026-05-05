@@ -16,6 +16,211 @@ prometheus.remote_write "default" {
   }
 }
 
+// -----------------------------------------------------------------------------
+// Linkerd Metrics Collection
+// -----------------------------------------------------------------------------
+
+// Discover all pods for Linkerd proxy metrics
+discovery.kubernetes "linkerd_pods" {
+  role = "pod"
+}
+
+// Scrape Linkerd proxy sidecars (admin port 4191)
+discovery.relabel "linkerd_proxy" {
+  targets = discovery.kubernetes.linkerd_pods.targets
+  
+  // Only keep pods with linkerd proxy (container port named linkerd-admin)
+  rule {
+    source_labels = ["__meta_kubernetes_pod_container_port_name"]
+    regex         = "linkerd-admin"
+    action        = "keep"
+  }
+  
+  // Use the linkerd-admin port (4191)
+  rule {
+    source_labels = ["__meta_kubernetes_pod_ip", "__meta_kubernetes_pod_container_port_number"]
+    regex         = "([^:]+);(\\d+)"
+    target_label  = "__address__"
+    replacement   = "$1:$2"
+    action        = "replace"
+  }
+  
+  // Add namespace label
+  rule {
+    source_labels = ["__meta_kubernetes_namespace"]
+    target_label  = "namespace"
+  }
+  
+  // Add pod label
+  rule {
+    source_labels = ["__meta_kubernetes_pod_name"]
+    target_label  = "pod"
+  }
+  
+  // Add service label (for linkerd dashboards)
+  rule {
+    source_labels = ["__meta_kubernetes_pod_label_app"]
+    regex         = "(.+)"
+    target_label  = "service"
+    action        = "replace"
+  }
+  
+  // Add deployment label
+  rule {
+    source_labels = ["__meta_kubernetes_pod_controller_name"]
+    target_label  = "deployment"
+  }
+  
+  // Copy all pod labels for additional filtering
+  rule {
+    regex       = "__meta_kubernetes_pod_label_(.+)"
+    action      = "labelmap"
+    replacement = "$1"
+  }
+}
+
+prometheus.scrape "linkerd_proxy" {
+  targets               = discovery.relabel.linkerd_proxy.output
+  forward_to            = [prometheus.remote_write.default.receiver]
+  job_name              = "linkerd-proxy"
+  scrape_interval       = "30s"
+  scrape_timeout        = "10s"
+  
+  bearer_token_file     = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+  
+  tls_config {
+    insecure_skip_verify = true
+  }
+}
+
+// Discover services for Linkerd control plane components
+discovery.kubernetes "linkerd_services" {
+  role = "service"
+  namespaces {
+    names = ["linkerd", "linkerd-viz", "linkerd-multicluster"]
+  }
+}
+
+// Scrape Linkerd control plane and viz components
+discovery.relabel "linkerd_control_plane" {
+  targets = discovery.kubernetes.linkerd_services.targets
+  
+  // Only scrape services in linkerd/linkerd-viz namespaces with admin port
+  rule {
+    source_labels = ["__meta_kubernetes_service_port_name"]
+    regex         = "admin-http"
+    action        = "keep"
+  }
+  
+  rule {
+    source_labels = ["__meta_kubernetes_namespace"]
+    target_label  = "namespace"
+  }
+  
+  rule {
+    source_labels = ["__meta_kubernetes_service_name"]
+    target_label  = "service"
+  }
+  
+  rule {
+    source_labels = ["__meta_kubernetes_service_name"]
+    target_label  = "job"
+  }
+  
+  // Copy service labels
+  rule {
+    regex       = "__meta_kubernetes_service_label_(.+)"
+    action      = "labelmap"
+    replacement = "$1"
+  }
+}
+
+prometheus.scrape "linkerd_control_plane" {
+  targets               = discovery.relabel.linkerd_control_plane.output
+  forward_to            = [prometheus.remote_write.default.receiver]
+  job_name              = "linkerd-control-plane"
+  scrape_interval       = "30s"
+  
+  bearer_token_file     = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+  
+  tls_config {
+    insecure_skip_verify = true
+  }
+}
+
+// -----------------------------------------------------------------------------
+// RKE2 Cluster Metrics - Kubelet and cAdvisor
+// -----------------------------------------------------------------------------
+// These metrics are sent to the NONPRODUCTION tenant
+
+// Scrape kubelet metrics (runtime metrics)
+prometheus.scrape "kubelet_metrics" {
+  targets = [{
+    __address__ = "in-cluster-local-kube-prom-kubelet.kube-system.svc.cluster.local:10250",
+  }]
+  forward_to   = [prometheus.remote_write.default.receiver]
+  job_name     = "kubelet"
+  metrics_path = "/metrics"
+  scheme       = "https"
+
+  bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+  tls_config {
+    insecure_skip_verify = true
+  }
+
+  // Drop high-cardinality metrics to reduce storage
+  metric_relabel_configs {
+    source_labels = ["__name__"]
+    regex         = "apiserver_.*|etcd_.*|rest_client_.*"
+    action        = "drop"
+  }
+}
+
+// Scrape cAdvisor metrics (container resource metrics)
+prometheus.scrape "cadvisor_metrics" {
+  targets = [{
+    __address__ = "in-cluster-local-kube-prom-kubelet.kube-system.svc.cluster.local:10250",
+  }]
+  forward_to   = [prometheus.remote_write.default.receiver]
+  job_name     = "cadvisor"
+  metrics_path = "/metrics/cadvisor"
+  scheme       = "https"
+
+  bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+  tls_config {
+    insecure_skip_verify = true
+  }
+
+  // Drop high-cardinality container metrics to reduce storage
+  metric_relabel_configs {
+    source_labels = ["__name__"]
+    regex         = "container_(network_tcp_usage_total|network_udp_usage_total|tasks_state|cpu_load_average_10s)"
+    action        = "drop"
+  }
+}
+
+// =============================================================================
+// Node Metrics (prometheus.exporter.unix)
+// =============================================================================
+// Collects host-level metrics from the underlying VM via mounted host paths.
+// Deployed to nonproduction first to determine which collectors/metrics are needed.
+
+prometheus.exporter.unix "node" {
+  procfs_path = "/host/proc"
+  sysfs_path  = "/host/sys"
+  rootfs_path = "/host/root"
+  disable_collectors = ["arp", "bcache", "bonding", "ipvs", "rapl"]
+}
+
+prometheus.scrape "node_exporter" {
+  targets         = prometheus.exporter.unix.node.targets
+  forward_to      = [prometheus.remote_write.default.receiver]
+  job_name        = "node-exporter"
+  scrape_interval = "60s"
+}
+
 // =============================================================================
 // Loki Configuration
 // =============================================================================

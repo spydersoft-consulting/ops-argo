@@ -1,7 +1,32 @@
 configFile: config/nonproduction.alloy
 
 alloy:
+  controller:
+    hostPID: true
+    volumes:
+      extra:
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: root
+          hostPath:
+            path: /
   alloy:
     configMap:
       create: false
       name: nonproduction-grafana-alloy-config
+    mounts:
+      extra:
+        - mountPath: /host/proc
+          name: proc
+          readOnly: true
+        - mountPath: /host/sys
+          name: sys
+          readOnly: true
+        - mountPath: /host/root
+          name: root
+          readOnly: true
+          mountPropagation: HostToContainer
