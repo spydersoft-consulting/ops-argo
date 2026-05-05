@@ -4,6 +4,12 @@ argo-cd:
     podAnnotations:
       linkerd.io/inject: enabled
   
+  # Redis secret init job - disable Linkerd injection so the job can complete
+  # (sidecar containers prevent job pods from terminating)
+  redisSecretInit:
+    podAnnotations:
+      linkerd.io/inject: disabled
+
   # Redis - sync first as it's required by other components
   redis:
     statefulsetAnnotations:
