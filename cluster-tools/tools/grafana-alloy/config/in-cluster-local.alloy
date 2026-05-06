@@ -256,13 +256,31 @@ prometheus.scrape "linkerd_control_plane" {
 // RKE2 Cluster Metrics - Kubelet and cAdvisor
 // -----------------------------------------------------------------------------
 
+prometheus.relabel "kubelet_filter" {
+  forward_to = [prometheus.remote_write.default.receiver]
+  rule {
+    source_labels = ["__name__"]
+    regex         = "apiserver_.*|etcd_.*|rest_client_.*"
+    action        = "drop"
+  }
+}
+
+prometheus.relabel "cadvisor_filter" {
+  forward_to = [prometheus.remote_write.default.receiver]
+  rule {
+    source_labels = ["__name__"]
+    regex         = "container_(network_tcp_usage_total|network_udp_usage_total|tasks_state|cpu_load_average_10s)"
+    action        = "drop"
+  }
+}
+
 // Scrape kubelet metrics (runtime metrics)
 // This service is created by prometheus-operator but works with Alloy
 prometheus.scrape "kubelet_metrics" {
   targets = [{
     __address__ = "in-cluster-local-kube-prom-kubelet.kube-system.svc.cluster.local:10250",
   }]
-  forward_to   = [prometheus.remote_write.default.receiver]
+  forward_to   = [prometheus.relabel.kubelet_filter.receiver]
   job_name     = "kubelet"
   metrics_path = "/metrics"
   scheme       = "https"
@@ -272,13 +290,6 @@ prometheus.scrape "kubelet_metrics" {
   tls_config {
     insecure_skip_verify = true
   }
-
-  // Drop high-cardinality metrics to reduce storage
-  metric_relabel_configs {
-    source_labels = ["__name__"]
-    regex         = "apiserver_.*|etcd_.*|rest_client_.*"
-    action        = "drop"
-  }
 }
 
 // Scrape cAdvisor metrics (container resource metrics)
@@ -286,7 +297,7 @@ prometheus.scrape "cadvisor_metrics" {
   targets = [{
     __address__ = "in-cluster-local-kube-prom-kubelet.kube-system.svc.cluster.local:10250",
   }]
-  forward_to   = [prometheus.remote_write.default.receiver]
+  forward_to   = [prometheus.relabel.cadvisor_filter.receiver]
   job_name     = "cadvisor"
   metrics_path = "/metrics/cadvisor"
   scheme       = "https"
@@ -295,13 +306,6 @@ prometheus.scrape "cadvisor_metrics" {
 
   tls_config {
     insecure_skip_verify = true
-  }
-
-  // Drop high-cardinality container metrics to reduce storage
-  metric_relabel_configs {
-    source_labels = ["__name__"]
-    regex         = "container_(network_tcp_usage_total|network_udp_usage_total|tasks_state|cpu_load_average_10s)"
-    action        = "drop"
   }
 }
 
