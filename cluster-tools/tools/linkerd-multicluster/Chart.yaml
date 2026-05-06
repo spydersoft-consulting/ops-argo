@@ -6,6 +6,6 @@ dependencies:
   name: linkerd-multicluster
   version: 2026.5.1
 type: application
-appVersion: edge-26.1.4
+appVersion: edge-26.5.1
 
 
