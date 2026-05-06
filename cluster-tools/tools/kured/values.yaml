@@ -1,4 +1,5 @@
 kured:
+  revisionHistoryLimit: 3
   configuration:
     rebootDays:
       - saturday

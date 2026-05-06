@@ -1,4 +1,5 @@
 linkerd-viz:
+  revisionHistoryLimit: 3
   dashboard:
     enforcedHostRegexp: .*
   tap:

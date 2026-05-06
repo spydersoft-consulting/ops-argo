@@ -1,5 +1,6 @@
 external-secrets:
   installCRDs: true
+  revisionHistoryLimit: 3
   securityContext:
     capabilities:
       drop:
@@ -15,6 +16,7 @@ external-secrets:
       cpu: 10m
       memory: 32Mi
   webhook:
+    revisionHistoryLimit: 3
     securityContext:
       capabilities:
         drop:
@@ -34,6 +36,7 @@ external-secrets:
         cpu: 10m
         memory: 32Mi
   certController:
+    revisionHistoryLimit: 3
     securityContext:
       capabilities:
         drop:

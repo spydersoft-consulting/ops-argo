@@ -2,6 +2,7 @@
 # Cluster-specific values are in config/<cluster-name>-values.yaml
 
 linkerd-multicluster:
+  revisionHistoryLimit: 3
   # Base configuration - gateway disabled by default
   # Internal cluster overrides this to enable gateway with NodePort
   gateway:

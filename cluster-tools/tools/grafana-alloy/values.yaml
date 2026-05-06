@@ -2,6 +2,7 @@ configFile: ""
 
 alloy:
   controller:
+    revisionHistoryLimit: 3
     podAnnotations:
       linkerd.io/inject: enabled
   alloy:

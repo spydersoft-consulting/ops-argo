@@ -1,5 +1,6 @@
 linkerd-control-plane:
   installNamespace: false
+  revisionHistoryLimit: 3
   podAnnotations:
     logs.spydersoft.io/collect: "true"
     logs.spydersoft.io/format: "logfmt"

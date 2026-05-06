@@ -1,4 +1,5 @@
 promtail:
+  revisionHistoryLimit: 3
   config:
     clients:
       - url: "https://loki.mattgerega.net/loki/api/v1/push"
