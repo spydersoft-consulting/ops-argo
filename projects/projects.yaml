@@ -109,6 +109,37 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
+  name: platform-apps
+  namespace: argo
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Platform Applications
+  sourceRepos:
+    - "*"
+  destinations:
+    - namespace: platform-test
+      server: https://cp-nonproduction.gerega.net:6443
+    - namespace: platform-stage
+      server: https://cp-nonproduction.gerega.net:6443
+    - namespace: platform-production
+      server: https://cp-production.gerega.net:6443
+    - namespace: platform-production
+      server: https://cp-prod.gerega.net:6443
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceBlacklist:
+    - group: ""
+      kind: ResourceQuota
+    - group: ""
+      kind: LimitRange
+    - group: ""
+      kind: NetworkPolicy
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
   name: cluster-tools
   namespace: argo
   # Finalizer that ensures that project is not deleted until it is not referenced by any application
