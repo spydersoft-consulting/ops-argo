@@ -256,6 +256,26 @@ prometheus.scrape "linkerd_control_plane" {
 // RKE2 Cluster Metrics - Kubelet and cAdvisor
 // -----------------------------------------------------------------------------
 
+// Discover all nodes dynamically — no kube-prometheus-stack service required
+discovery.kubernetes "nodes" {
+  role = "node"
+}
+
+discovery.relabel "nodes" {
+  targets = discovery.kubernetes.nodes.targets
+
+  rule {
+    source_labels = ["__meta_kubernetes_node_name"]
+    target_label  = "node"
+  }
+
+  rule {
+    regex       = "__meta_kubernetes_node_label_(.+)"
+    action      = "labelmap"
+    replacement = "$1"
+  }
+}
+
 prometheus.relabel "kubelet_filter" {
   forward_to = [prometheus.remote_write.default.receiver]
   rule {
@@ -275,11 +295,8 @@ prometheus.relabel "cadvisor_filter" {
 }
 
 // Scrape kubelet metrics (runtime metrics)
-// This service is created by prometheus-operator but works with Alloy
 prometheus.scrape "kubelet_metrics" {
-  targets = [{
-    __address__ = "in-cluster-local-kube-prom-kubelet.kube-system.svc.cluster.local:10250",
-  }]
+  targets      = discovery.relabel.nodes.output
   forward_to   = [prometheus.relabel.kubelet_filter.receiver]
   job_name     = "kubelet"
   metrics_path = "/metrics"
@@ -294,9 +311,7 @@ prometheus.scrape "kubelet_metrics" {
 
 // Scrape cAdvisor metrics (container resource metrics)
 prometheus.scrape "cadvisor_metrics" {
-  targets = [{
-    __address__ = "in-cluster-local-kube-prom-kubelet.kube-system.svc.cluster.local:10250",
-  }]
+  targets      = discovery.relabel.nodes.output
   forward_to   = [prometheus.relabel.cadvisor_filter.receiver]
   job_name     = "cadvisor"
   metrics_path = "/metrics/cadvisor"
