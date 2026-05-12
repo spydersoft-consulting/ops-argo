@@ -599,7 +599,25 @@ discovery.relabel "spydersoft_logs" {
     source_labels = ["__meta_kubernetes_pod_annotation_logs_spydersoft_io_format"]
     target_label  = "__log_format__"
   }
-  
+
+  // Tag the Vault audit sidecar's stream so it lands in the same
+  // source / source_type namespace as the syslog ingest. Keyed on
+  // container name because the audit and main-server containers
+  // share the pod (and therefore the pod-level annotations).
+  rule {
+    source_labels = ["__meta_kubernetes_pod_container_name"]
+    regex         = "vault-audit"
+    target_label  = "source"
+    replacement   = "vault-audit"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_pod_container_name"]
+    regex         = "vault-audit"
+    target_label  = "source_type"
+    replacement   = "security"
+  }
+
   // Copy all pod labels
   rule {
     regex       = "__meta_kubernetes_pod_label_(.+)"
@@ -644,6 +662,30 @@ loki.process "parse_logs" {
   stage.labels {
     values = {
       level = "",
+    }
+  }
+
+  // Promote a few low-cardinality Vault audit fields to labels.
+  // Deliberately NOT labeling request_id, entity_id, path, accessor —
+  // those are high cardinality and would blow up Loki stream count.
+  // Query the rest via `| json` in LogQL.
+  stage.match {
+    selector = "{container=\"vault-audit\"}"
+
+    stage.json {
+      expressions = {
+        audit_type       = "type",
+        audit_operation  = "request.operation",
+        audit_mount_type = "request.mount_type",
+      }
+    }
+
+    stage.labels {
+      values = {
+        audit_type       = "",
+        audit_operation  = "",
+        audit_mount_type = "",
+      }
     }
   }
 }
