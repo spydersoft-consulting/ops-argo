@@ -618,12 +618,13 @@ discovery.relabel "spydersoft_logs" {
     replacement   = "security"
   }
 
-  // Copy all pod labels
-  rule {
-    regex       = "__meta_kubernetes_pod_label_(.+)"
-    action      = "labelmap"
-    replacement = "$1"
-  }
+  // Intentionally NOT labelmap'ing pod labels here. A blanket
+  // __meta_kubernetes_pod_label_* labelmap previously added 9+ noise
+  // labels per stream (app_kubernetes_io_*, controller_revision_hash,
+  // helm_sh_chart, etc.) — the last two churn on every chart bump and
+  // fragment streams. Identity labels (namespace, pod, container,
+  // node) are set explicitly above; add others by name only when a
+  // dashboard or alert actually needs them.
 }
 
 // Collect logs from discovered pods
