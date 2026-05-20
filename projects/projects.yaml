@@ -238,3 +238,35 @@ spec:
       kind: LimitRange
     - group: ""
       kind: NetworkPolicy
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: pitstop-apps
+  namespace: argo
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Pitstop Applications
+  sourceRepos:
+    - "*"
+  destinations:
+    - namespace: pitstop-test
+      server: https://cp-nonproduction.gerega.net:6443
+    - namespace: pitstop-stage
+      server: https://cp-nonproduction.gerega.net:6443
+    - namespace: pitstop-production
+      server: https://cp-production.gerega.net:6443
+    - namespace: pitstop-production
+      server: https://cp-prod.gerega.net:6443
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceBlacklist:
+    - group: ""
+      kind: ResourceQuota
+    - group: ""
+      kind: LimitRange
+    - group: ""
+      kind: NetworkPolicy
+---
