@@ -728,6 +728,37 @@ otelcol.processor.memory_limiter "default" {
   limit          = "1GiB"
 
   output {
+    metrics = [otelcol.processor.filter.drop_probes.input]
+    logs    = [otelcol.processor.filter.drop_probes.input]
+    traces  = [otelcol.processor.filter.drop_probes.input]
+  }
+}
+
+// Drop traces/logs from k8s liveness and readiness probe requests
+// (/livez, /readyz). Probe hits clog logs and tracing with no signal
+// unless they fail — and failures still surface via the kubelet/Pod
+// status path, not application telemetry. Metrics pass through
+// unfiltered (no `metrics` block here).
+otelcol.processor.filter "drop_probes" {
+  error_mode = "ignore"
+
+  traces {
+    span = [
+      "IsMatch(attributes[\"url.path\"], \"^/(livez|readyz)$\")",
+      "IsMatch(attributes[\"http.target\"], \"^/(livez|readyz)(\\\\?.*)?$\")",
+      "IsMatch(attributes[\"http.route\"], \"^/(livez|readyz)$\")",
+    ]
+  }
+
+  logs {
+    log_record = [
+      "IsMatch(attributes[\"url.path\"], \"^/(livez|readyz)$\")",
+      "IsMatch(attributes[\"http.target\"], \"^/(livez|readyz)(\\\\?.*)?$\")",
+      "IsMatch(attributes[\"http.route\"], \"^/(livez|readyz)$\")",
+    ]
+  }
+
+  output {
     metrics = [otelcol.processor.batch.default.input]
     logs    = [otelcol.processor.batch.default.input]
     traces  = [otelcol.processor.batch.default.input]
