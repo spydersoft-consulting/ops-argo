@@ -5,6 +5,7 @@ alloy:
     revisionHistoryLimit: 3
     podAnnotations:
       linkerd.io/inject: enabled
+      config.linkerd.io/opaque-ports: "4317,4318"
   alloy:
     extraPorts:
       - name: "otlp-grpc"
