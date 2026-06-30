@@ -1,12 +1,12 @@
-version: 6.0.0
-dependencies:
-- repository: https://kubereboot.github.io/charts
-  name: kured
-  version: 6.0.0
-description: Install kured for safe rolling node reboots
-apiVersion: v2
-name: kured
-appVersion: 2.15.1
 type: application
+apiVersion: v2
+appVersion: 2.15.1
+name: kured
+description: Install kured for safe rolling node reboots
+version: 6.1.0
+dependencies:
+- version: 6.1.0
+  name: kured
+  repository: https://kubereboot.github.io/charts
 
 
