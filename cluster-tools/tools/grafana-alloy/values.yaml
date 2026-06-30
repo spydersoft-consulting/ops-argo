@@ -7,6 +7,13 @@ alloy:
       linkerd.io/inject: enabled
       config.linkerd.io/opaque-ports: "4317,4318"
   alloy:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 768Mi
+      limits:
+        cpu: "1"
+        memory: 1536Mi
     extraPorts:
       - name: "otlp-grpc"
         port: 4317
