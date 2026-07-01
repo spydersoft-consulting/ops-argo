@@ -1,11 +1,7 @@
 argo-cd:
   global:
     storageClass: nfs-client
-    podAnnotations:
-      linkerd.io/inject: enabled
-  
-  # Redis secret init job - disable Linkerd injection so the job can complete
-  # (sidecar containers prevent job pods from terminating)
+
   redisSecretInit:
     podAnnotations:
       linkerd.io/inject: disabled
@@ -23,8 +19,6 @@ argo-cd:
   controller:
     statefulsetAnnotations:
       argocd.argoproj.io/sync-wave: "30"
-    podAnnotations:
-      config.linkerd.io/skip-outbound-ports: "8081"
     resources:
       requests:
         cpu: 250m
@@ -41,8 +35,6 @@ argo-cd:
   repoServer:
     deploymentAnnotations:
       argocd.argoproj.io/sync-wave: "40"
-    podAnnotations:
-      linkerd.io/inject: disabled
     livenessProbe:
       timeoutSeconds: 10
     readinessProbe:
