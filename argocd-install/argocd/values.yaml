@@ -39,6 +39,8 @@ argo-cd:
   repoServer:
     deploymentAnnotations:
       argocd.argoproj.io/sync-wave: "40"
+    podAnnotations:
+      linkerd.io/inject: disabled
     livenessProbe:
       timeoutSeconds: 10
     readinessProbe:
@@ -125,6 +127,9 @@ argo-cd:
       server.insecure: true
       server.repo.server.strict.tls: false
       server.rootpath: ""
+      reposerver.disable.tls: "true"
+      controller.repo.server.plaintext: "true"
+      applicationsetcontroller.repo.server.plaintext: "true"
     repositories:
       argo-helm:
         url: https://argoproj.github.io/argo-helm
