@@ -23,6 +23,8 @@ argo-cd:
   controller:
     statefulsetAnnotations:
       argocd.argoproj.io/sync-wave: "30"
+    podAnnotations:
+      config.linkerd.io/skip-outbound-ports: "8081"
     resources:
       requests:
         cpu: 250m
