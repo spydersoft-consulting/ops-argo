@@ -72,11 +72,6 @@ discovery.relabel "linkerd_proxy" {
   }
   
   // Copy all pod labels for additional filtering
-  rule {
-    regex       = "__meta_kubernetes_pod_label_(.+)"
-    action      = "labelmap"
-    replacement = "$1"
-  }
 }
 
 prometheus.scrape "linkerd_proxy" {
