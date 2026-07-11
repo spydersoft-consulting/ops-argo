@@ -183,11 +183,15 @@ prometheus.scrape "linkerd_proxy" {
   job_name              = "linkerd-proxy"
   scrape_interval       = "30s"
   scrape_timeout        = "10s"
-  
+
   bearer_token_file     = "/var/run/secrets/kubernetes.io/serviceaccount/token"
-  
+
   tls_config {
     insecure_skip_verify = true
+  }
+
+  clustering {
+    enabled = true
   }
 }
 
@@ -225,12 +229,11 @@ discovery.relabel "linkerd_control_plane" {
     target_label  = "job"
   }
   
-  // Copy service labels
-  rule {
-    regex       = "__meta_kubernetes_service_label_(.+)"
-    action      = "labelmap"
-    replacement = "$1"
-  }
+  // Intentionally NOT labelmap'ing service labels here. A blanket
+  // __meta_kubernetes_service_label_* labelmap previously pushed some
+  // linkerd/linkerd-viz services (with their many Helm/version labels)
+  // over Mimir's 30-label-per-series limit, silently dropping the series.
+  // namespace/service/job are already set explicitly above.
 }
 
 prometheus.scrape "linkerd_control_plane" {
@@ -238,11 +241,15 @@ prometheus.scrape "linkerd_control_plane" {
   forward_to            = [prometheus.remote_write.default.receiver]
   job_name              = "linkerd-control-plane"
   scrape_interval       = "30s"
-  
+
   bearer_token_file     = "/var/run/secrets/kubernetes.io/serviceaccount/token"
-  
+
   tls_config {
     insecure_skip_verify = true
+  }
+
+  clustering {
+    enabled = true
   }
 }
 
@@ -301,6 +308,10 @@ prometheus.scrape "kubelet_metrics" {
   tls_config {
     insecure_skip_verify = true
   }
+
+  clustering {
+    enabled = true
+  }
 }
 
 // Scrape cAdvisor metrics (container resource metrics)
@@ -315,6 +326,10 @@ prometheus.scrape "cadvisor_metrics" {
 
   tls_config {
     insecure_skip_verify = true
+  }
+
+  clustering {
+    enabled = true
   }
 }
 
@@ -527,9 +542,13 @@ discovery.relabel "spydersoft_metrics" {
 prometheus.scrape "spydersoft_metrics" {
   targets    = discovery.relabel.spydersoft_metrics.output
   forward_to = [prometheus.remote_write.default.receiver]
-  
+
   honor_labels     = true
   honor_timestamps = true
+
+  clustering {
+    enabled = true
+  }
 }
 
 // -------------------------------------------------------------------

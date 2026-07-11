@@ -7,6 +7,12 @@ alloy:
       linkerd.io/inject: enabled
       config.linkerd.io/opaque-ports: "4317,4318"
   alloy:
+    # Shard discovered targets across DaemonSet replicas via memberlist gossip.
+    # Without this, every replica scrapes every cluster-wide target (nodes,
+    # services, linkerd pods) independently, and near-simultaneous duplicate
+    # pushes get rejected by Mimir as out-of-order samples.
+    clustering:
+      enabled: true
     resources:
       requests:
         cpu: 200m
