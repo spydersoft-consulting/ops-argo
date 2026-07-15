@@ -1,8 +1,21 @@
 linkerd-viz:
   revisionHistoryLimit: 3
+  # CPU requests based on observed `kubectl top pods -n linkerd-viz --containers`
+  # usage across all 3 clusters (metrics-api ~1-5m, tap ~2-4m, tap-injector ~1m,
+  # web ~1m).
+  metricsAPI:
+    resources:
+      cpu:
+        request: 2m
   dashboard:
     enforcedHostRegexp: .*
+    resources:
+      cpu:
+        request: 1m
   tap:
+    resources:
+      cpu:
+        request: 2m
     externalSecret: true
     caBundle: |
       -----BEGIN CERTIFICATE-----
@@ -17,6 +30,9 @@ linkerd-viz:
       9DMD/KIJWeWLzCpDSMnBxr1Vn3iYHWvMdg==
       -----END CERTIFICATE-----
   tapInjector:
+    resources:
+      cpu:
+        request: 1m
     externalSecret: true
     caBundle: |
       -----BEGIN CERTIFICATE-----
