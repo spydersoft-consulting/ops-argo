@@ -4,6 +4,28 @@ linkerd-control-plane:
   podAnnotations:
     logs.spydersoft.io/collect: "true"
     logs.spydersoft.io/format: "logfmt"
+  # CPU requests based on observed `kubectl top pods -n linkerd --containers` usage
+  # (destination ~6-8m, sp-validator ~1m, policy ~1-3m, identity ~1m, identity's
+  # linkerd-proxy ~2-3m, proxy-injector ~2-5m) across all 3 clusters.
+  destinationResources:
+    cpu:
+      request: 5m
+  spValidatorResources:
+    cpu:
+      request: 1m
+  policyController:
+    resources:
+      cpu:
+        request: 2m
+  identityResources:
+    cpu:
+      request: 1m
+  identityProxyResources:
+    cpu:
+      request: 2m
+  proxyInjectorResources:
+    cpu:
+      request: 3m
   policyValidator:
     externalSecret: true
     caBundle: |
