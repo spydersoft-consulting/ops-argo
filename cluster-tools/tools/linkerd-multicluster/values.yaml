@@ -11,5 +11,5 @@ linkerd-multicluster:
   # --containers` usage across all 3 clusters (service-mirror container ~3-4m).
   localServiceMirror:
     resources:
-      cpu:
-        request: 3m
+      requests:
+        cpu: 3m

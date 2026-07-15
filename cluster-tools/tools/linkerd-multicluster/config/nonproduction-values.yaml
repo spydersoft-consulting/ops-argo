@@ -21,8 +21,8 @@ linkerd-multicluster:
         ref:
           name: internal
       resources:
-        cpu:
-          request: 5m
+        requests:
+          cpu: 5m
 
   # Grant access to internal cluster
   remoteMirrorServiceAccountName: linkerd-service-mirror-remote-access-in-cluster-local
