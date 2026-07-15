@@ -15,7 +15,8 @@ linkerd-multicluster:
   # ~25m). This looks like a bug/hot-loop, not real steady-state need - do NOT
   # read this request as validated against that number. Set conservatively in
   # line with linkerd-local-service-mirror's healthy usage instead; the anomaly
-  # itself should be investigated separately (see PR/summary notes).
+  # itself should be investigated separately - see
+  # spydersoft/plans/linkerd-multicluster-controller-cpu-spike.md for the writeup.
   controllers:
     - link:
         ref:
