@@ -5,3 +5,6 @@ nfs-subdir-external-provisioner:
   storageClass:
     pathPattern: ${.PVC.namespace}-${.PVC.name}
     reclaimPolicy: Delete
+  resources:
+    requests:
+      cpu: 5m
