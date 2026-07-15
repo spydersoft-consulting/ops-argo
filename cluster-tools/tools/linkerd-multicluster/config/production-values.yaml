@@ -8,10 +8,22 @@ linkerd-multicluster:
     enabled: false
 
   # Configure controller to manage the link
+  #
+  # NOTE: kubectl top has repeatedly shown this controller (controller-internal)
+  # pegged around 950-1010m CPU (sustained across samples ~35s apart), which is
+  # wildly higher than every sibling mirror/service-mirror component (all under
+  # ~25m). This looks like a bug/hot-loop, not real steady-state need - do NOT
+  # read this request as validated against that number. Set conservatively in
+  # line with linkerd-local-service-mirror's healthy usage instead; the anomaly
+  # itself should be investigated separately - see
+  # spydersoft/plans/linkerd-multicluster-controller-cpu-spike.md for the writeup.
   controllers:
     - link:
         ref:
           name: internal
+      resources:
+        requests:
+          cpu: 5m
 
   # Grant access to internal cluster
   remoteMirrorServiceAccountName: linkerd-service-mirror-remote-access-in-cluster-local

@@ -10,11 +10,20 @@ argo-cd:
   redis:
     statefulsetAnnotations:
       argocd.argoproj.io/sync-wave: "20"
+    resources:
+      requests:
+        cpu: 15m
     metrics:
       enabled: true
       serviceMonitor:
         enabled: false
-  
+
+  # Dex - SSO
+  dex:
+    resources:
+      requests:
+        cpu: 2m
+
   # Application Controller - sync second, depends on Redis
   controller:
     statefulsetAnnotations:
@@ -35,6 +44,9 @@ argo-cd:
   repoServer:
     deploymentAnnotations:
       argocd.argoproj.io/sync-wave: "40"
+    resources:
+      requests:
+        cpu: 30m
     livenessProbe:
       timeoutSeconds: 10
     readinessProbe:
@@ -48,6 +60,9 @@ argo-cd:
   applicationSet:
     deploymentAnnotations:
       argocd.argoproj.io/sync-wave: "50"
+    resources:
+      requests:
+        cpu: 10m
     metrics:
       enabled: true
       serviceMonitor:
@@ -59,6 +74,9 @@ argo-cd:
     secret:
       create: false
       name: argocd-notifications-secret
+    resources:
+      requests:
+        cpu: 10m
 
     metrics:
       enabled: true
@@ -71,6 +89,9 @@ argo-cd:
       argocd.argoproj.io/sync-wave: "70"
     ingress:
       enabled: false
+    resources:
+      requests:
+        cpu: 5m
     metrics:
       enabled: true
       serviceMonitor:

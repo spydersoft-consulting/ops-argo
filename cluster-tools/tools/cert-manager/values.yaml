@@ -1,2 +1,13 @@
 cert-manager:
   installCRDs: true
+  resources:
+    requests:
+      cpu: 5m
+  cainjector:
+    resources:
+      requests:
+        cpu: 5m
+  webhook:
+    resources:
+      requests:
+        cpu: 2m
