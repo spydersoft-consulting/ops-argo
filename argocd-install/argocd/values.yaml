@@ -145,6 +145,7 @@ argo-cd:
       reposerver.disable.tls: "true"
       controller.repo.server.plaintext: "true"
       applicationsetcontroller.repo.server.plaintext: "true"
+      server.repo.server.plaintext: "true"
     repositories:
       argo-helm:
         url: https://argoproj.github.io/argo-helm
