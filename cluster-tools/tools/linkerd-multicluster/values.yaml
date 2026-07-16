@@ -7,3 +7,9 @@ linkerd-multicluster:
   # Internal cluster overrides this to enable gateway with NodePort
   gateway:
     enabled: false
+  # CPU request based on observed `kubectl top pods -n linkerd-multicluster
+  # --containers` usage across all 3 clusters (service-mirror container ~3-4m).
+  localServiceMirror:
+    resources:
+      requests:
+        cpu: 3m
