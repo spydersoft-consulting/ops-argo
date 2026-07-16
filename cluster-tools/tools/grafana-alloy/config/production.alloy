@@ -357,6 +357,36 @@ discovery.relabel "spydersoft_metrics" {
     source_labels = ["__meta_kubernetes_service_name"]
     target_label  = "job"
   }
+
+  // Mimir/Tempo's shipped mixin dashboards hardcode job as
+  // "<namespace>/<component>" (e.g. "monitoring/distributor") - the
+  // convention kube-prometheus-stack's ServiceMonitors produce, not
+  // our bare-service-name job value. Strip the chart prefix off
+  // mimir-/tempo- service names so those dashboards resolve.
+  rule {
+    source_labels = ["__meta_kubernetes_service_name"]
+    regex         = "(?:mimir|tempo)-(.+)"
+    target_label  = "__mixin_component"
+    action        = "replace"
+  }
+
+  // Loki's mixin dashboards expect job as "<namespace>/loki-<component>"
+  // (full service name kept, unlike Mimir/Tempo) - copy it through
+  // unstripped so it combines with namespace the same way below.
+  rule {
+    source_labels = ["__meta_kubernetes_service_name"]
+    regex         = "(loki-.+)"
+    target_label  = "__mixin_component"
+    action        = "replace"
+  }
+
+  rule {
+    source_labels = ["namespace", "__mixin_component"]
+    regex         = "(.+);(.+)"
+    target_label  = "job"
+    replacement   = "$1/$2"
+    action        = "replace"
+  }
 }
 
 prometheus.scrape "spydersoft_metrics" {
