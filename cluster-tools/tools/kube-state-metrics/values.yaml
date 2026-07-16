@@ -1,0 +1,43 @@
+kube-state-metrics:
+  revisionHistoryLimit: 3
+  # Only the resource types the planned dashboards/alerts actually use
+  # (workload rollout status, pod phase/restarts, node conditions, PVC/PV
+  # capacity, HPA scaling). Default chart enables ~20 collectors including
+  # ingresses, webhook configs, CSRs, leases, network policies, etc. that
+  # nothing here queries — add more later only when a dashboard needs one.
+  collectors:
+    - daemonsets
+    - deployments
+    - horizontalpodautoscalers
+    - jobs
+    - cronjobs
+    - nodes
+    - persistentvolumeclaims
+    - persistentvolumes
+    - pods
+    - replicasets
+    - statefulsets
+  # kube_*_labels / kube_*_annotations are unbounded (one series per
+  # unique label/annotation value per object) and none of the planned
+  # dashboards join on them.
+  metricDenylist:
+    - kube_.*_labels
+    - kube_.*_annotations
+  # Annotation-based discovery: Alloy's spydersoft_metrics job picks this
+  # up automatically, no per-cluster Alloy config changes needed.
+  service:
+    annotations:
+      metrics.spydersoft.io/scrape: "true"
+      metrics.spydersoft.io/port: "8080"
+      metrics.spydersoft.io/path: "/metrics"
+  podAnnotations:
+    linkerd.io/inject: enabled
+  # Conservative defaults for small (<50 node) clusters; bump if a
+  # cluster's `kubectl top` shows sustained usage above these.
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi

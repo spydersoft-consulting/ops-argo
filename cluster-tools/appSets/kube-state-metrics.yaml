@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: kube-state-metrics-tool
+  labels:
+    spydersoft.io/category: cluster-tools
+spec:
+  generators:
+    - clusters:
+        selector:
+          matchLabels:
+            argocd.argoproj.io/secret-type: cluster
+            spydersoft.io/kube-state-metrics: "true"
+  template:
+    metadata:
+      name: "{{ nameNormalized }}-kube-state-metrics"
+      annotations:
+        argocd.argoproj.io/compare-options: ServerSideDiff=true
+      labels:
+        spydersoft.io/category: cluster-tools
+    spec:
+      project: cluster-tools
+      source:
+        repoURL: https://github.com/spydersoft-consulting/ops-argo
+        targetRevision: main
+        path: "cluster-tools/tools/kube-state-metrics"
+        helm: {}
+      destination:
+        server: "{{ server }}"
+        namespace: "kube-system"
+      syncPolicy:
+        syncOptions: # Sync options which modifies sync behavior
+          - CreateNamespace=true
+          - RespectIgnoreDifferences=true
+          - ServerSideApply=true
