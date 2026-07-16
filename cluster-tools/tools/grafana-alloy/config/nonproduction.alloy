@@ -311,7 +311,15 @@ discovery.relabel "spydersoft_metrics" {
     regex         = "true"
     action        = "keep"
   }
-  
+
+  // kube-state-metrics is scraped separately below and routed to the
+  // shared "internal" Mimir tenant instead of this cluster's own tenant.
+  rule {
+    source_labels = ["__meta_kubernetes_service_name"]
+    regex         = "kube-state-metrics"
+    action        = "drop"
+  }
+
   // Get port from metrics.spydersoft.io/port
   rule {
     source_labels = ["__address__", "__meta_kubernetes_service_annotation_metrics_spydersoft_io_port"]
@@ -387,6 +395,79 @@ discovery.relabel "spydersoft_metrics" {
 prometheus.scrape "spydersoft_metrics" {
   targets    = discovery.relabel.spydersoft_metrics.output
   forward_to = [prometheus.remote_write.default.receiver]
+
+  honor_labels     = true
+  honor_timestamps = true
+
+  clustering {
+    enabled = true
+  }
+}
+
+// -------------------------------------------------------------------
+// METRICS DISCOVERY - kube-state-metrics routed to internal tenant
+// -------------------------------------------------------------------
+// kube-state-metrics is cluster-inventory data, not per-tenant
+// application data - send it to the shared "internal" Mimir tenant
+// (same tenant on all 3 clusters) so cluster-level dashboards can query
+// it consistently regardless of which cluster it came from.
+
+prometheus.remote_write "internal_tenant" {
+  endpoint {
+    url = "http://mimir-gateway-internal.monitoring.svc.cluster.local/api/v1/push"
+    headers = {
+      "X-Scope-OrgID" = "internal",
+    }
+  }
+  external_labels = {
+    cluster       = "nonproduction",
+    custom_source = "grafana-alloy",
+  }
+}
+
+discovery.relabel "kube_state_metrics" {
+  targets = discovery.kubernetes.services.targets
+
+  rule {
+    source_labels = ["__meta_kubernetes_service_name"]
+    regex         = "kube-state-metrics"
+    action        = "keep"
+  }
+
+  rule {
+    source_labels = ["__address__", "__meta_kubernetes_service_annotation_metrics_spydersoft_io_port"]
+    regex         = "([^:]+)(?::\\d+)?;(\\d+)"
+    target_label  = "__address__"
+    replacement   = "$1:$2"
+    action        = "replace"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_service_annotation_metrics_spydersoft_io_path"]
+    regex         = "(.+)"
+    target_label  = "__metrics_path__"
+    action        = "replace"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_namespace"]
+    target_label  = "namespace"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_service_name"]
+    target_label  = "service"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_service_name"]
+    target_label  = "job"
+  }
+}
+
+prometheus.scrape "kube_state_metrics" {
+  targets    = discovery.relabel.kube_state_metrics.output
+  forward_to = [prometheus.remote_write.internal_tenant.receiver]
 
   honor_labels     = true
   honor_timestamps = true
