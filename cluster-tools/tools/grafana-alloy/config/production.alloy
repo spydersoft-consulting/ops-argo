@@ -321,7 +321,7 @@ discovery.relabel "spydersoft_metrics" {
   // shared "internal" Mimir tenant instead of this cluster's own tenant.
   rule {
     source_labels = ["__meta_kubernetes_service_name"]
-    regex         = "kube-state-metrics"
+    regex         = ".*-kube-state-metrics"
     action        = "drop"
   }
 
@@ -435,7 +435,7 @@ discovery.relabel "kube_state_metrics" {
 
   rule {
     source_labels = ["__meta_kubernetes_service_name"]
-    regex         = "kube-state-metrics"
+    regex         = ".*-kube-state-metrics"
     action        = "keep"
   }
 
