@@ -177,7 +177,9 @@ prometheus.relabel "kubelet_filter" {
   forward_to = [prometheus.remote_write.default.receiver]
   rule {
     source_labels = ["__name__"]
-    regex         = "apiserver_.*|etcd_.*|rest_client_.*"
+    // kubernetes_feature_enabled: static feature-gate enumeration, no
+    // monitoring value - identified via cardinality-cleanup-status.md
+    regex         = "apiserver_.*|etcd_.*|rest_client_.*|kubernetes_feature_enabled"
     action        = "drop"
   }
 }
@@ -186,7 +188,9 @@ prometheus.relabel "cadvisor_filter" {
   forward_to = [prometheus.remote_write.default.receiver]
   rule {
     source_labels = ["__name__"]
-    regex         = "container_(network_tcp_usage_total|network_udp_usage_total|tasks_state|cpu_load_average_10s)"
+    // Long tail of cAdvisor's default metric set that's never dashboarded/
+    // alerted on - see cardinality-cleanup-status.md (2026-07-16 pass).
+    regex         = "container_(network_tcp_usage_total|network_udp_usage_total|tasks_state|cpu_load_average_10s|memory_failures_total|blkio_device_usage_total|fs_reads_total|fs_writes_total|fs_reads_bytes_total|fs_writes_bytes_total|cpu_load_d_average_10s|cpu_system_seconds_total|cpu_user_seconds_total|file_descriptors|last_seen|memory_cache|memory_failcnt|memory_kernel_usage|memory_mapped_file|memory_max_usage_bytes|memory_rss|memory_swap|memory_total_active_file_bytes|memory_total_inactive_file_bytes|pressure_cpu_stalled_seconds_total|pressure_cpu_waiting_seconds_total|pressure_io_stalled_seconds_total|pressure_io_waiting_seconds_total|pressure_memory_stalled_seconds_total|pressure_memory_waiting_seconds_total|processes|sockets|threads|threads_max|spec_cpu_shares|spec_memory_reservation_limit_bytes|spec_memory_swap_limit_bytes|start_time_seconds|ulimits_soft)"
     action        = "drop"
   }
 }
@@ -392,9 +396,21 @@ discovery.relabel "spydersoft_metrics" {
   }
 }
 
+prometheus.relabel "spydersoft_metrics_filter" {
+  forward_to = [prometheus.remote_write.default.receiver]
+  rule {
+    source_labels = ["__name__"]
+    // Payload-size histograms and Loki-internal store/RPC latency - only
+    // useful mid-incident via raw query, never as a standing panel. See
+    // cardinality-cleanup-status.md (2026-07-16 pass).
+    regex         = "cortex_request_message_bytes_bucket|cortex_response_message_bytes_bucket|loki_request_message_bytes_bucket|loki_response_message_bytes_bucket|tempo_request_message_bytes_bucket|tempo_response_message_bytes_bucket|loki_kv_request_duration_seconds_bucket|rpc_duration_bucket|table_get_request_duration_bucket|table_put_request_duration_bucket"
+    action        = "drop"
+  }
+}
+
 prometheus.scrape "spydersoft_metrics" {
   targets    = discovery.relabel.spydersoft_metrics.output
-  forward_to = [prometheus.remote_write.default.receiver]
+  forward_to = [prometheus.relabel.spydersoft_metrics_filter.receiver]
 
   honor_labels     = true
   honor_timestamps = true
@@ -465,9 +481,21 @@ discovery.relabel "kube_state_metrics" {
   }
 }
 
+prometheus.relabel "kube_state_metrics_filter" {
+  forward_to = [prometheus.remote_write.internal_tenant.receiver]
+  rule {
+    source_labels = ["__name__"]
+    // ReplicaSets are a generated intermediate behind Deployments - the
+    // mixin/dashboards already track at the Deployment level. See
+    // cardinality-cleanup-status.md (2026-07-16 pass).
+    regex         = "kube_replicaset_.*"
+    action        = "drop"
+  }
+}
+
 prometheus.scrape "kube_state_metrics" {
   targets    = discovery.relabel.kube_state_metrics.output
-  forward_to = [prometheus.remote_write.internal_tenant.receiver]
+  forward_to = [prometheus.relabel.kube_state_metrics_filter.receiver]
 
   honor_labels     = true
   honor_timestamps = true
