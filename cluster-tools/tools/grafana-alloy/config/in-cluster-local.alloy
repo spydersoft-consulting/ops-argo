@@ -118,6 +118,10 @@ prometheus.scrape "linkerd_gateway_job" {
   job_name     = "linkerd-multicluster-gateway-job"
   metrics_path = "/metrics"
   scheme       = "http"
+
+  clustering {
+    enabled = true
+  }
 }
 
 // -----------------------------------------------------------------------------
