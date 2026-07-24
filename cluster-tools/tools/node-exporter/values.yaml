@@ -1,0 +1,32 @@
+prometheus-node-exporter:
+  revisionHistoryLimit: 3
+
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+
+  # Annotations kept for convention/documentation only (same as
+  # kube-state-metrics). Actual scraping is a dedicated per-cluster Alloy
+  # block (grafana-alloy config/*.alloy) that discovers node-exporter by
+  # POD, not by this Service - a DaemonSet's ClusterIP would round-robin
+  # to one random node's pod per scrape and miss every other node. The
+  # generic spydersoft_metrics job explicitly drops this service by name
+  # to avoid double-scraping the same targets through both paths.
+  service:
+    annotations:
+      metrics.spydersoft.io/scrape: "true"
+      metrics.spydersoft.io/port: "9100"
+      metrics.spydersoft.io/path: "/metrics"
+
+  podAnnotations:
+    logs.spydersoft.io/collect: "true"
+    logs.spydersoft.io/format: "text"
+
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 50m
+      memory: 64Mi

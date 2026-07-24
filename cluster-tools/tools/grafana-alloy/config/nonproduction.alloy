@@ -324,6 +324,17 @@ discovery.relabel "spydersoft_metrics" {
     action        = "drop"
   }
 
+  // node-exporter is scraped separately below (by pod, not by this
+  // Service - see the node_exporter block) and routed to the shared
+  // "internal" tenant. Drop it here to avoid double-scraping the same
+  // targets through both the generic annotation-based path and the
+  // dedicated per-pod block.
+  rule {
+    source_labels = ["__meta_kubernetes_service_name"]
+    regex         = ".*-prometheus-node-exporter"
+    action        = "drop"
+  }
+
   // Get port from metrics.spydersoft.io/port
   rule {
     source_labels = ["__address__", "__meta_kubernetes_service_annotation_metrics_spydersoft_io_port"]
@@ -496,6 +507,75 @@ prometheus.relabel "kube_state_metrics_filter" {
 prometheus.scrape "kube_state_metrics" {
   targets    = discovery.relabel.kube_state_metrics.output
   forward_to = [prometheus.relabel.kube_state_metrics_filter.receiver]
+
+  honor_labels     = true
+  honor_timestamps = true
+
+  clustering {
+    enabled = true
+  }
+}
+
+// -------------------------------------------------------------------
+// METRICS DISCOVERY - node-exporter routed to internal tenant
+// -------------------------------------------------------------------
+// Node-level host metrics (D-state process counts, load average, etc.)
+// are cluster-inventory data like kube-state-metrics, not per-tenant
+// application data - send to the shared "internal" tenant so a single
+// alert/dashboard works across all 3 clusters. Discovered by POD, not
+// Service - node-exporter is a DaemonSet, and scraping its ClusterIP
+// Service would round-robin to one random node's pod per scrape and
+// miss every other node.
+
+discovery.kubernetes "node_exporter_pods" {
+  role = "pod"
+}
+
+discovery.relabel "node_exporter" {
+  targets = discovery.kubernetes.node_exporter_pods.targets
+
+  rule {
+    source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+    regex         = "prometheus-node-exporter"
+    action        = "keep"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_pod_container_port_name"]
+    regex         = "metrics"
+    action        = "keep"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_pod_ip", "__meta_kubernetes_pod_container_port_number"]
+    regex         = "([^:]+);(\\d+)"
+    target_label  = "__address__"
+    replacement   = "$1:$2"
+    action        = "replace"
+  }
+
+  rule {
+    source_labels = ["__meta_kubernetes_pod_node_name"]
+    target_label  = "node"
+  }
+}
+
+prometheus.relabel "node_exporter_filter" {
+  forward_to = [prometheus.remote_write.internal_tenant.receiver]
+  rule {
+    source_labels = ["__name__"]
+    // Default chart exposes ~500 metrics (per-mountpoint filesystem,
+    // per-interface network, per-core CPU, systemd unit states, etc.) -
+    // keep only what's dashboarded/alerted on today. Widen this list
+    // before adding new node dashboards/alerts.
+    regex         = "node_procs_blocked|node_load1|node_load5|node_load15|node_cpu_seconds_total|node_memory_MemTotal_bytes|node_memory_MemAvailable_bytes|node_filesystem_avail_bytes|node_filesystem_size_bytes|node_filesystem_readonly|node_boot_time_seconds|node_uname_info"
+    action        = "keep"
+  }
+}
+
+prometheus.scrape "node_exporter" {
+  targets    = discovery.relabel.node_exporter.output
+  forward_to = [prometheus.relabel.node_exporter_filter.receiver]
 
   honor_labels     = true
   honor_timestamps = true
