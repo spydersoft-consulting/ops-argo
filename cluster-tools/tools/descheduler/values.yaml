@@ -1,0 +1,60 @@
+descheduler:
+  kind: CronJob
+  # Conservative interval for a first rollout - the chart default (every
+  # 2 minutes) is too aggressive before we've watched this run at all.
+  # Tighten once dry-run output looks sane and this has run live a while.
+  schedule: "*/10 * * * *"
+
+  cmdOptions:
+    v: 3
+    # Start in dry-run: logs which pods it WOULD evict without evicting
+    # anything. We don't have PodDisruptionBudgets on every workload yet,
+    # so this is the only safety net until we've reviewed real output.
+    # Flip to false in a follow-up commit once that review is done.
+    dry-run: true
+
+  deschedulerPolicy:
+    # Rate-limit once this goes live - rebalance gradually across
+    # scheduled runs rather than evicting a large batch at once.
+    maxNoOfPodsToEvictPerNode: 2
+    maxNoOfPodsToEvictPerNamespace: 5
+
+    profiles:
+      - name: default
+        pluginConfig:
+          # Deliberately NOT setting podProtections here (the chart's own
+          # example values.yaml sets extraEnabled: ["PodsWithPVC"], which
+          # opts PVC-backed pods INTO eviction - exactly the pods most at
+          # risk given we don't have PDBs everywhere). Omitting args keeps
+          # the descheduler binary's own conservative defaults: PVC-backed
+          # and local-storage pods stay protected regardless of PDBs.
+          - name: DefaultEvictor
+          - name: RemoveDuplicates
+          - name: RemovePodsViolatingTopologySpreadConstraint
+          - name: LowNodeUtilization
+            args:
+              thresholds:
+                cpu: 20
+                memory: 20
+                pods: 20
+              targetThresholds:
+                cpu: 50
+                memory: 50
+                pods: 50
+        plugins:
+          balance:
+            enabled:
+              - RemoveDuplicates
+              - RemovePodsViolatingTopologySpreadConstraint
+              - LowNodeUtilization
+          # Intentionally empty - RemovePodsHavingTooManyRestarts /
+          # RemovePodsViolatingNodeTaints / RemovePodsViolatingNodeAffinity /
+          # RemovePodsViolatingInterPodAntiAffinity aren't related to the
+          # node-imbalance problem this was added for. Add them later,
+          # deliberately, if a specific need comes up.
+          deschedule:
+            enabled: []
+
+  podAnnotations:
+    logs.spydersoft.io/collect: "true"
+    logs.spydersoft.io/format: "text"
