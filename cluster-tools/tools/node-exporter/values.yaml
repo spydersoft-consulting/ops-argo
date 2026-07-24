@@ -1,5 +1,5 @@
 prometheus-node-exporter:
-  revisionHistoryLimit: 3
+  revisionHistoryLimit: 1
 
   tolerations:
     - key: node-role.kubernetes.io/control-plane
