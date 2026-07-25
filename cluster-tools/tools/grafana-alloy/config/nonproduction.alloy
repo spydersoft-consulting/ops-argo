@@ -234,26 +234,6 @@ prometheus.scrape "cadvisor_metrics" {
 }
 
 // =============================================================================
-// Node Metrics (prometheus.exporter.unix)
-// =============================================================================
-// Collects host-level metrics from the underlying VM via mounted host paths.
-// Deployed to nonproduction first to determine which collectors/metrics are needed.
-
-prometheus.exporter.unix "node" {
-  procfs_path = "/host/proc"
-  sysfs_path  = "/host/sys"
-  rootfs_path = "/host/root"
-  disable_collectors = ["arp", "bcache", "bonding", "ipvs", "rapl"]
-}
-
-prometheus.scrape "node_exporter" {
-  targets         = prometheus.exporter.unix.node.targets
-  forward_to      = [prometheus.remote_write.default.receiver]
-  job_name        = "node-exporter"
-  scrape_interval = "60s"
-}
-
-// =============================================================================
 // Loki Configuration
 // =============================================================================
 // Remote write endpoint for pushing logs to Loki (via Linkerd mirror)
