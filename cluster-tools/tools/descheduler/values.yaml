@@ -28,6 +28,15 @@ descheduler:
     maxNoOfPodsToEvictPerNode: 2
     maxNoOfPodsToEvictPerNamespace: 5
 
+    # Control-plane nodes never count as eviction sources or rebalancing
+    # targets. Without this, nonproduction's 3-node shape (1 control-plane
+    # + 2 agents) trips the pods thresholds below on completely normal
+    # load - with only 2 agent nodes to split work across, a 29%/22%
+    # split is unremarkable, but the only "underutilized" node under
+    # those thresholds is the control-plane node, which would pull
+    # workload pods onto it just to satisfy the check.
+    nodeSelector: "!node-role.kubernetes.io/control-plane"
+
     profiles:
       - name: default
         pluginConfig:
