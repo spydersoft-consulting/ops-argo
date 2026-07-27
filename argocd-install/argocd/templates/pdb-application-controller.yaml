@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: argocd-application-controller
+  namespace: argo
+spec:
+  # The argo-cd chart ships no PDB for the application-controller
+  # StatefulSet at all (it's a singleton by design in non-HA setups).
+  # maxUnavailable: 0 keeps it out of descheduler's reach.
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-application-controller
+      app.kubernetes.io/instance: argocd
