@@ -7,11 +7,15 @@ descheduler:
 
   cmdOptions:
     v: 3
-    # Start in dry-run: logs which pods it WOULD evict without evicting
-    # anything. We don't have PodDisruptionBudgets on every workload yet,
-    # so this is the only safety net until we've reviewed real output.
-    # Flip to false in a follow-up commit once that review is done.
-    dry-run: true
+    # Dry-run's own eviction preview turned out to be untrustworthy: it runs
+    # as a fresh process each CronJob invocation and evaluates a fake
+    # in-memory clientset that's still being asynchronously seeded from the
+    # real cluster when the balance cycle runs, so every dry-run so far saw
+    # 0% utilization everywhere and never found anything to evict - not a
+    # real "all clear". Going live instead, backed by maxNoOfPodsToEvictPerNode
+    # / PerNamespace below plus PDBs now added for the single-replica
+    # StatefulSets that had none.
+    dry-run: false
 
   deschedulerPolicy:
     # Rate-limit once this goes live - rebalance gradually across
