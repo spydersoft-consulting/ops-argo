@@ -42,8 +42,17 @@ descheduler:
           - name: RemovePodsViolatingTopologySpreadConstraint
           - name: LowNodeUtilization
             args:
+              # A node only counts as "underutilized" (a valid eviction
+              # target) if ALL three of these are below threshold - it's
+              # an AND, not an OR. cpu: 20 left every node ineligible: the
+              # control-plane nodes run a fixed ~65-70% cpu from
+              # etcd/apiserver/scheduler overhead alone regardless of app
+              # load, and even the one genuinely idle agent node sat at
+              # ~31% cpu (pods/memory were both comfortably under 20%).
+              # Raised to 40 to give that headroom without pulling the
+              # control-plane nodes' baseline into range.
               thresholds:
-                cpu: 20
+                cpu: 40
                 memory: 20
                 pods: 20
               targetThresholds:
