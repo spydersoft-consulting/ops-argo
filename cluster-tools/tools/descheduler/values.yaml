@@ -42,26 +42,33 @@ descheduler:
           - name: RemovePodsViolatingTopologySpreadConstraint
           - name: LowNodeUtilization
             args:
-              # A node only counts as "underutilized" (a valid eviction
-              # target) if ALL three of these are below threshold - it's
-              # an AND, not an OR. The original 20/20/20 left every node
-              # ineligible: control-plane nodes run a fixed ~65-70% cpu
-              # from etcd/apiserver/scheduler overhead alone regardless of
-              # app load, and even the one genuinely idle agent node sat
-              # above 20 on at least one dimension. Bumping cpu to 40
-              # alone just meant memory became the new blocker one cycle
-              # later as pods started landing there - each threshold needs
-              # real headroom above where a receiving node will actually
-              # sit mid-rebalance, not just above its current reading, or
-              # this needs re-tuning every 10 minutes as pods accumulate.
+              # cpu/memory thresholds don't work here and were dropped
+              # after two rounds of chasing them: a node only counts as
+              # "underutilized" if ALL configured resources are below
+              # threshold (AND), and "overutilized" if ANY is above
+              # target (OR). Every control-plane node runs a fixed
+              # ~65-70% cpu from etcd/apiserver/scheduler overhead alone,
+              # in every cluster, regardless of app load - that's not
+              # fixable by rebalancing and kept tripping the overutilized
+              # OR-check for nodes we don't actually want to evict from.
+              # Meanwhile the one genuinely idle agent node's memory
+              # crept past each threshold we set as soon as a couple of
+              # pods landed on it, since absolute percentages don't hold
+              # still while the tool is actively rebalancing.
+              #
+              # Pod count percentage doesn't have either problem - an
+              # idle node has few pods regardless of its role or the
+              # cluster's baseline load, so it's comparable across nodes
+              # and across clusters without per-cluster tuning. Verified
+              # against live numbers in all three clusters: 15/25 flags
+              # production's real imbalance (one node at 45% pods vs.
+              # 5-7% everywhere else) while leaving internal and
+              # nonproduction untouched, since neither has anything close
+              # to that skew today.
               thresholds:
-                cpu: 45
-                memory: 35
-                pods: 20
+                pods: 15
               targetThresholds:
-                cpu: 50
-                memory: 50
-                pods: 50
+                pods: 25
         plugins:
           balance:
             enabled:
