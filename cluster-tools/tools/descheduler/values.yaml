@@ -44,16 +44,19 @@ descheduler:
             args:
               # A node only counts as "underutilized" (a valid eviction
               # target) if ALL three of these are below threshold - it's
-              # an AND, not an OR. cpu: 20 left every node ineligible: the
-              # control-plane nodes run a fixed ~65-70% cpu from
-              # etcd/apiserver/scheduler overhead alone regardless of app
-              # load, and even the one genuinely idle agent node sat at
-              # ~31% cpu (pods/memory were both comfortably under 20%).
-              # Raised to 40 to give that headroom without pulling the
-              # control-plane nodes' baseline into range.
+              # an AND, not an OR. The original 20/20/20 left every node
+              # ineligible: control-plane nodes run a fixed ~65-70% cpu
+              # from etcd/apiserver/scheduler overhead alone regardless of
+              # app load, and even the one genuinely idle agent node sat
+              # above 20 on at least one dimension. Bumping cpu to 40
+              # alone just meant memory became the new blocker one cycle
+              # later as pods started landing there - each threshold needs
+              # real headroom above where a receiving node will actually
+              # sit mid-rebalance, not just above its current reading, or
+              # this needs re-tuning every 10 minutes as pods accumulate.
               thresholds:
-                cpu: 40
-                memory: 20
+                cpu: 45
+                memory: 35
                 pods: 20
               targetThresholds:
                 cpu: 50
