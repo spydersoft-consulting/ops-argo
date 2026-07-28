@@ -778,8 +778,25 @@ otelcol.processor.filter "drop_probes" {
 otelcol.processor.batch "default" {
   output {
     metrics = [otelcol.exporter.prometheus.default.input]
-    logs    = [otelcol.exporter.loki.default.input]
+    logs    = [otelcol.processor.transform.otlp_logs.input]
     traces  = [otelcol.exporter.otlp.default.input]
+  }
+}
+
+// Stamp cluster/source identity onto log Resource attributes so Loki's
+// otlp_config (limits_config, loki values.yaml) can promote them to index
+// labels the same way loki.write's external_labels did for the old path.
+otelcol.processor.transform "otlp_logs" {
+  log_statements {
+    context = "resource"
+    statements = [
+      `set(attributes["cluster"], "production")`,
+      `set(attributes["custom_source"], "grafana-alloy")`,
+    ]
+  }
+
+  output {
+    logs = [otelcol.exporter.otlphttp.loki_native.input]
   }
 }
 
@@ -787,9 +804,20 @@ otelcol.processor.batch "default" {
 // OTLP Exporters
 // -----------------------------------------------------------------------------
 
-// Export logs to Loki (via Linkerd mirror)
-otelcol.exporter.loki "default" {
-  forward_to = [loki.write.default.receiver]
+// Export logs directly to Loki's native OTLP endpoint instead of via
+// otelcol.exporter.loki/loki.write. otelcol.exporter.loki has no way to
+// split LogRecord.Body from attributes/resource into structured metadata
+// (grafana/alloy#2757) - Loki's own otlp_config now does that split.
+otelcol.exporter.otlphttp "loki_native" {
+  client {
+    endpoint = "http://loki-gateway-internal.monitoring.svc.cluster.local/otlp"
+    headers = {
+      "X-Scope-OrgID" = "production",
+    }
+    tls {
+      insecure = true
+    }
+  }
 }
 
 // Export metrics to Prometheus/Mimir (via Linkerd mirror)
