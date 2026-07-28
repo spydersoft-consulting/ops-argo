@@ -10,8 +10,9 @@ remote.kubernetes.secret "vault_app_role_secret" {
 
 // Vault remote configuration for Home Assistant credentials
 remote.vault "hass" {
-  server = "https://hcvault.mattgerega.net"
-  path   = "secrets-k8/hass"
+  server           = "https://hcvault.mattgerega.net"
+  path             = "secrets-k8/hass"
+  reread_frequency = "1h"
 
   auth.approle {
     role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
@@ -21,8 +22,9 @@ remote.vault "hass" {
 
 // Vault remote configuration for Vault metrics token
 remote.vault "vault" {
-  server = "https://hcvault.mattgerega.net"
-  path   = "secrets-k8/monitoring/vault"
+  server           = "https://hcvault.mattgerega.net"
+  path             = "secrets-k8/monitoring/vault"
+  reread_frequency = "1h"
 
   auth.approle {
     role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"

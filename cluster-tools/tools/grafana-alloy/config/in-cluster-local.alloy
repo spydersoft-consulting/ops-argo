@@ -10,8 +10,9 @@ remote.kubernetes.secret "vault_app_role_secret" {
 
 // Vault remote configuration for monitoring targets
 remote.vault "targets" {
-  server = "https://hcvault.mattgerega.net"
-  path   = "secrets-k8/monitoring/targets/internal"
+  server           = "https://hcvault.mattgerega.net"
+  path             = "secrets-k8/monitoring/targets/internal"
+  reread_frequency = "1h"
 
   auth.approle {
     role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
@@ -21,8 +22,9 @@ remote.vault "targets" {
 
 // Vault remote configuration for Vault metrics token
 remote.vault "vault" {
-  server = "https://hcvault.mattgerega.net"
-  path   = "secrets-k8/monitoring/vault"
+  server           = "https://hcvault.mattgerega.net"
+  path             = "secrets-k8/monitoring/vault"
+  reread_frequency = "1h"
 
   auth.approle {
     role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
@@ -32,8 +34,9 @@ remote.vault "vault" {
 
 // Vault remote configuration for Garage S3 metrics token
 remote.vault "garage" {
-  server = "https://hcvault.mattgerega.net"
-  path   = "secrets-k8/monitoring/garage/metrics"
+  server           = "https://hcvault.mattgerega.net"
+  path             = "secrets-k8/monitoring/garage/metrics"
+  reread_frequency = "1h"
 
   auth.approle {
     role_id = "13f4cd25-b02f-f705-c92d-ef6bfeff1344"
