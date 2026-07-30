@@ -25,7 +25,7 @@ descheduler:
   deschedulerPolicy:
     # Rate-limit once this goes live - rebalance gradually across
     # scheduled runs rather than evicting a large batch at once.
-    maxNoOfPodsToEvictPerNode: 2
+    maxNoOfPodsToEvictPerNode: 4
     maxNoOfPodsToEvictPerNamespace: 5
 
     # Control-plane nodes never count as eviction sources or rebalancing
