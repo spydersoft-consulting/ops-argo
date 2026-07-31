@@ -2,9 +2,9 @@ prometheus-node-exporter:
   revisionHistoryLimit: 1
 
   tolerations:
-    - key: node-role.kubernetes.io/control-plane
+    - key: CriticalAddonsOnly
       operator: Exists
-      effect: NoSchedule
+      effect: NoExecute
 
   # Annotations kept for convention/documentation only (same as
   # kube-state-metrics). Actual scraping is a dedicated per-cluster Alloy

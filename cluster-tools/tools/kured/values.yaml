@@ -11,9 +11,9 @@ kured:
     forceReboot: false
 
   tolerations:
-    - key: node-role.kubernetes.io/control-plane
+    - key: CriticalAddonsOnly
       operator: Exists
-      effect: NoSchedule
+      effect: NoExecute
 
   podAnnotations:
     logs.spydersoft.io/collect: "true"

@@ -3,6 +3,10 @@ configFile: ""
 alloy:
   controller:
     revisionHistoryLimit: 3
+    tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+        effect: NoExecute
     podAnnotations:
       linkerd.io/inject: enabled
       config.linkerd.io/opaque-ports: "4317,4318"
