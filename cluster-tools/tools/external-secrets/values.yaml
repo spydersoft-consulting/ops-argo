@@ -1,5 +1,8 @@
 external-secrets:
   installCRDs: true
+  crds:
+    annotations:
+      argocd.argoproj.io/compare-options: ServerSideDiff=false
   revisionHistoryLimit: 3
   securityContext:
     capabilities:
