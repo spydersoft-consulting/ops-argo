@@ -2,3 +2,6 @@ nfs-subdir-external-provisioner:
   nfs:
     server: cloud.gerega.net
     path: /volume1/kubernetes/production
+    mountOptions:
+      - nfsvers=3
+      - nolock
