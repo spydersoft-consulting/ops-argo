@@ -497,6 +497,18 @@ discovery.relabel "spydersoft_metrics" {
     action        = "drop"
   }
 
+  // StatefulSet components (e.g. mimir-ingester) get both a regular and
+  // a headless Service from their Helm chart, and both inherit the same
+  // metrics.spydersoft.io/scrape annotation - scraping both hits the same
+  // pods twice and Mimir discards the second copy as sample-out-of-order
+  // (see Mimir Discarding Samples alert, 2026-08-04). Only the non-headless
+  // Service is needed for discovery.
+  rule {
+    source_labels = ["__meta_kubernetes_service_name"]
+    regex         = ".*-headless"
+    action        = "drop"
+  }
+
   // Get port from metrics.spydersoft.io/port
   rule {
     source_labels = ["__address__", "__meta_kubernetes_service_annotation_metrics_spydersoft_io_port"]
