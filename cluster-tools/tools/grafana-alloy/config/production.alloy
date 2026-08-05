@@ -68,6 +68,14 @@ prometheus.scrape "hass" {
     type        = "Bearer"
     credentials = remote.vault.hass.data.token
   }
+
+  // Static (non-k8s-discovered) target - without this, every Alloy
+  // DaemonSet replica scrapes home.mattgerega.net independently and
+  // pushes duplicate samples, which Mimir then rejects as
+  // sample-out-of-order (see Mimir Discarding Samples alert, 2026-08-05).
+  clustering {
+    enabled = true
+  }
 }
 
 // -----------------------------------------------------------------------------

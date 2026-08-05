@@ -83,6 +83,12 @@ prometheus.scrape "vault_job" {
     type        = "Bearer"
     credentials = remote.vault.vault.data["metric-token"]
   }
+
+  // Static (non-k8s-discovered) target - see garage_job below for why
+  // this needs clustering.
+  clustering {
+    enabled = true
+  }
 }
 
 // Scrape Garage S3 metrics
@@ -98,6 +104,14 @@ prometheus.scrape "garage_job" {
   authorization {
     type        = "Bearer"
     credentials = remote.vault.garage.data["metrics-token"]
+  }
+
+  // Static (non-k8s-discovered) target - without this, every Alloy
+  // DaemonSet replica scrapes it independently and pushes duplicate
+  // samples, which Mimir then rejects as sample-out-of-order (see
+  // Mimir Discarding Samples alert, 2026-08-05).
+  clustering {
+    enabled = true
   }
 }
 
