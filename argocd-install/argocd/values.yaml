@@ -44,6 +44,11 @@ argo-cd:
   repoServer:
     deploymentAnnotations:
       argocd.argoproj.io/sync-wave: "40"
+    # v3.5.0 refuses to start with --disable-tls unless client-ca-path is explicitly
+    # cleared; the chart doesn't yet wire reposerver.client.ca.path from
+    # argocd-cmd-params-cm to a flag/env var, so pass it directly.
+    extraArgs:
+      - --client-ca-path=
     resources:
       requests:
         cpu: 30m
@@ -143,8 +148,6 @@ argo-cd:
       server.repo.server.strict.tls: false
       server.rootpath: ""
       reposerver.disable.tls: "true"
-      # v3.5.0 repo-server refuses to start with --disable-tls unless client-ca-path is explicitly cleared
-      reposerver.client.ca.path: ""
       controller.repo.server.plaintext: "true"
       applicationsetcontroller.repo.server.plaintext: "true"
       server.repo.server.plaintext: "true"
