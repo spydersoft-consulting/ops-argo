@@ -143,6 +143,8 @@ argo-cd:
       server.repo.server.strict.tls: false
       server.rootpath: ""
       reposerver.disable.tls: "true"
+      # v3.5.0 repo-server refuses to start with --disable-tls unless client-ca-path is explicitly cleared
+      reposerver.client.ca.path: ""
       controller.repo.server.plaintext: "true"
       applicationsetcontroller.repo.server.plaintext: "true"
       server.repo.server.plaintext: "true"
