@@ -41,6 +41,10 @@ spec:
             - '.spec.data[]?.remoteRef.nullBytePolicy'
             - '.spec.dataFrom[]?.extract.nullBytePolicy'
             - '.spec.dataFrom[]?.find.nullBytePolicy'
+            - '.spec.target.template.mergePolicy'
+            - '.spec.data[]?.remoteRef.conversionStrategy'
+            - '.spec.data[]?.remoteRef.decodingStrategy'
+            - '.spec.data[]?.remoteRef.metadataPolicy'
           jsonPointers:
             - /metadata/labels
       syncPolicy:
