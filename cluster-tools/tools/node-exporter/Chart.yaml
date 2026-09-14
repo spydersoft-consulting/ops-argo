@@ -1,11 +1,11 @@
+type: application
+appVersion: 1.12.1
+apiVersion: v2
+name: node-exporter
+version: 4.57.0
 dependencies:
 - name: prometheus-node-exporter
-  version: 4.56.3
   repository: https://prometheus-community.github.io/helm-charts
-name: node-exporter
-version: 4.56.3
-appVersion: 1.12.1
-type: application
-apiVersion: v2
+  version: 4.57.0
 
 
