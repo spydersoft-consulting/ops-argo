@@ -2,12 +2,14 @@ configFile: config/production.alloy
 
 alloy:
   image:
-    # Retrying v1.19.2 to match the other clusters, which run it fine. The
-    # crash loop on 2026-09-15 is believed to have been triggered by heavy
-    # concurrent node reboots/rescheduling plus direct containerd content-store
-    # surgery during incident response, not an inherent flaw in this version -
-    # nonprod/internal never saw it. If it recurs, drop back to v1.19.0.
-    tag: v1.19.2
+    # Pinned to v1.19.0. v1.19.2 reproducibly fails with "exec format error"
+    # on specific production nodes (confirmed on gk-production-agt-09e even
+    # under calm, idle conditions with no concurrent reboots or containerd
+    # manipulation) while running fine on the exact same node with v1.19.0 -
+    # so this is not a load/timing race, it's deterministic per-node for this
+    # image version specifically, and not yet understood. Do not re-attempt
+    # v1.19.2 without root-causing this first.
+    tag: v1.19.0
   alloy:
     configMap:
       create: false
