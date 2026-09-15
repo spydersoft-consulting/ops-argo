@@ -1,6 +1,12 @@
 configFile: config/production.alloy
 
 alloy:
+  image:
+    # Pinned to the last known-good version: v1.19.2 has an intermittent unpack
+    # corruption on its ~164MB compressed layer (deterministic per-pod once it
+    # happens, but not tied to any specific node/host/CPU - reproduced on a
+    # brand-new node too). Revert once the underlying issue is understood.
+    tag: v1.19.0
   alloy:
     configMap:
       create: false
