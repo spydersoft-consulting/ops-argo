@@ -2,11 +2,12 @@ configFile: config/production.alloy
 
 alloy:
   image:
-    # Pinned to the last known-good version: v1.19.2 has an intermittent unpack
-    # corruption on its ~164MB compressed layer (deterministic per-pod once it
-    # happens, but not tied to any specific node/host/CPU - reproduced on a
-    # brand-new node too). Revert once the underlying issue is understood.
-    tag: v1.19.0
+    # Retrying v1.19.2 to match the other clusters, which run it fine. The
+    # crash loop on 2026-09-15 is believed to have been triggered by heavy
+    # concurrent node reboots/rescheduling plus direct containerd content-store
+    # surgery during incident response, not an inherent flaw in this version -
+    # nonprod/internal never saw it. If it recurs, drop back to v1.19.0.
+    tag: v1.19.2
   alloy:
     configMap:
       create: false
