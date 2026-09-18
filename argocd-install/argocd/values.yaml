@@ -28,6 +28,10 @@ argo-cd:
   controller:
     statefulsetAnnotations:
       argocd.argoproj.io/sync-wave: "30"
+    # Singleton by design: keeps the descheduler off it (DefaultEvictor
+    # noEvictionPolicy: Mandatory) without a PDB, so drains can still evict it.
+    podAnnotations:
+      descheduler.alpha.kubernetes.io/prefer-no-eviction: "true"
     resources:
       requests:
         cpu: 250m

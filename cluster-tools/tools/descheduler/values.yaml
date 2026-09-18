@@ -47,6 +47,11 @@ descheduler:
           # the descheduler binary's own conservative defaults: PVC-backed
           # and local-storage pods stay protected regardless of PDBs.
           - name: DefaultEvictor
+            args:
+              # Pods annotated descheduler.alpha.kubernetes.io/prefer-no-eviction
+              # are never evicted. Used for single-replica singletons instead of
+              # a maxUnavailable: 0 PDB, which would also block node drains.
+              noEvictionPolicy: Mandatory
           - name: RemoveDuplicates
           - name: RemovePodsViolatingTopologySpreadConstraint
           - name: LowNodeUtilization
