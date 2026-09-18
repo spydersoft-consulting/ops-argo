@@ -2,18 +2,20 @@ configFile: config/production.alloy
 
 alloy:
   image:
-    # Pinned to v1.19.0. Re-confirmed 2026-09-18 via a supervised retry
-    # (auto-revert watch script, ~1 minute in): gk-production-srv-09c
-    # crash-looped with "exec /bin/alloy: input/output error" - NOT
-    # gk-production-agt-09e, the node that failed the same way on 2026-09-15.
-    # 09e and 09d (also on pxhp) ran clean this time. So the affected node is
-    # not fixed/stable over time - it's intermittent across pxhp-hosted VMs,
-    # not a permanent property of one specific VM's disk. Don't re-attempt
-    # v1.19.2 without root-causing this first; see
-    # project_pxhp_hardware_failure_2026_09.md in the ops memory for the full
-    # investigation (fsck clean, 2GB block-level integrity test clean, RAM
-    # ruled out, other VMs on the same host/pool/image run it fine).
-    tag: v1.19.0
+    # Retrying v1.19.2 (2026-09-18) after another round of "exec /bin/alloy:
+    # input/output error" crashes across different pxhp-hosted VMs each time
+    # (gk-production-agt-09e on 2026-09-15, gk-production-srv-09c on
+    # 2026-09-18 - fsck clean, block-level integrity clean, RAM ruled out;
+    # see project_pxhp_hardware_failure_2026_09.md). Those prior attempts
+    # only ran `crictl rmi` + pod redeploy before retrying, which we've since
+    # found leaves containerd's dangling pull-protection leases (and
+    # whatever content they're pinning) in place - a full purge (image +
+    # content blobs + leases) fixed an unrelated v1.19.0 corruption on
+    # gk-internal-agt-0d9 that a plain rmi did not. Do NOT sync this to
+    # production until every node has had that fuller purge AND
+    # nonproduction has run clean on v1.19.2 first. If it recurs after that,
+    # treat it as a real image issue, not leftover local state.
+    tag: v1.19.2
   alloy:
     configMap:
       create: false

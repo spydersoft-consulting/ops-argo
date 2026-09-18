@@ -9,12 +9,16 @@ syslog:
 
 alloy:
   image:
-    # Pinned to v1.19.0. v1.19.2 has an intermittent unpack corruption on its
-    # compressed layer (deterministic per-pod once it happens, reproduced on
-    # a brand-new node) - same issue already root-caused and pinned around in
-    # production (see cluster-tools/tools/grafana-alloy/config/production-values.yaml).
-    # Do not remove this pin without root-causing the underlying image issue.
-    tag: v1.19.0
+    # Retrying v1.19.2 (2026-09-18). Earlier "unpack corruption" reports on
+    # this version were "fixed" with a plain `crictl rmi` + pod redeploy,
+    # which we've since found only clears the image ref and top snapshot -
+    # it leaves containerd's dangling pull-protection leases (and whatever
+    # content they're pinning) in place. A full purge (image + content
+    # blobs + leases) resolved an unrelated v1.19.0 corruption on
+    # gk-internal-agt-0d9 that a plain rmi did not. Rolling out v1.19.2
+    # again only after doing that fuller purge on every node in each
+    # cluster. If it recurs after that, treat it as a real image issue.
+    tag: v1.19.2
   alloy:
     extraPorts:
       - name: "otlp-grpc"
