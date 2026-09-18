@@ -2,13 +2,17 @@ configFile: config/production.alloy
 
 alloy:
   image:
-    # Pinned to v1.19.0. v1.19.2 reproducibly fails with "exec format error"
-    # on specific production nodes (confirmed on gk-production-agt-09e even
-    # under calm, idle conditions with no concurrent reboots or containerd
-    # manipulation) while running fine on the exact same node with v1.19.0 -
-    # so this is not a load/timing race, it's deterministic per-node for this
-    # image version specifically, and not yet understood. Do not re-attempt
-    # v1.19.2 without root-causing this first.
+    # Pinned to v1.19.0. Re-confirmed 2026-09-18 via a supervised retry
+    # (auto-revert watch script, ~1 minute in): gk-production-srv-09c
+    # crash-looped with "exec /bin/alloy: input/output error" - NOT
+    # gk-production-agt-09e, the node that failed the same way on 2026-09-15.
+    # 09e and 09d (also on pxhp) ran clean this time. So the affected node is
+    # not fixed/stable over time - it's intermittent across pxhp-hosted VMs,
+    # not a permanent property of one specific VM's disk. Don't re-attempt
+    # v1.19.2 without root-causing this first; see
+    # project_pxhp_hardware_failure_2026_09.md in the ops memory for the full
+    # investigation (fsck clean, 2GB block-level integrity test clean, RAM
+    # ruled out, other VMs on the same host/pool/image run it fine).
     tag: v1.19.0
   alloy:
     configMap:

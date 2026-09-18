@@ -1,6 +1,13 @@
 configFile: config/nonproduction.alloy
 
 alloy:
+  image:
+    # Pinned to v1.19.0. v1.19.2 has an intermittent unpack corruption on its
+    # compressed layer (deterministic per-pod once it happens, reproduced on
+    # a brand-new node) - same issue already root-caused and pinned around in
+    # production (see cluster-tools/tools/grafana-alloy/config/production-values.yaml).
+    # Do not remove this pin without root-causing the underlying image issue.
+    tag: v1.19.0
   controller:
     hostPID: true
     volumes:
