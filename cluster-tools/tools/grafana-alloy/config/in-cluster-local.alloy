@@ -55,6 +55,13 @@ prometheus.remote_write "default" {
     headers = {
       "X-Scope-OrgID" = "internal",
     }
+    queue_config {
+      max_shards = 8
+    }
+  }
+  wal {
+    truncate_frequency = "15m"
+    max_keepalive_time = "30m"
   }
   external_labels = {
     cluster       = "internal",
