@@ -1,11 +1,11 @@
 appVersion: 1.9.1
-apiVersion: v2
 dependencies:
-- name: cert-manager
+- version: v1.21.3
   repository: https://charts.jetstack.io
-  version: v1.21.2
+  name: cert-manager
 name: cert-manager
-version: v1.21.2
+apiVersion: v2
 type: application
+version: v1.21.3
 
 
