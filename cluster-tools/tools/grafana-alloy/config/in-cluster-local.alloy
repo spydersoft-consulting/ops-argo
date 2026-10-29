@@ -866,7 +866,24 @@ loki.process "parse_logs" {
         audit_type       = "type",
         audit_operation  = "request.operation",
         audit_mount_type = "request.mount_type",
+        audit_path       = "request.path",
+        audit_error      = "error",
       }
+    }
+
+    // Drop routine machine traffic (ExternalSecrets, Alloy, metrics scrapes).
+    // Writes/deletes, secret-read requests and all errors are kept.
+    stage.drop {
+      source     = "audit_path"
+      expression = "^(sys/metrics|auth/token/lookup-self|auth/token/revoke-self)$"
+    }
+
+    // audit_error is only extracted when present, so the trailing
+    // [^;]*$ matches successful responses only.
+    stage.drop {
+      source     = "audit_type,audit_operation,audit_path,audit_error"
+      separator  = ";"
+      expression = "^response;read;secrets-k8/data/[^;]*$|^response;update;auth/approle/login$"
     }
 
     stage.labels {
