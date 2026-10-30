@@ -1,10 +1,10 @@
-dependencies:
-- version: 8.7.1
-  repository: https://prometheus-community.github.io/helm-charts
-  name: kube-state-metrics
-name: kube-state-metrics
 apiVersion: v2
 type: application
-version: 8.7.1
+name: kube-state-metrics
+dependencies:
+- name: kube-state-metrics
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 8.8.0
+version: 8.8.0
 
 
