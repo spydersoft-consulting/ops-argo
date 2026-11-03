@@ -1032,4 +1032,10 @@ otelcol.exporter.otlp "default" {
       insecure = true
     }
   }
+  retry_on_failure {
+    max_elapsed_time = "30s"
+  }
+  sending_queue {
+    queue_size = 100
+  }
 }
